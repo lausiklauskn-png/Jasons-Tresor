@@ -3,6 +3,31 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-05-31 — Drei-Knoten-Netz + Briefkasten quittiert (Sitzung 5)
+
+**Getan (verifiziert, `npm test` 27/27 grün):**
+- **Sage seq 8 gelesen + quittiert** → `ack["Sage-Protokol"]=8` (Sages Bau „Wächter/Briefkasten
+  in die Vorteilspack-Truhe" — kein Aktionsbedarf bei uns).
+- **SB-KIMTool-Point ist jetzt im Netz** (`SIGNAL.json` seq 2 live): **reziprok verifiziert** →
+  `sbkim/point_inbox.json` ✔ VALID (nodeId `CyunQ…`); neuer Test-Fall in `test/andock.test.js`.
+  `ack["SB-KIMTool-Point"]=2`. **Drei-Knoten-Netz von unserer Seite vollständig** (Tresor
+  verifiziert Sage **und** SB-KIMTool-Point).
+- **Briefkasten gepflegt:** eigene `sbkim/SIGNAL.json` auf **seq 2**; Postfächer `AUSTAUSCH.md`
+  (Sage) + `AUSTAUSCH-SBKIMTool.md` (A) mit Lese-Quittung/Verifikations-Quittung fortgeschrieben.
+- Wächter live: **📭 nichts Neues** (beide Nachbarn quittiert).
+
+**Offen / ehrlich (optional, nicht blockierend):**
+- **`verified-match`** braucht echtes `domainVector`-Embedding (Modul 03 im Browser) → Re-Sign.
+- **Gegenseitigkeit:** Sage hat uns `verified-spore` (ack 1); SB-KIMTool-Point listet uns als
+  `verified-spore`, hat uns aber im Briefkasten noch nicht geackt (`ack["Jasons-Tresor"]` offen) —
+  ihre Seite, nicht blockierend.
+- **Klaus' Browser-Lauf** der App inkl. 📬-Knopf steht weiter aus.
+
+**Manual-Check:** App/📬-Knopf **ungeprüft im Browser** — wartet auf Klaus' Browser-Lauf.
+Headless alles grün; Andock-Krypto (Sage + SB-KIMTool-Point) beidseitig von uns aus VALID.
+
+---
+
 ## 2026-05-31 — Briefkasten-Sync §11.6 (Sitzung 4)
 
 **Getan (verifiziert, `npm test` 26/26 grün):**

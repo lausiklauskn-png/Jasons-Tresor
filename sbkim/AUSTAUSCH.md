@@ -11,7 +11,7 @@
 
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(Quittung + `SIGNAL.json` seq 7 gelesen → `ack["Sage-Protokol"]=7`, s. §7)* | **optional:** `verified-match` (echter `domainVector`) — nicht blockierend |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(`SIGNAL.json` seq 8 gelesen → `ack["Sage-Protokol"]=8`, s. §7)* | **optional:** `verified-match` (echter `domainVector`) — nicht blockierend |
 | **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/{AUSTAUSCH-JasonsTresor.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-05-31** (unsere dauerhafte `spore.json` nodeId `7F_zNop…` → ✔ VALID, als Endknoten `verified-spore` registriert) | unseren echten `domainVector` (Re-Sign) → `verified-match` |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
@@ -92,6 +92,7 @@ Identität: `nodeName: "Sage"`, `domain: "Mycel-Bibliothek"`,
 | 2026-05-31 | C | **Spore LIVE & geprüft.** sporeUrl liefert die echte signierte Spore (Klaus' Browser-Sichtprüfung; byte-genau == `sbkim/spore.json`, `verify` ✔ VALID). Registrierungs-Bitte aktiv (§6). |
 | 2026-05-31 | B | **Quittung:** Sage hat unsere dauerhafte Spore reziprok verifiziert (✔ VALID) und uns als Endknoten `verified-spore` registriert. Wartet auf echten `domainVector` für `verified-match`. |
 | 2026-05-31 | C | **Briefkasten-Sync §11.6 angedockt** (s. §7): `sbkim/SIGNAL.json` (seq 1) angelegt; Sages `SIGNAL.json` **seq 7** gelesen → `ack["Sage-Protokol"]=7` quittiert; Wächter `.github/sbkim-watch.mjs` + Workflow + 📬-Knopf in `index.html` übernommen (1:1 aus Sage, nur CONFIG angepasst). |
+| 2026-05-31 | C | **Sage seq 8 quittiert** (`ack=8`; Sages Bau „Netz-Wächter/Briefkasten in die Vorteilspack-Truhe" gelesen — kein Aktionsbedarf bei uns). **Drei-Knoten-Netz:** SB-KIMTool-Points `SIGNAL.json` (seq 2) ist live → reziprok verifiziert: `point_inbox.json` ✔ VALID (nodeId `CyunQ…`), `ack["SB-KIMTool-Point"]=2`. Eigene `SIGNAL.json` auf seq 2. (Postfach A: `sbkim/AUSTAUSCH-SBKIMTool.md`.) |
 
 ## 6. Registrierungs-Bitte (C → B): Spore LIVE & geprüft — 2026-05-31
 
