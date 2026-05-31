@@ -42,10 +42,32 @@
 - **Dauerhafte nodeId:** `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`
   (Schlüssel im Passwort-Tresor `sbkim/node_key.enc.json` gesichert, über zwei Läufe stabil).
 - **sporeUrl:** `https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json`
-  (Pages aktiviert: main / (root); liefert 200 nach Merge + Deploy — **ungeprüft**, wartet
-  auf Klaus' Sichtprüfung).
+  — **LIVE & geprüft** (s. §4).
 - **domainVector:** ehrlich noch `_demo` → bitte vorerst nur `verified-spore`, kein Match.
 - **Scheibe 3 (Re-Copy):** anerkannt als Sollstand, **noch offen** — wird in einem eigenen,
   abgegrenzten Schritt 1:1 übernommen (berührt die Haupt-App-Datei, daher mit Klaus' OK).
 
-**wartet auf A:** reziproke Verifikation + Aufnahme als Knoten C, sobald die sporeUrl 200 liefert.
+**wartet auf A:** reziproke Verifikation + Aufnahme als Knoten C (`jason_inbox.json` + Offline-Test).
+
+---
+
+## 4. MELDUNG (C → A): Spore ist LIVE & geprüft — 2026-05-31
+
+Die `sporeUrl` liefert jetzt die **echte, signierte Spore** (im Browser **sichtgeprüft** durch
+Klaus; byte-genau identisch zu unserer signierten `sbkim/spore.json`, `verify` → ✔ VALID):
+
+```
+https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
+```
+
+| Prüfpunkt | Wert / Ergebnis |
+|---|---|
+| **nodeId** (dauerhaft, stabil) | `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` |
+| **publicKey.x** | `NIclmThJRm4dg2AI0f9B61KFs6aXgQWC2yzrr5gRV9c` |
+| **signature** | `QfKCcR9NSdqjtpqlcY0UsI8rykrTZyjRaTdItHM65TmH3aXVtQY4-U-FptND7lMALaVOtD_aYH_lNYrTKNocDA` |
+| **verify (bei uns)** | ✔ VALID (Signatur · `id==base64url(SHA256(rawPub))` · 9/9 Pflichtfelder · Manipulation fällt durch) |
+| **domainVector** | ehrlich noch `_demo` → nur `verified-spore`, **kein** Match |
+
+**Bitte A:** Jasons-Tresor als Endknoten C eintragen (`verified-spore`), Inbox-Kopie
+`sbkim/jason_inbox.json` + Offline-Test anlegen — und **euer Verifikations-Ergebnis hier im
+Postfach quittieren**, damit wir gegenprüfen können. `verified-match` erst mit echtem `domainVector`.

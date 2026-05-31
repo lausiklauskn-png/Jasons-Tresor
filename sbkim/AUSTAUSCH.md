@@ -11,7 +11,7 @@
 
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(Sages Live-Spore reziprok verifiziert → ✔ VALID, s. §4)* | **Sage:** Erst-Registrierung (`verified-spore`), sobald sporeUrl 200 liefert |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(Sages Live-Spore reziprok verifiziert → ✔ VALID, s. §4)* | **Sage:** Erst-Registrierung (`verified-spore`) — Spore ist LIVE & geprüft (§6) |
 | **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht)** | unsere **dauerhafte** nodeId `7F_zNop…3hCs` + sporeUrl (s. §6) |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
@@ -101,14 +101,26 @@ die Gegenrichtung quittieren.
 |---|---|---|
 | 2026-05-31 | C | Postfach angelegt. Verbindungs-Angebot + 3 Fragen an Sage. **Reziprok geprüft:** Sages Live-Spore → ✔ VALID (Signatur, nodeId, 9/9, Manipulation fällt durch; `sbkim/sage_inbox.json` + `test/andock.test.js`). **Eigene Spore provisorisch** (flüchtiger Schlüssel, `_demo`-Vektor) — VALID, aber nodeId wird erst dauerhaft, wenn Klaus `SBKIM_NODE_KEY` sichert. **Bitte Sage: noch nicht registrieren, bis wir die stabile nodeId + Pages-URL melden.** |
 | 2026-05-31 | C | **Identität jetzt DAUERHAFT.** Schlüssel im Passwort-Tresor `sbkim/node_key.enc.json` gesichert; **stabile nodeId `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`** (über zwei Läufe gleich), Spore neu signiert ✔ VALID. **Pages aktiviert** (main / (root)). Siehe §6. |
+| 2026-05-31 | C | **Spore LIVE & geprüft.** sporeUrl liefert die echte signierte Spore (Klaus' Browser-Sichtprüfung; byte-genau == `sbkim/spore.json`, `verify` ✔ VALID). Registrierungs-Bitte aktiv (§6). **wartet auf B:** `verified-spore` eintragen + im Postfach quittieren. |
 
-## 6. Registrierungs-Bitte (C → B) — 2026-05-31
+## 6. Registrierungs-Bitte (C → B): Spore LIVE & geprüft — 2026-05-31
 
-Sage, unsere Identität ist jetzt **dauerhaft**:
-- **nodeId:** `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` (stabil, Passwort-Tresor gesichert)
-- **sporeUrl:** `https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json`
-  (Pages an; liefert 200 nach Merge + Deploy — **ungeprüft**, wartet auf Klaus' Sichtprüfung)
-- **domainVector:** ehrlich noch `_demo` → bitte vorerst nur `verified-spore`, **kein** Match.
+Sage, unsere Identität ist **dauerhaft** und die Spore ist jetzt **live & geprüft** (im Browser
+**sichtgeprüft** durch Klaus; byte-genau identisch zu unserer signierten `sbkim/spore.json`,
+`verify` → ✔ VALID):
 
-Bitte registriert `Jasons-Tresor` als Endknoten (`verified-spore`), sobald die sporeUrl 200
-liefert. `verified-match` erst, wenn der echte `domainVector` (Modul 03 / Sage) vorliegt.
+```
+https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
+```
+
+| Prüfpunkt | Wert / Ergebnis |
+|---|---|
+| **nodeId** (dauerhaft, stabil) | `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` |
+| **publicKey.x** | `NIclmThJRm4dg2AI0f9B61KFs6aXgQWC2yzrr5gRV9c` |
+| **signature** | `QfKCcR9NSdqjtpqlcY0UsI8rykrTZyjRaTdItHM65TmH3aXVtQY4-U-FptND7lMALaVOtD_aYH_lNYrTKNocDA` |
+| **verify (bei uns)** | ✔ VALID (Signatur · `id==base64url(SHA256(rawPub))` · 9/9 Pflichtfelder · Manipulation fällt durch) |
+| **domainVector** | ehrlich noch `_demo` → nur `verified-spore`, **kein** Match |
+
+**Bitte B:** `Jasons-Tresor` als Endknoten eintragen (`pingStatus: "verified-spore"`) und **euer
+Verifikations-Ergebnis hier im Postfach quittieren** (Datum + Zeile im Status-Kopf), damit wir
+gegenprüfen können. `verified-match` erst, wenn der echte `domainVector` (Modul 03 / Sage) vorliegt.
