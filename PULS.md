@@ -3,6 +3,60 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-05-31 — Dauerhafte Identität eingelöst + Andock-Quittungen (Sitzung 3)
+
+**Getan (headless bewiesen, `npm test` 26/26 grün):**
+- **Dauerhafte Identität erzeugt:** Klaus' Passwort geliefert → `make_node_key.mjs` →
+  `sbkim/node_key.enc.json` (Passwort-Tresor, AES-256-GCM/PBKDF2 600k). **Stabile nodeId
+  `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`** (über zwei Läufe gleich). Spore neu
+  signiert → `verify` ✔ VALID. Kein Passwort/Klartext-Schlüssel im Tresor (grep-geprüft).
+- **GitHub Pages aktiviert** (durch Klaus, Screenshot): Deploy from branch `main` / `(root)`.
+- **SB-KIMTool-Point hat unsere 4 Fragen beantwortet** → Postfach `sbkim/AUSTAUSCH-SBKIMTool.md`
+  (Bug bestätigt + upstream gefixt; Scheibe 3 kanonisch; Drei-Knoten-Netz zugesagt).
+- **Sage-Postfach** (`AUSTAUSCH.md` §6) + `status.json` + `docs/SCHLUESSEL.md` auf die
+  dauerhafte nodeId + Pages fortgeschrieben. Real-Anteil ~60 %.
+
+**Offen / ehrlich:**
+- **sporeUrl liefert 200 erst nach Merge + Pages-Deploy** — UNGEPRÜFT, wartet auf Klaus'
+  Sichtprüfung im Browser.
+- **Scheibe-3-Re-Copy** (4 Dateien von SB-KIMTool-Point/main) anerkannt, aber **noch offen**
+  (berührt Haupt-App-Datei → eigener Schritt mit Klaus' OK).
+- **`domainVector` weiter Demo** (`_demo`) → nur `verified-spore`, noch kein Match.
+- **App-Browser-Lauf** weiter ungeprüft.
+
+**Manual-Check:** App + sporeUrl **ungeprüft im Browser** — wartet auf Klaus. Headless 26/26.
+
+## 2026-05-31 — Werkzeug für dauerhafte Identität (Sitzung 2)
+
+**Getan (headless bewiesen, `npm test` 26/26 grün — +5 neu):**
+- **Werkzeug-Lücke geschlossen:** `scripts/make_node_key.mjs` **1:1** aus dem getesteten
+  Original (SB-KIMTool-Point) geholt — legt den Knoten-Schlüssel-Tresor `node_key.enc.json`
+  **an** (Gegenstück zu `open_node_key.mjs`). Erzeugt frischen Ed25519-Schlüssel, zeigt die
+  **dauerhafte nodeId**, verschlüsselt mit AES-256-GCM / PBKDF2-SHA256 600k. Gibt
+  privaten Schlüssel/Passwort **nie** aus; überschreibt vorhandenen Tresor nicht (außer
+  `SBKIM_KEY_FORCE=1`).
+- **Modul 01 ergänzt:** `web/tools/sbkim-storage.js` **1:1** (Modul 02 verlangt es: „lade
+  01_storage.js vor 02_spore.js").
+- **Neuer headless-Test `test/node_key.test.js` (5 Fälle):** Rundlauf `make → open` ergibt
+  dieselbe nodeId (stabile Identität), falsches Passwort fällt durch (AES-GCM-Auth-Tag),
+  Klartext-Schlüssel/Passwort **nicht** im Umschlag, zu kurzes Passwort abgewiesen, zwei
+  Läufe → verschiedene Identitäten. **Wegwerf-Passwort im Test — kein echter Schlüssel im Repo.**
+- **Doku konkretisiert:** `docs/SCHLUESSEL.md` Schritt 1 verweist jetzt auf `make_node_key.mjs`
+  (statt vager „behalte den base64-PEM"). `package.json`: neuer Befehl `npm run key`.
+
+**Offen / ehrlich (wartet weiter auf Klaus — die EINE unvermeidbare Aktion):**
+- **Dauerhafte nodeId noch nicht erzeugt:** Weder `SBKIM_KEY_PW` noch `SBKIM_NODE_KEY` ist in
+  dieser Umgebung gesetzt. Den einen Tresor-Lauf kann ich **nicht** ohne Klaus' Passwort
+  fahren (ein selbst erfundenes Passwort würde Klaus aussperren und dürfte nicht ins
+  Repo/in den Chat). **Werkzeug + Beweis stehen jetzt bereit** — sobald Klaus `SBKIM_KEY_PW`
+  als Umgebungs-Secret setzt (oder den Lauf selbst startet), entsteht die stabile nodeId.
+- nodeId in `sbkim/spore.json` bleibt **provisorisch** (flüchtiger Schlüssel), bis o. g. läuft.
+- `domainVector` weiter Demo (`_demo`); Pages noch nicht aktiv; Klaus' Browser-Lauf offen.
+
+**Manual-Check:** App **ungeprüft im Browser** — wartet auf Klaus' Browser-Lauf. Headless 26/26.
+
+**Nächste Schritte:** siehe neuesten Brief `docs/sessions/BRIEF_werkzeug-tresor-anlegen.md`.
+
 ## 2026-05-31 — Gründung (Sitzung 1)
 
 **Getan (headless bewiesen, `npm test` 21/21 grün):**
