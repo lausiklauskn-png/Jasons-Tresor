@@ -17,8 +17,9 @@ Stand: 2026-05-31 · Von: Sitzung 2 (Briefkasten-Sync §11.6) · An: nächste Si
 ## Stand
 - **Real (headless bewiesen):** Tresor/Bibliothek-App (16 Tests), dauerhafte Ed25519-Identität
   (nodeId `7F_zNop…`) + reziproke Verifikation (5 Tests), Netz-Sync/Briefkasten §11.6.
-- **Sage:** hat uns als **4. Endknoten `verified-spore`** registriert; ihr seq 3 ist quittiert.
-- **Demo/offen:** `domainVector` (`_demo`) → noch kein `verified-match`. Pages aus.
+- **Sage:** hat uns als Endknoten `verified-spore` registriert; ihr **seq 7** ist quittiert.
+  GitHub Pages ist **live** (Spore über sporeUrl abrufbar).
+- **Demo/offen:** `domainVector` (`_demo`) → noch kein `verified-match`.
   SB-KIMTool-Points `SIGNAL.json` 404. Klaus' Browser-Lauf steht aus.
 
 ## Was gebaut / gepflegt / getestet werden soll (Einzelschritte, je mit Klaus-Rückmeldung)
@@ -28,9 +29,7 @@ Stand: 2026-05-31 · Von: Sitzung 2 (Briefkasten-Sync §11.6) · An: nächste Si
    `SBKIM_NODE_KEY` → `_demo` entfällt, nodeId bleibt `7F_zNop…`. Sage meldet den Score.
 2. **SIGNAL fortschreiben:** bei jedem gemeldeten Bau `seq` erhöhen + `history`-Zeile;
    neue Nachbar-`seq` per `ack` quittieren (Wächter/📬-Knopf zeigen Ungelesenes).
-3. **GitHub Pages aktivieren** (Klaus) → `…github.io/Jasons-Tresor/sbkim/spore.json` = 200;
-   `sporeUrl` ggf. auf Pages umstellen.
-4. **Drei-Knoten-Netz (optional):** sobald SB-KIMTool-Point eine `SIGNAL.json` hat, deren Bau
+3. **Drei-Knoten-Netz (optional):** sobald SB-KIMTool-Point eine `SIGNAL.json` hat, deren Bau
    lesen + quittieren; gegenseitige Spore-Verifikation Tresor ⟷ SB-KIMTool-Point.
 
 ## Datenverträge (nicht brechen)
