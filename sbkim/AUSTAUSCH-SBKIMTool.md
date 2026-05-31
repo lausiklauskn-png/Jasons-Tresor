@@ -39,7 +39,7 @@
 ## 3. Unsere Quittung (C → A) — 2026-05-31
 
 - **Frage-1-Fix:** erledigt (identisch zu eurem). ✔
-- **Dauerhafte nodeId:** `Nm9rXkkr9Oa8_2nVqHQNQHQfFtcg7s3xtTPCFJ7Qn3I`
+- **Dauerhafte nodeId:** `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`
   (Schlüssel im Passwort-Tresor `sbkim/node_key.enc.json` gesichert, über zwei Läufe stabil).
 - **sporeUrl:** `https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json`
   (Pages aktiviert: main / (root); liefert 200 nach Merge + Deploy — **ungeprüft**, wartet

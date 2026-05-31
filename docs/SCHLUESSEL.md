@@ -16,7 +16,7 @@ nodeId gleich — Sage muss uns nicht neu registrieren.
 
 Der Schlüssel ist gesichert: `sbkim/node_key.enc.json` (Passwort-Tresor, AES-256-GCM /
 PBKDF2-SHA256 600k) wurde mit Klaus' Passwort angelegt. Die **dauerhafte nodeId** ist
-`Nm9rXkkr9Oa8_2nVqHQNQHQfFtcg7s3xtTPCFJ7Qn3I` — über zwei Läufe **stabil**, Spore
+`7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` — über zwei Läufe **stabil**, Spore
 `sbkim/spore.json` echt signiert und ✔ VALID. Das **Passwort und der private Schlüssel
 sind nicht im Repo** (nur der verschlüsselte Tresor — ohne Passwort wertlos).
 
