@@ -12,17 +12,17 @@ Unser Knoten unterschreibt seine Spore mit einem **privaten Ed25519-Schlüssel**
 `base64url(SHA256(roher Pubkey))` ab. Solange wir denselben Schlüssel behalten, bleibt die
 nodeId gleich — Sage muss uns nicht neu registrieren.
 
-## ⚠ Aktueller Stand: nodeId ist PROVISORISCH
+## ✓ Aktueller Stand: nodeId ist DAUERHAFT
 
-In dieser Sitzung war **kein** `SBKIM_NODE_KEY` gesetzt. `scripts/generate_spore.mjs` hat
-darum eine **flüchtige** Identität erzeugt (klar markiert „⚠ UNGESICHERT / NUR TEST"). Die
-nodeId in `sbkim/spore.json` **wechselt bei jedem Lauf ohne Secret** und ist deshalb **nicht**
-die endgültige Identität. Die Spore ist trotzdem **echt signiert und ✔ VALID** — sie beweist,
-dass die Andock-Pipeline funktioniert.
+Der Schlüssel ist gesichert: `sbkim/node_key.enc.json` (Passwort-Tresor, AES-256-GCM /
+PBKDF2-SHA256 600k) wurde mit Klaus' Passwort angelegt. Die **dauerhafte nodeId** ist
+`Nm9rXkkr9Oa8_2nVqHQNQHQfFtcg7s3xtTPCFJ7Qn3I` — über zwei Läufe **stabil**, Spore
+`sbkim/spore.json` echt signiert und ✔ VALID. Das **Passwort und der private Schlüssel
+sind nicht im Repo** (nur der verschlüsselte Tresor — ohne Passwort wertlos).
 
-**Damit die Identität dauerhaft wird, muss Klaus den Schlüssel einmalig sichern** (siehe
-unten). Solange das aussteht, bitte Sage **noch nicht** um eine feste Registrierung der
-provisorischen nodeId — sonst muss bei jedem Re-Sign neu registriert werden.
+Damit darf Sage / SB-KIMTool-Point die nodeId jetzt **fest registrieren**. Re-Sign (z. B. wenn
+der echte `domainVector` dazukommt) hält die nodeId gleich, solange derselbe Schlüssel benutzt
+wird (Rezept unten). **Passwort gut aufbewahren** — Verlust = neue Identität nötig.
 
 ## Schlüssel dauerhaft machen (einmalig, durch Klaus)
 

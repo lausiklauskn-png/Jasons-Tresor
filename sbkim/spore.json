@@ -2,7 +2,7 @@
   "_demo": [
     "domainVector"
   ],
-  "createdAt": "2026-05-31T17:58:39.855Z",
+  "createdAt": "2026-05-31T19:33:06.029Z",
   "domain": "Jasons-Tresor-Bibliothek",
   "domainDescription": "Verwahrt und verschlüsselt JSON-Dateien und SBKIM-Schlüssel offline; Bibliothek/Tresor.",
   "domainKeywords": [
@@ -406,7 +406,7 @@
     "Schlüssel-Andock",
     "Spore-Verifikation"
   ],
-  "id": "OdDBmsrSWnM-mgFyI61FelAp4X7veXez88GZXZuGQwc",
+  "id": "7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs",
   "nodeName": "Jasons-Tresor",
   "nodeType": "hybrid",
   "protocolVersion": "0.1",
@@ -418,7 +418,7 @@
       "verify"
     ],
     "kty": "OKP",
-    "x": "ihllFZUcdaWlpgXXsZOHuDxk0UuX5fiLwuWOAucS5I4"
+    "x": "NIclmThJRm4dg2AI0f9B61KFs6aXgQWC2yzrr5gRV9c"
   },
   "stammCategories": [
     "JSON-Tresor",
@@ -426,5 +426,5 @@
     "Schlüssel-Backup",
     "AES-256-GCM-Verschlüsselung"
   ],
-  "signature": "ccrbEYknq8VCokS2ysUyx0CJkkKrjQ7R8SUmCwn-iYv2cwqwVY96mvrhdfuvqLWjmuuRzZIEqhU0p9_QfaGHAA"
+  "signature": "QfKCcR9NSdqjtpqlcY0UsI8rykrTZyjRaTdItHM65TmH3aXVtQY4-U-FptND7lMALaVOtD_aYH_lNYrTKNocDA"
 }

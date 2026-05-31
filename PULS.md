@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-05-31 — Dauerhafte Identität eingelöst + Andock-Quittungen (Sitzung 3)
+
+**Getan (headless bewiesen, `npm test` 26/26 grün):**
+- **Dauerhafte Identität erzeugt:** Klaus' Passwort geliefert → `make_node_key.mjs` →
+  `sbkim/node_key.enc.json` (Passwort-Tresor, AES-256-GCM/PBKDF2 600k). **Stabile nodeId
+  `Nm9rXkkr9Oa8_2nVqHQNQHQfFtcg7s3xtTPCFJ7Qn3I`** (über zwei Läufe gleich). Spore neu
+  signiert → `verify` ✔ VALID. Kein Passwort/Klartext-Schlüssel im Tresor (grep-geprüft).
+- **GitHub Pages aktiviert** (durch Klaus, Screenshot): Deploy from branch `main` / `(root)`.
+- **SB-KIMTool-Point hat unsere 4 Fragen beantwortet** → Postfach `sbkim/AUSTAUSCH-SBKIMTool.md`
+  (Bug bestätigt + upstream gefixt; Scheibe 3 kanonisch; Drei-Knoten-Netz zugesagt).
+- **Sage-Postfach** (`AUSTAUSCH.md` §6) + `status.json` + `docs/SCHLUESSEL.md` auf die
+  dauerhafte nodeId + Pages fortgeschrieben. Real-Anteil ~60 %.
+
+**Offen / ehrlich:**
+- **sporeUrl liefert 200 erst nach Merge + Pages-Deploy** — UNGEPRÜFT, wartet auf Klaus'
+  Sichtprüfung im Browser.
+- **Scheibe-3-Re-Copy** (4 Dateien von SB-KIMTool-Point/main) anerkannt, aber **noch offen**
+  (berührt Haupt-App-Datei → eigener Schritt mit Klaus' OK).
+- **`domainVector` weiter Demo** (`_demo`) → nur `verified-spore`, noch kein Match.
+- **App-Browser-Lauf** weiter ungeprüft.
+
+**Manual-Check:** App + sporeUrl **ungeprüft im Browser** — wartet auf Klaus. Headless 26/26.
+
 ## 2026-05-31 — Werkzeug für dauerhafte Identität (Sitzung 2)
 
 **Getan (headless bewiesen, `npm test` 26/26 grün — +5 neu):**
