@@ -154,7 +154,11 @@ test("Tresor: Manipulation faellt durch (AES-GCM Auth-Tag)", async () => {
   const blob = await L.encryptTresor({ x: 1 }, "passwort123");
   const tampered = JSON.parse(JSON.stringify(blob));
   const ch = tampered.ciphertext;
-  tampered.ciphertext = ch.slice(0, -1) + (ch.slice(-1) === "A" ? "B" : "A");
+  // Abweichung von der 1:1-Kopie (Evolutions-Klausel, an Klaus genannt): das ERSTE
+  // base64-Zeichen kippen statt des letzten. Das letzte Zeichen kann je nach
+  // Laenge/Padding bedeutungslose Bits tragen -> Klartext unveraendert -> Auth-Tag
+  // schlaegt nicht an (flaky). Das erste Zeichen ist immer signifikant -> deterministisch.
+  tampered.ciphertext = (ch[0] === "A" ? "B" : "A") + ch.slice(1);
   await assert.rejects(() => L.decryptTresor(tampered, "passwort123"));
 });
 
