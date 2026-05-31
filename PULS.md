@@ -3,6 +3,24 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-05-31 — Briefkasten-Sync §11.6 (Sitzung 4)
+
+**Getan (verifiziert, `npm test` 26/26 grün):**
+- **Aushang:** `sbkim/SIGNAL.json` (seq 1, `forNodes:["*"]`, `mailboxes`).
+- **Quittiert:** Sages Postfach + `SIGNAL.json` (**seq 7**) gelesen → `ack["Sage-Protokol"]=7`;
+  Lese-Quittung §7 + Status-Kopf + Log in `sbkim/AUSTAUSCH.md`.
+- **Auto-Sync (1:1 aus Sage):** Wächter `.github/sbkim-watch.mjs` (CONFIG: SELF/PEERS),
+  Workflow `.github/workflows/sbkim-watch.yml`, **📬-Knopf** in `index.html` (zero-dependency;
+  Auto-Check beim Laden still/Badge-only).
+- Wächter live geprüft: Sage = nichts Neues (quittiert), SB-KIMTool-Point = noch kein SIGNAL (404).
+
+**Offen / ehrlich (optional):** `verified-match` (echter `domainVector` via Modul 03);
+SB-KIMTool-Points `SIGNAL.json` (kommt automatisch, sobald da); Klaus' Browser-Lauf inkl. 📬-Knopf.
+
+**Manual-Check:** 📬-Knopf **ungeprüft im Browser** — wartet auf Klaus' Browser-Lauf. Headless grün.
+
+---
+
 ## 2026-05-31 — Dauerhafte Identität eingelöst + Andock-Quittungen (Sitzung 3)
 
 **Getan (headless bewiesen, `npm test` 26/26 grün):**
