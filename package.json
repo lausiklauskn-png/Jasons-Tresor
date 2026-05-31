@@ -1,0 +1,13 @@
+{
+  "name": "jasons-tresor",
+  "version": "0.1.0",
+  "description": "Jasons-Tresor: herunterladbarer Tresor/Bibliothek fuer JSON + SBKIM-Schluessel UND ein echter SBKIM-Endknoten mit eigener Identitaet (Andock an Sage)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "demo": "node scripts/generate_spore.mjs",
+    "verify": "node scripts/verify_foreign_spore.mjs sbkim/spore.json"
+  },
+  "license": "UNLICENSED"
+}
