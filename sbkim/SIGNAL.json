@@ -1,0 +1,15 @@
+{
+  "node": "Jasons-Tresor",
+  "lastBuild": "2026-05-31",
+  "seq": 1,
+  "headline": "Briefkasten-Aushang angelegt; Netz-Sync §11.6 aktiv.",
+  "mailboxes": {
+    "Sage-Protokol": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md",
+    "SB-KIMTool-Point": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md"
+  },
+  "forNodes": ["*"],
+  "ack": { "Sage-Protokol": 3, "SB-KIMTool-Point": null },
+  "history": [
+    { "seq": 1, "date": "2026-05-31", "headline": "Aushang angelegt." }
+  ]
+}

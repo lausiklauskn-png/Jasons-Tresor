@@ -655,5 +655,68 @@
   render();
 })();
 </script>
+
+<!-- ============================================================
+     📬 SBKIM-Briefkasten (INTERFACES §11.6) — liest die SIGNAL.json der
+     Nachbarn (Sage + SB-KIMTool-Point) und zeigt ungelesene Bauten.
+     Zero-dependency. Vorlage: Sage .github/SBKIM-WATCH-FUER-FORKER.md.
+     ============================================================ -->
+<dialog id="sbkim-mailbox-dialog" style="max-width:32em;border:none;border-radius:.8em;padding:1.2em">
+  <h3 style="margin:.2em 0 .6em">📬 SBKIM-Briefkasten</h3>
+  <div id="sbkim-mailbox-body">…</div>
+  <form method="dialog" style="text-align:right;margin-top:1em">
+    <button style="font:inherit;padding:.4em 1em;border-radius:.5em;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Schließen</button>
+  </form>
+</dialog>
+
+<script>
+  // === SBKIM-Briefkasten CONFIG ===
+  window.SBKIM_MAILBOX = {
+    self: "Jasons-Tresor",                   // unser Knoten-Name
+    selfSignal: "sbkim/SIGNAL.json",          // relativ zu dieser Seite
+    peers: [
+      { name: "Sage-Protokol",    signal: "https://raw.githubusercontent.com/lausiklauskn-png/Sage-Protokol/main/sbkim/SIGNAL.json" },
+      { name: "SB-KIMTool-Point", signal: "https://raw.githubusercontent.com/lausiklauskn-png/SB-KIMTool-Point/main/sbkim/SIGNAL.json" }
+    ]
+  };
+
+  // === SBKIM-Briefkasten Logik (zero-dependency) ===
+  async function sbkimMailboxFetch(url) {
+    try { const r = await fetch(url, { cache: "no-store" }); if (!r.ok) return { error: "HTTP " + r.status }; return await r.json(); }
+    catch (e) { return { error: String(e && e.message || e) }; }
+  }
+  // silent=true: nur Badge setzen (beim Laden), KEIN Dialog (Vorlage-Intention "still pruefen").
+  async function sbkimMailboxCheck(silent) {
+    const cfg = window.SBKIM_MAILBOX || {};
+    const dlg = document.getElementById("sbkim-mailbox-dialog");
+    const body = document.getElementById("sbkim-mailbox-body");
+    if (!silent) { body.innerHTML = "Lese Nachbarn …"; if (dlg.showModal) dlg.showModal(); }
+    let selfAck = {};
+    try { const s = await sbkimMailboxFetch(cfg.selfSignal); if (s && s.ack) selfAck = s.ack; } catch {}
+    const lines = [];
+    let unread = 0;
+    for (const peer of (cfg.peers || [])) {
+      const sig = await sbkimMailboxFetch(peer.signal);
+      if (sig.error) { lines.push(`<li><b>${peer.name}</b>: SIGNAL nicht lesbar (${sig.error})</li>`); continue; }
+      const seq = Number(sig.seq) || 0;
+      const seen = Number(selfAck[peer.name]) || 0;
+      if (seq > seen) {
+        unread++;
+        lines.push(`<li><b>${peer.name}</b>: NEUER Bau (seq ${seq}) — ${sig.headline || ""}</li>`);
+      } else {
+        lines.push(`<li><b>${peer.name}</b>: nichts Neues (seq ${seq})</li>`);
+      }
+    }
+    if (!silent) {
+      body.innerHTML = `<ul style="margin:.2em 0 .2em 1.1em;padding:0">${lines.join("")}</ul>` +
+        (unread ? `<p style="margin:.6em 0 0"><b>${unread}</b> ungelesene(r) Bau(ten). Lies das jeweilige Postfach und quittiere via <code>ack</code> in deiner SIGNAL.json.</p>`
+                : `<p style="margin:.6em 0 0">Alles gelesen. 📭</p>`);
+    }
+    const badge = document.getElementById("sbkim-mailbox-badge");
+    if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
+  }
+  // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
+  window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
+</script>
 </body>
 </html>

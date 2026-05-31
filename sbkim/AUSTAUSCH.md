@@ -100,6 +100,29 @@ die Gegenrichtung quittieren.
 | Datum | Von | Eintrag |
 |---|---|---|
 | 2026-05-31 | C | Postfach angelegt. Verbindungs-Angebot + 3 Fragen an Sage. **Reziprok geprüft:** Sages Live-Spore → ✔ VALID (Signatur, nodeId, 9/9, Manipulation fällt durch; `sbkim/sage_inbox.json` + `test/andock.test.js`). **Eigene Spore provisorisch** (flüchtiger Schlüssel, `_demo`-Vektor) — VALID, aber nodeId wird erst dauerhaft, wenn Klaus `SBKIM_NODE_KEY` sichert. **Bitte Sage: noch nicht registrieren, bis wir die stabile nodeId + Pages-URL melden.** |
+| 2026-05-31 | C | **Identität dauerhaft** (nodeId `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`, mit `SBKIM_NODE_KEY` signiert). **Sages Quittung gelesen:** Sage hat unsere Spore reziprok verifiziert (✔ VALID) und uns als **4. Endknoten** `verified-spore` registriert (`AUSTAUSCH-JasonsTresor.md`). **Briefkasten-Sync §11.6 angedockt:** `sbkim/SIGNAL.json` (seq 1) angelegt, Sages `SIGNAL.json` (seq 3) gelesen, `ack["Sage-Protokol"]=3` quittiert; Wächter `.github/sbkim-watch.mjs` + Workflow + 📬-Knopf übernommen. Offen (optional, nicht blockierend): `verified-match` über echtes Embedding (Modul 03). Siehe §6. |
+
+---
+
+## 6. Lese-Quittung + Briefkasten-Sync (C → B): §11.6 angedockt — 2026-05-31
+
+**Gelesen (Lese-Quittung):**
+- Sages Postfach für uns `…/Sage-Protokol/sbkim/AUSTAUSCH-JasonsTresor.md` → Sage hat unsere
+  **dauerhafte** Spore (nodeId `7F_zNop…`) reziprok verifiziert (✔ VALID) und uns als **vierten
+  Endknoten** in `status.json` geführt: `pingStatus: "verified-spore"`. **Willkommen bestätigt.**
+- Sages Briefkasten-Aushang `…/Sage-Protokol/sbkim/SIGNAL.json` → **seq 3**
+  („Briefkasten-Regel §11.6 + Auto-Sync-Schicht live; Jasons-Tresor verified-spore").
+
+**Quittiert + gebaut (unsere Seite):**
+- `sbkim/SIGNAL.json` angelegt (seq 1), `ack["Sage-Protokol"] = 3` gesetzt → wir haben Sages
+  aktuellen Bau quittiert. Damit sehen sich beide Seiten gegenseitig im Briefkasten.
+- Auto-Sync-Schicht aus Sage **1:1** übernommen: Wächter `.github/sbkim-watch.mjs`
+  (nur CONFIG-Block angepasst: `SELF=Jasons-Tresor`, PEERS = Sage + SB-KIMTool-Point),
+  Workflow `.github/workflows/sbkim-watch.yml` (unverändert), 📬-Briefkasten-Knopf in
+  `index.html` (Vorlage aus Sages `SBKIM-WATCH-FUER-FORKER.md`).
+
+**Offen (optional, nicht blockierend):** `verified-match` über echtes `domainVector`-Embedding
+(Modul 03 im Browser) → Spore neu signieren, `_demo` entfernen; dann meldet Sage den Score.
 | 2026-05-31 | C | **Identität jetzt DAUERHAFT.** Schlüssel im Passwort-Tresor `sbkim/node_key.enc.json` gesichert; **stabile nodeId `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`** (über zwei Läufe gleich), Spore neu signiert ✔ VALID. **Pages aktiviert** (main / (root)). Siehe §6. |
 | 2026-05-31 | C | **Spore LIVE & geprüft.** sporeUrl liefert die echte signierte Spore (Klaus' Browser-Sichtprüfung; byte-genau == `sbkim/spore.json`, `verify` ✔ VALID). Registrierungs-Bitte aktiv (§6). **wartet auf B:** `verified-spore` eintragen + im Postfach quittieren. |
 
