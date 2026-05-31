@@ -12,7 +12,7 @@
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
 | **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(Sages Live-Spore reziprok verifiziert → ✔ VALID, s. §4)* | **Sage:** Erst-Registrierung (`verified-spore`), sobald sporeUrl 200 liefert |
-| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht)** | unsere **dauerhafte** nodeId `Nm9rXkkr…Qn3I` + sporeUrl (s. §6) |
+| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/AUSTAUSCH.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht)** | unsere **dauerhafte** nodeId `7F_zNop…3hCs` + sporeUrl (s. §6) |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
