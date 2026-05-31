@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "test": "node --test",
+    "key": "node scripts/make_node_key.mjs",
     "demo": "node scripts/generate_spore.mjs",
     "verify": "node scripts/verify_foreign_spore.mjs sbkim/spore.json"
   },

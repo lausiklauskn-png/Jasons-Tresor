@@ -26,26 +26,31 @@ provisorischen nodeId — sonst muss bei jedem Re-Sign neu registriert werden.
 
 ## Schlüssel dauerhaft machen (einmalig, durch Klaus)
 
-1. **Frischen Schlüssel erzeugen** (ohne Secret) und die `nodeId` notieren:
+> Ein einziger Lauf genügt. `scripts/make_node_key.mjs` erzeugt den frischen Schlüssel,
+> zeigt die **dauerhafte** nodeId und legt ihn **sofort verschlüsselt** als
+> `sbkim/node_key.enc.json` ab — der private Schlüssel/das Passwort werden dabei **nie**
+> ausgegeben. (Headless bewiesen in `test/node_key.test.js`: Rundlauf `make → open`,
+> falsches Passwort fällt durch.)
+
+1. **Schlüssel erzeugen + Tresor anlegen** (Passwort nur über die Umgebungsvariable,
+   **nie** als Argument — sonst steht es in der Prozessliste):
    ```
-   node scripts/generate_spore.mjs        # druckt nodeId + ⚠ UNGESICHERT
+   SBKIM_KEY_PW='<dein-Passwort>' node scripts/make_node_key.mjs
    ```
-   Den **privaten** Schlüssel (PKCS8-PEM, base64) dabei abgreifen — der Generator selbst legt
-   ihn nicht offen; erzeuge ihn alternativ einmal kontrolliert und behalte den base64-PEM.
-2. **Sofort sichern — beide Wege, mind. einer muss greifen:**
-   - **Umgebungs-Secret `SBKIM_NODE_KEY`** in der Claude-Code-Umgebung hinterlegen (am
-     bequemsten). Wenn gesetzt, nutzt `generate_spore.mjs` es automatisch.
-   - **Passwort-Tresor im Repo** — `sbkim/node_key.enc.json`: verschlüsselt mit
-     **AES-256-GCM**, Schlüssel via **PBKDF2 (600k, SHA-256)** aus Klaus' Passwort. Ohne
-     Passwort wertlos; das **Passwort steht nirgends im Repo**. Öffnen:
-     ```
-     SBKIM_KEY_PW='<Klaus-Passwort>' node scripts/open_node_key.mjs
-     ```
-3. **Re-Sign ab dann mit Secret/Tresor → nodeId bleibt stabil:**
+   → schreibt `sbkim/node_key.enc.json` und druckt die **dauerhafte nodeId**. Das Passwort
+   sicher merken (Passwort-Manager) — es steht **nirgends** im Repo. Ein vorhandener Tresor
+   wird **nicht** überschrieben (Identitätsschutz), außer `SBKIM_KEY_FORCE=1` ist gesetzt.
+2. **Optional zusätzlich als Umgebungs-Secret `SBKIM_NODE_KEY`** hinterlegen (bequemstes
+   Re-Sign ohne Passwort-Eingabe). Wenn gesetzt, nutzt `generate_spore.mjs` es automatisch:
+   ```
+   SBKIM_NODE_KEY="$(SBKIM_KEY_PW='<Passwort>' node scripts/open_node_key.mjs)"
+   ```
+3. **Spore signieren — mit genau diesem Schlüssel → nodeId bleibt stabil:**
    ```
    SBKIM_NODE_KEY="$(SBKIM_KEY_PW='<Passwort>' node scripts/open_node_key.mjs)" \
      node scripts/generate_spore.mjs
    ```
+   **Kontrolle:** Die gedruckte nodeId muss die **dauerhafte** aus Schritt 1 sein.
 
 ## Re-Sign-Ablauf (wenn Vektor/Kategorien sich ändern)
 
