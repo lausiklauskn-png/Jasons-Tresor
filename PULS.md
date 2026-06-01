@@ -40,6 +40,10 @@ Passwort — die Verdrahtung an den **AES-Tresor** (echtes Passwort) + echte Ein
 und Ebene 3 mit je 5×6 gemischten Füll-Büchern; echte anklickbare Bücher je Ebene (Ebene 1:
 Rezepte/Reisen/Ideen · Ebene 2: Konten/Verträge · Ebene 3: Schlüssel/Vermächtnis). Sichtbar via
 `.has-books` (frontale Ebenen 1/3/4; die Schwenk-Ansichten links/rechts bleiben buchlos).
+**Buchrücken-Beschriftung:** cyan/blaues Leuchten wie Ebene 2/3 (Text-Shadow + sanftes Pulsen),
+**frei eintippbar** (Feld „Beschriftung" im geöffneten Buch, lokal in `localStorage` gespeichert,
+live auf dem Rücken), und **automatisch in Höhe/Breite eingepasst** (`fitSpineText`, Spationierung
+0.05em). 5. Buchrücken (`buchruecken-5.png`) im Pool.
 
 **Erlebnis-Schicht zu Ende gebaut (Klaus' Freibrief, `npm test` 27/27 grün, Kern unberührt):**
 - **Panik-Knopf (Notfall)** im HUD: Dialog mit 3 Stufen. **Stufe 1 „Verriegeln"** scharf (zurück
