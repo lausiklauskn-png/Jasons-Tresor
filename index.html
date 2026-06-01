@@ -91,6 +91,13 @@
 </head>
 <body>
 <header>
+  <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
+          title="Briefkasten der Nachbar-Knoten (Sage + SB-KIMTool-Point) jetzt prüfen"
+          style="position:relative;float:right;font:inherit;padding:.4em .8em;border-radius:.5em;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">
+    📬 Briefkasten
+    <span id="sbkim-mailbox-badge" hidden
+          style="position:absolute;top:-.5em;right:-.5em;min-width:1.4em;height:1.4em;padding:0 .3em;border-radius:.7em;background:#c0392b;color:#fff;font-size:.75em;line-height:1.4em;text-align:center"></span>
+  </button>
   <h1><span class="glyph">▤</span> Jasons-Bibliothek</h1>
   <p class="sub">Deine Bibliothek fuer JSON-Dateien — laden, benennen, ordnen, exportieren, wieder einlesen.</p>
   <p><span class="chip">offline</span> <span class="chip">Scheibe 2</span>
