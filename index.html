@@ -256,31 +256,33 @@
   #regal-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
     transition:opacity .45s ease}
   #regal.switching #regal-bg{opacity:0}
-  .regal-torch{position:absolute; top:50%; transform:translateY(-50%); z-index:3; border:0; background:none;
-    cursor:pointer; padding:0; height:46%; max-height:400px; line-height:0; transition:transform .15s ease}
-  .regal-torch.left{left:1%} .regal-torch.right{right:1%}
-  .regal-torch img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none;
-    animation:torch-flicker 2.6s ease-in-out infinite}
-  .regal-torch.right img{transform:scaleX(-1)}
-  .regal-torch:hover{transform:translateY(-50%) scale(1.04)}
-  .regal-torch:hover img{animation-play-state:paused; filter:drop-shadow(0 0 20px rgba(110,231,211,.9))}
-  .regal-torch:disabled{opacity:.16; cursor:default}
-  .regal-torch:disabled img{animation:none; filter:none}
-  @keyframes torch-flicker{
-    0%,100%{filter:drop-shadow(0 0 8px rgba(244,180,53,.45))}
-    50%{filter:drop-shadow(0 0 17px rgba(244,180,53,.8))}}
+  /* Navigation nutzt die Fackeln IM Bild: Rand-Klickflächen mit Hover-Halo („da ist ein Link"). */
+  .regal-torch{position:absolute; top:0; bottom:0; width:16%; z-index:3; border:0; background:none;
+    cursor:pointer; padding:0}
+  .regal-torch.left{left:0} .regal-torch.right{right:0}
+  .regal-torch::before{content:""; position:absolute; top:50%; transform:translateY(-50%);
+    width:88%; height:50%; opacity:0; pointer-events:none; transition:opacity .35s ease;
+    background:radial-gradient(ellipse at center, rgba(110,231,211,.5) 0%, rgba(244,180,53,.3) 34%, transparent 70%)}
+  .regal-torch.left::before{left:0} .regal-torch.right::before{right:0}
+  .regal-torch:hover::before, .regal-torch:focus-visible::before{opacity:1}
+  .regal-torch:focus-visible{outline:none}
+  .regal-torch:disabled{cursor:default}
+  .regal-torch:disabled::before{display:none}
   /* Bücher auf der mittleren Ebene-1-Ansicht — volle Regalreihen (kein leeres Regal) */
   #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:9%; z-index:2; overflow:hidden;
     display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
   #regal:not(.has-books) #regal-books{display:none}
   .shelf-row{display:flex; justify-content:center; align-items:flex-end; gap:.5%; height:17%}
-  .filler{height:94%; width:auto; opacity:.9; pointer-events:none; -webkit-user-drag:none;
-    filter:drop-shadow(0 5px 10px rgba(0,0,0,.5))}
-  .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:pointer;
-    padding:0; line-height:0; filter:drop-shadow(0 6px 12px rgba(0,0,0,.55)); transition:transform .2s ease, filter .2s ease}
+  /* Bücher (auch Füll-Bücher) sind greifbar: ziehen = bewegen, oben/unten greifen = kippen */
+  .filler{height:94%; width:auto; opacity:.92; -webkit-user-drag:none; cursor:grab; touch-action:none;
+    filter:drop-shadow(0 5px 10px rgba(0,0,0,.5)); transition:filter .2s ease}
+  .filler:hover{filter:drop-shadow(0 8px 14px rgba(0,0,0,.55)) drop-shadow(0 0 8px rgba(110,231,211,.4))}
+  .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:grab;
+    padding:0; line-height:0; touch-action:none; filter:drop-shadow(0 6px 12px rgba(0,0,0,.55)); transition:filter .2s ease}
   .shelf-book img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none}
-  .shelf-book:hover, .shelf-book:focus-visible{transform:translateY(-10px); outline:none;
-    filter:drop-shadow(0 14px 22px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.65))}
+  .shelf-book:hover, .shelf-book:focus-visible{outline:none;
+    filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.65))}
+  .book-dragging{cursor:grabbing !important; filter:drop-shadow(0 16px 26px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(110,231,211,.8)) !important}
   /* Buchrücken-Beschriftung: cyan/blaues Leuchten wie Ebene 2/3, auto-skaliert (JS),
      spationiert. Box ist fest (% des Buches), Schriftgröße wird per JS eingepasst. */
   .sb-name{position:absolute; left:50%; top:46%; transform:translate(-50%,-50%);
@@ -361,12 +363,8 @@
   <img id="regal-bg" alt="" decoding="async" src="assets/erlebnis/bilder/regal-ebene1.png" />
   <!-- Bücher auf den frontalen Ebenen (Reihen per JS gefüllt; sichtbar via .has-books) -->
   <div id="regal-books" aria-label="Bücher im Regal"></div>
-  <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links">
-    <img decoding="async" alt="" src="assets/erlebnis/bilder/fackel.png" />
-  </button>
-  <button id="regal-next" class="regal-torch right" type="button" aria-label="eine Ansicht nach rechts">
-    <img decoding="async" alt="" src="assets/erlebnis/bilder/fackel.png" />
-  </button>
+  <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links"></button>
+  <button id="regal-next" class="regal-torch right" type="button" aria-label="eine Ansicht nach rechts"></button>
   <div id="regal-caption" aria-live="polite"></div>
   <div id="regal-hint">Mit den Fackeln ◀ ▶ (oder ←/→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
   <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
@@ -1293,30 +1291,75 @@
     var sp = document.querySelector('#regal-books .shelf-book[data-id="' + id + '"] .sb-name');
     if(sp){ sp.textContent = name; fitSpineText(sp); }
   };
+
+  // --- Bücher bewegen (Drag) & kippen (oben/unten = Drehpunkt); Layout lokal gespeichert ---
+  function getLayout(){ try{ return JSON.parse(localStorage.getItem('jt-booklayout') || '{}') || {}; }catch(e){ return {}; } }
+  function setLayout(m){ try{ localStorage.setItem('jt-booklayout', JSON.stringify(m)); }catch(e){} }
+  function applyTransform(el, t){ el.style.transform = 'translate(' + (t.dx||0) + 'px,' + (t.dy||0) + 'px) rotate(' + (t.rot||0) + 'deg)'; }
+  var DRAG = null;
+  function bookDown(e){
+    var el = e.currentTarget, id = el.getAttribute('data-id'); if(!id) return;
+    var rect = el.getBoundingClientRect();
+    var rel = (e.clientY - rect.top) / Math.max(1, rect.height);
+    var region = rel < 0.34 ? 'top' : (rel > 0.66 ? 'bottom' : 'mid');   // greifst du oben/unten → kippen
+    var lay = getLayout()[id] || {dx:0, dy:0, rot:0};
+    DRAG = { el:el, id:id, sx:e.clientX, sy:e.clientY, bx:lay.dx||0, by:lay.dy||0, br:lay.rot||0, region:region, moved:false, t:lay };
+    el.style.transformOrigin = region==='top' ? 'center bottom' : (region==='bottom' ? 'center top' : 'center center');
+    el.classList.add('book-dragging');
+    try{ el.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  }
+  function bookMove(e){
+    if(!DRAG) return;
+    var dx = e.clientX - DRAG.sx, dy = e.clientY - DRAG.sy;
+    if(Math.abs(dx) + Math.abs(dy) > 6) DRAG.moved = true;
+    var t = { dx:DRAG.bx, dy:DRAG.by, rot:DRAG.br };
+    if(DRAG.region === 'mid'){ t.dx = DRAG.bx + dx; t.dy = DRAG.by + dy; }   // Mitte greifen → bewegen
+    else { var sign = DRAG.region === 'top' ? 1 : -1; t.rot = DRAG.br + sign * dx * 0.25;
+           if(t.rot > 42) t.rot = 42; if(t.rot < -42) t.rot = -42; }
+    applyTransform(DRAG.el, t); DRAG.t = t;
+  }
+  function bookUp(){
+    if(!DRAG) return;
+    var el = DRAG.el;
+    if(DRAG.moved){ var m = getLayout(); m[DRAG.id] = DRAG.t; setLayout(m);
+      el._suppressClick = true; setTimeout(function(){ el._suppressClick = false; }, 60); }
+    el.classList.remove('book-dragging'); DRAG = null;
+  }
+  document.addEventListener('pointermove', bookMove);
+  document.addEventListener('pointerup', bookUp);
+  document.addEventListener('pointercancel', bookUp);
+
   function renderBooks(level){
     var wrap = document.getElementById('regal-books'); if(!wrap) return;
     wrap.innerHTML = '';
-    var list = REALS[level] || [], names = loadNames();
+    var list = REALS[level] || [], names = loadNames(), lay = getLayout();
     var ROWS = 5, PER = 6, si = level;     // si=level → je Ebene andere Misch-Reihenfolge
     for(var r=0; r<ROWS; r++){
       var row = document.createElement('div'); row.className = 'shelf-row';
       for(var c=0; c<PER; c++){
+        var id = level + '-' + r + '-' + c;
         var real = realAt(list, r, c);
         if(real){
-          var id = level + '-' + r + '-' + c;
           var nm = names[id] || real.name;
           var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book'; btn.setAttribute('data-id', id);
           var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = 'Buch: ' + nm;
           var sp = document.createElement('span'); sp.className = 'sb-name'; sp.textContent = nm;
           btn.appendChild(im); btn.appendChild(sp);
+          if(lay[id]) applyTransform(btn, lay[id]);
+          btn.addEventListener('pointerdown', bookDown);
           (function(bid, el){ el.addEventListener('click', function(){
+            if(el._suppressClick) return;                 // nach echtem Ziehen nicht öffnen
             var s = el.querySelector('.sb-name'); var t = s ? s.textContent : 'Buch';
             if(window.jtOpenBook) window.jtOpenBook({ title: t, requireCode: true, id: bid, el: el });
           }); })(id, btn);
           row.appendChild(btn);
         } else {
           var f = document.createElement('img'); f.className = 'filler'; f.alt = ''; f.setAttribute('aria-hidden', 'true');
+          f.setAttribute('data-id', id);
           f.src = SPINES[si % SPINES.length]; si++;
+          if(lay[id]) applyTransform(f, lay[id]);
+          f.addEventListener('pointerdown', bookDown);
           row.appendChild(f);
         }
       }
