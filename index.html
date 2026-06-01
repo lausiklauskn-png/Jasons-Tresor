@@ -96,7 +96,7 @@
     overflow:hidden; transition:opacity .8s ease}
   #threshold[hidden]{display:none}
   #threshold.is-gone{opacity:0; pointer-events:none}
-  .th-stage{position:absolute; inset:0; cursor:pointer}
+  .th-stage{position:absolute; inset:0; cursor:pointer; perspective:2000px}
   .th-door{position:absolute; inset:0; width:100%; height:100%;
     object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none;
     transition:transform 1.6s cubic-bezier(.6,.02,.2,1), filter 1.6s ease}
@@ -120,11 +120,24 @@
     100%{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
   #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
   #threshold.is-opening .th-lock-seq{opacity:1; transform:scale(1)}
-  /* Finaler Beat: Tür offen, Blick in die Bibliothek (sanftes Hineingleiten) */
+  /* Finaler Beat: Bibliothek-Hintergrund + dunkle Wand + aufschwingender Türflügel.
+     Feinschliff-Stellschrauben (Klaus prüft im Browser): --leaf-h (Höhe), Schwenkwinkel. */
   .th-open{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
     object-position:center; opacity:0; transform:scale(1.06);
-    transition:opacity .7s ease, transform 1.6s ease; user-select:none; -webkit-user-drag:none}
+    transition:opacity .7s ease, transform 1.8s ease; user-select:none; -webkit-user-drag:none}
   #threshold.is-open-final .th-open{opacity:1; transform:scale(1.12)}
+  .th-wall{position:absolute; inset:0; opacity:0; pointer-events:none;
+    background:radial-gradient(ellipse 52% 82% at 50% 48%, rgba(5,5,15,0) 40%, #05050f 78%);
+    transition:opacity .6s ease}
+  #threshold.is-open-final .th-wall{opacity:1}
+  .th-leaf{position:absolute; top:50%; left:50%; height:92%; width:auto;
+    transform:translate(-50%,-50%) rotateY(0deg); transform-origin:left center;
+    opacity:0; backface-visibility:hidden; user-select:none; -webkit-user-drag:none;
+    transition:opacity .5s ease, transform 1.2s cubic-bezier(.45,.05,.25,1), filter 1.2s ease;
+    filter:drop-shadow(0 22px 55px rgba(0,0,0,.6))}
+  #threshold.is-open-final .th-leaf{opacity:1}
+  #threshold.is-swing .th-leaf{transform:translate(-50%,-50%) rotateY(-115deg);
+    filter:brightness(.5) drop-shadow(0 22px 55px rgba(0,0,0,.85))}
   .th-flash.is-flash{animation:th-flash 1s ease-out forwards}
   @keyframes th-flash{0%{opacity:0} 35%{opacity:1} 100%{opacity:0}}
   .th-ui{position:absolute; left:0; right:0; bottom:6vh; z-index:2; text-align:center; padding:0 18px}
@@ -141,9 +154,12 @@
     text-decoration:underline; cursor:pointer; background:none; border:0}
   .th-skip:hover{color:#bfd8d4}
   @media (prefers-reduced-motion:reduce){
-    .th-door,.th-lock{transition:opacity .4s ease}
+    .th-door{transition:opacity .4s ease}
     #threshold.is-opening .th-door{transform:none}
     .th-flash.is-flash{animation:none}
+    .th-burst.is-flash{animation:none}
+    .th-leaf{transition:opacity .4s ease}
+    #threshold.is-swing .th-leaf{transform:translate(-50%,-50%) rotateY(-115deg)}
   }
 </style>
 </head>
@@ -168,6 +184,9 @@
          src="assets/erlebnis/bilder/licht-blitz.png" />
     <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.png"
          alt="Die Tür steht offen — Blick in die Bibliothek" />
+    <div class="th-wall" aria-hidden="true"></div>
+    <img class="th-leaf" decoding="async" aria-hidden="true" alt=""
+         src="assets/erlebnis/bilder/tuer-fluegel.png" />
   </div>
   <div class="th-ui">
     <button class="th-enter" id="th-enter" type="button">🔑 Tür öffnen</button>
@@ -842,7 +861,7 @@
     if(opening) return; opening = true;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     th.classList.add('is-opening');                 // Tür zoomt, Schloss-Sequenz blendet ein
-    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); at(450, function(){ done(false); }); return; }
+    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); th.classList.add('is-swing'); at(550, function(){ done(false); }); return; }
     // Frame-Sequenz: Türkis lädt sich auf → goldener Blitz → Gold flutet aus
     var times = [450, 680, 880, 1120, 1480];        // Einblendzeiten Frame 1..5
     for(var i=0; i<frames.length; i++){ (function(idx){ at(times[idx], function(){ showFrame(idx); }); })(i); }
@@ -850,8 +869,9 @@
       flash.classList.add('is-flash');
       if(burst) burst.classList.add('is-flash');                     // transparenter Funken-Blitz
     });
-    at(1750, function(){ th.classList.add('is-open-final'); });      // Tür offen → Blick in die Bibliothek
-    at(2650, function(){ done(false); });            // dann in die App blenden
+    at(1650, function(){ th.classList.add('is-open-final'); });      // Bibliothek + Wand + Türflügel (zu)
+    at(2100, function(){ th.classList.add('is-swing'); });           // Türflügel schwingt auf
+    at(3350, function(){ done(false); });            // dann in die App blenden
   }
   function done(instant){
     for(var i=0;i<timers.length;i++) clearTimeout(timers[i]);   // keine Nachzügler

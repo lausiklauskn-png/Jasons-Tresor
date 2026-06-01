@@ -6,18 +6,22 @@
 ## 2026-06-01 — Schwelle gebaut: Tür → Aufschließ-Sequenz → offene Bibliothek (Sitzung 7)
 
 **Getan (headless bewiesen, `npm test` 27/27 grün — Kern unberührt):**
-- **8 Bilder von Klaus' externer Bild-KI** abgelegt in `assets/erlebnis/bilder/`:
+- **Komplette Phase-1-Serie von Klaus' externer Bild-KI** in `assets/erlebnis/bilder/`:
   `tuer-zu.png` (geschlossene Tür, 1672×941), `schloss-frame-1…5.png` (Aufschließ-Sequenz
-  1536×1024: Türkis lädt → goldener Blitz → Gold flutet) und `tuer-offen.png` (Tür offen,
-  Blick in die Bibliothek/Schatzkammer, 1672×941). (`schluessel-im-schloss.png` = Vorwahl,
-  bleibt als Reserve liegen.)
+  1536×1024: Türkis lädt → goldener Blitz → Gold flutet), `tuer-offen.png` (Tür offen,
+  Bibliothek/Schatzkammer, 1672×941), `licht-blitz.png` (Prompt 9, transparenter Funken-
+  Blitz) und `tuer-fluegel.png` (Prompt 8, freigestellter Türflügel). PNG-Transparenz exakt
+  dekodiert/geprüft (Blitz + Flügel minAlpha 0). (`schluessel-im-schloss.png` = Reserve.)
 - **Schwelle als Erlebnis-Schale** in `index.html` gebaut (+ Spiegel `jasons-bibliothek/`):
-  Overlay `#threshold` — Tür → Klick/Enter → Zoom aufs Schlüsselloch → **5-Frame-Sequenz**
-  (Türkis lädt sich auf → goldener Blitz, CSS-Lichtblitz synchron) → **Tür schwingt offen,
-  Blick in die Bibliothek** → in die App blenden (~2,7 s). Knöpfe „🔑 Tür öffnen" /
+  Overlay `#threshold` — Tür → Klick/Enter → Zoom aufs Schlüsselloch → **5-Frame-Aufschließ-
+  Sequenz** → **goldener Funken-Blitz** (`licht-blitz.png`, additiv) → **Türflügel schwingt
+  3D um die linke Kante auf** (`tuer-fluegel.png`) und gibt die **Bibliothek** dahinter frei
+  (dunkle Wand-Vignette rahmt) → in die App blenden (~3,4 s). Knöpfe „🔑 Tür öffnen" /
   „überspringen", Esc; einmal pro Sitzung (`sessionStorage`); `prefers-reduced-motion`
   respektiert; Timer bei Skip sauber gestoppt. **Ehrlicher Hinweis im Bild:** „Diese Tür ist
   nur die Begrüßung — das echte Schloss ist dein Passwort." (Theater ≠ Schloss).
+- **Feinschliff offen:** Flügel-Ausrichtung/Schwenkwinkel sind Startwerte (`--leaf-h` 92 %,
+  `rotateY(-115deg)`) — Klaus prüft im Browser, ich justiere per Zahlenwert.
 - **Kein Eingriff in den `JasonLib`-Kern:** Schale liegt komplett außerhalb der Marker;
   Kern in Wurzel und Spiegel **byte-identisch** (geprüft). Nur der Bildpfad unterscheidet
   sich (`assets/…` vs. `../assets/…`). **Keine Daten angefasst** (Lösch-Schutz-Regel gewahrt).
