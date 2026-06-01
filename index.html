@@ -97,16 +97,25 @@
   #threshold[hidden]{display:none}
   #threshold.is-gone{opacity:0; pointer-events:none}
   .th-stage{position:absolute; inset:0; cursor:pointer}
-  .th-door,.th-lock{position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none}
-  .th-door{transition:transform 1.4s cubic-bezier(.6,.02,.2,1), filter 1.4s ease}
-  .th-lock{opacity:0; transform:scale(1.15);
-    transition:opacity 1s ease, transform 1.4s cubic-bezier(.6,.02,.2,1); filter:saturate(1.05)}
+  .th-door{position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none;
+    transition:transform 1.6s cubic-bezier(.6,.02,.2,1), filter 1.6s ease}
+  /* Schloss-Sequenz: 5 Frames (Türkis lädt → goldener Blitz → Gold flutet) */
+  .th-lock-seq{position:absolute; inset:0; opacity:0; transform:scale(1.12);
+    transition:opacity .5s ease, transform 1.3s cubic-bezier(.6,.02,.2,1)}
+  .th-lock-seq img{position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center 45%; opacity:0; transition:opacity .16s linear;
+    user-select:none; -webkit-user-drag:none}
+  .th-lock-seq img.is-on{opacity:1}
   .th-flash{position:absolute; inset:0; pointer-events:none; opacity:0;
     background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
   #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
-  #threshold.is-opening .th-lock{opacity:1; transform:scale(1); animation:th-pulse 1.2s ease-in-out infinite}
-  @keyframes th-pulse{0%,100%{filter:saturate(1) brightness(1)} 50%{filter:saturate(1.5) brightness(1.28)}}
+  #threshold.is-opening .th-lock-seq{opacity:1; transform:scale(1)}
+  /* Finaler Beat: Tür offen, Blick in die Bibliothek (sanftes Hineingleiten) */
+  .th-open{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    object-position:center; opacity:0; transform:scale(1.06);
+    transition:opacity .7s ease, transform 1.6s ease; user-select:none; -webkit-user-drag:none}
+  #threshold.is-open-final .th-open{opacity:1; transform:scale(1.12)}
   .th-flash.is-flash{animation:th-flash 1s ease-out forwards}
   @keyframes th-flash{0%{opacity:0} 35%{opacity:1} 100%{opacity:0}}
   .th-ui{position:absolute; left:0; right:0; bottom:6vh; z-index:2; text-align:center; padding:0 18px}
@@ -138,9 +147,16 @@
   <div class="th-stage" id="th-stage">
     <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.png"
          alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
-    <img class="th-lock" decoding="async" src="assets/erlebnis/bilder/schluessel-im-schloss.png"
-         alt="Der Schlüssel im glühenden Schloss" />
+    <div class="th-lock-seq" id="th-lock-seq" aria-hidden="true">
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-1.png" alt="Das Schloss lädt sich auf" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-2.png" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-3.png" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-4.png" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-5.png" alt="Das Schloss öffnet sich, Gold flutet aus" />
+    </div>
     <div class="th-flash" id="th-flash"></div>
+    <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.png"
+         alt="Die Tür steht offen — Blick in die Bibliothek" />
   </div>
   <div class="th-ui">
     <button class="th-enter" id="th-enter" type="button">🔑 Tür öffnen</button>
@@ -795,22 +811,35 @@
   var skip  = document.getElementById('th-skip');
   var stage = document.getElementById('th-stage');
   var flash = document.getElementById('th-flash');
+  var seq   = document.getElementById('th-lock-seq');
+  var frames = seq ? seq.querySelectorAll('img') : [];
+  var timers = [];
   var KEY = 'jt-threshold-seen';
   // Schon in dieser Sitzung eingetreten? Dann Schwelle still überspringen.
   try{ if(sessionStorage.getItem(KEY) === '1'){ done(true); return; } }catch(e){}
   // Hintergrund (Bibliothek) nicht scrollen, solange die Schwelle offen ist.
   document.body.classList.add('th-lock-scroll');
 
+  function showFrame(i){
+    for(var k=0; k<frames.length; k++) frames[k].classList.toggle('is-on', k === i);
+  }
+
   var opening = false;
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
   function open(){
     if(opening) return; opening = true;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-    th.classList.add('is-opening');                 // Tür zoomt, Schloss blendet ein + pulst
-    if(reduce){ setTimeout(function(){ done(false); }, 200); return; }
-    setTimeout(function(){ flash.classList.add('is-flash'); }, 750);  // warmer Lichtblitz
-    setTimeout(function(){ done(false); }, 1500);   // dann Bibliothek freigeben
+    th.classList.add('is-opening');                 // Tür zoomt, Schloss-Sequenz blendet ein
+    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); at(450, function(){ done(false); }); return; }
+    // Frame-Sequenz: Türkis lädt sich auf → goldener Blitz → Gold flutet aus
+    var times = [450, 680, 880, 1120, 1480];        // Einblendzeiten Frame 1..5
+    for(var i=0; i<frames.length; i++){ (function(idx){ at(times[idx], function(){ showFrame(idx); }); })(i); }
+    at(1200, function(){ flash.classList.add('is-flash'); });        // Lichtblitz mit dem Gold-Frame
+    at(1750, function(){ th.classList.add('is-open-final'); });      // Tür offen → Blick in die Bibliothek
+    at(2650, function(){ done(false); });            // dann in die App blenden
   }
   function done(instant){
+    for(var i=0;i<timers.length;i++) clearTimeout(timers[i]);   // keine Nachzügler
     try{ sessionStorage.setItem(KEY, '1'); }catch(e){}
     document.body.classList.remove('th-lock-scroll');
     if(instant){ th.setAttribute('hidden',''); return; }

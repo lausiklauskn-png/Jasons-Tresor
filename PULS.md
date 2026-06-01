@@ -3,27 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
-## 2026-06-01 — Schwelle gebaut (Tür → Schloss → Lichtblitz) + erste 2 Bilder (Sitzung 7)
+## 2026-06-01 — Schwelle gebaut: Tür → Aufschließ-Sequenz → offene Bibliothek (Sitzung 7)
 
 **Getan (headless bewiesen, `npm test` 27/27 grün — Kern unberührt):**
-- **Zwei Bilder von Klaus' externer Bild-KI** abgelegt in `assets/erlebnis/bilder/`:
-  `tuer-zu.png` (geschlossene Tür, 1672×941) + `schluessel-im-schloss.png` (Schloss-
-  Nahaufnahme, aus 3 Varianten gewählt: „ausgewogen", Türkis pulst durch das Metall).
+- **8 Bilder von Klaus' externer Bild-KI** abgelegt in `assets/erlebnis/bilder/`:
+  `tuer-zu.png` (geschlossene Tür, 1672×941), `schloss-frame-1…5.png` (Aufschließ-Sequenz
+  1536×1024: Türkis lädt → goldener Blitz → Gold flutet) und `tuer-offen.png` (Tür offen,
+  Blick in die Bibliothek/Schatzkammer, 1672×941). (`schluessel-im-schloss.png` = Vorwahl,
+  bleibt als Reserve liegen.)
 - **Schwelle als Erlebnis-Schale** in `index.html` gebaut (+ Spiegel `jasons-bibliothek/`):
-  Overlay `#threshold` (Tür → Klick/Enter → Zoom aufs Schlüsselloch + Schloss blendet ein
-  und pulst türkis → warmer Lichtblitz per CSS → Bibliothek). Knöpfe „🔑 Tür öffnen" /
+  Overlay `#threshold` — Tür → Klick/Enter → Zoom aufs Schlüsselloch → **5-Frame-Sequenz**
+  (Türkis lädt sich auf → goldener Blitz, CSS-Lichtblitz synchron) → **Tür schwingt offen,
+  Blick in die Bibliothek** → in die App blenden (~2,7 s). Knöpfe „🔑 Tür öffnen" /
   „überspringen", Esc; einmal pro Sitzung (`sessionStorage`); `prefers-reduced-motion`
-  respektiert. **Ehrlicher Hinweis im Bild:** „Diese Tür ist nur die Begrüßung — das echte
-  Schloss ist dein Passwort." (Theater ≠ Schloss).
+  respektiert; Timer bei Skip sauber gestoppt. **Ehrlicher Hinweis im Bild:** „Diese Tür ist
+  nur die Begrüßung — das echte Schloss ist dein Passwort." (Theater ≠ Schloss).
 - **Kein Eingriff in den `JasonLib`-Kern:** Schale liegt komplett außerhalb der Marker;
   Kern in Wurzel und Spiegel **byte-identisch** (geprüft). Nur der Bildpfad unterscheidet
   sich (`assets/…` vs. `../assets/…`). **Keine Daten angefasst** (Lösch-Schutz-Regel gewahrt).
 
 **Offen / ehrlich:**
 - **Schwelle im Browser UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
-- Restliche Phase-1-Bilder (freigestellter Schlüssel, Türflügel, Lichtblitz-Sprite) **nicht
-  nötig** für diese einfache Schwelle; volle Animation optional später.
-- **Bibliothek-Hintergrund (Szene 1)** noch offen — Schwelle öffnet bisher in die bestehende App.
+- `tuer-offen.png` dient als Schluss-Frame und taugt zugleich als **Szene-1-Hintergrund**
+  (Bibliothek) — der eigentliche Bibliotheks-Raum (Szene 1) ist aber noch nicht gebaut.
 - PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
 
 **Manual-Check:** Headless 27/27 grün. **App-Schwelle im Browser ungeprüft** — wartet auf Klaus.
