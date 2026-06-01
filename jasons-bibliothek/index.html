@@ -171,6 +171,15 @@
   .bd-hint{position:absolute; bottom:9%; left:0; right:0; text-align:center; color:#cfe6e2;
     font-size:.8rem; opacity:.85; text-shadow:0 1px 6px rgba(0,0,0,.8);
     transition:opacity .4s ease; pointer-events:none}
+  /* Buch-Schlüssel: liegt auf dem Buch, atmet, dreht sich beim Öffnen weg */
+  .bd-key{position:absolute; left:50%; top:50%; height:76%; width:auto;
+    transform:translate(-50%,-50%) rotate(0deg); transform-origin:center; pointer-events:none; z-index:3;
+    animation:bd-key-breath 2.6s ease-in-out infinite;
+    transition:opacity .55s ease, transform .7s cubic-bezier(.5,0,.3,1)}
+  @keyframes bd-key-breath{
+    0%,100%{filter:drop-shadow(0 0 5px rgba(110,231,211,0.45))}
+    50%{filter:drop-shadow(0 0 13px rgba(244,180,53,0.65))}}
+  #bookdemo.is-open .bd-key{opacity:0; transform:translate(-50%,-50%) rotate(30deg) scale(1.1); animation:none}
   #bookdemo.is-open .bd-zu{opacity:0; transform:scale(1.02)}
   #bookdemo.is-open .bd-auf{opacity:1; transform:scale(1)}
   #bookdemo.is-open .bd-book{filter:drop-shadow(0 0 42px rgba(244,180,53,.55))}
@@ -186,6 +195,7 @@
   .bd-close:hover{border-color:var(--accent)}
   @media (prefers-reduced-motion:reduce){
     .bd-zu,.bd-auf,.bd-content,.bd-title,.bd-hint{transition:opacity .3s ease}
+    .bd-key{animation:none}
   }
 
   /* „Intro neu starten" — kleiner Schlüssel-Knopf (Funfakt). SVG-Platzhalter, bis der
@@ -306,8 +316,9 @@
     <div class="bd-book" id="bd-book" role="button" tabindex="0" aria-label="Buch öffnen oder schließen">
       <img class="bd-zu" decoding="async" src="../assets/erlebnis/bilder/buch-zu.png" alt="Verschlossenes Buch mit Schlüsselloch" />
       <img class="bd-auf" decoding="async" src="../assets/erlebnis/bilder/buch-auf.png" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
+      <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="../assets/erlebnis/bilder/buch-schluessel.png" />
       <span class="bd-title">Mein erstes Jason</span>
-      <span class="bd-hint">antippen zum Öffnen</span>
+      <span class="bd-hint">mit dem Schlüssel öffnen</span>
     </div>
     <div class="bd-content" id="bd-content">
       <h3>Mein erstes Jason</h3>
