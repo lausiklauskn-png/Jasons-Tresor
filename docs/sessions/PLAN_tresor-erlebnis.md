@@ -118,7 +118,7 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 
 ### PHASE 1 — Die Schwelle (zuerst generieren, Look festzurren)
 
-**Bild 1 — `tuer-zu.webp` · Hintergrund 16:9 · Die geschlossene Tür**
+**Bild 1 — `tuer-zu.png` · Hintergrund 16:9 · Die geschlossene Tür** ✅ DA (1672×941, von Klaus)
 > Eine gewaltige, uralte **Tempel-Tresortür**, fest geschlossen, mittig frontal. Aus
 > verwittertem Tempelstein und dunklem Leder-/Holz mit Messingbändern, durchzogen von
 > **Ornamenten aus flüssig wirkendem Spiegel-Metall** (poliertes Chrom/Quecksilber, mitten
