@@ -187,6 +187,20 @@
   @media (prefers-reduced-motion:reduce){
     .bd-zu,.bd-auf,.bd-content,.bd-title,.bd-hint{transition:opacity .3s ease}
   }
+
+  /* „Intro neu starten" — kleiner Schlüssel-Knopf (Funfakt). SVG-Platzhalter, bis der
+     freigestellte Schlüssel (Prompt 2, transparent) als Bild vorliegt. */
+  .key-fab{position:fixed; left:14px; bottom:14px; z-index:60; width:46px; height:46px;
+    display:grid; place-items:center; border-radius:50%; cursor:pointer; color:var(--accent);
+    background:var(--card2); border:1px solid var(--line); box-shadow:0 4px 14px rgba(0,0,0,.35);
+    transition:transform .15s ease, box-shadow .25s ease, border-color .2s ease}
+  .key-fab:hover{transform:translateY(-2px) rotate(-8deg); border-color:var(--accent);
+    box-shadow:0 0 18px rgba(110,231,211,.45), 0 4px 14px rgba(0,0,0,.4)}
+  .key-fab:active{transform:translateY(0) rotate(-8deg)}
+  .key-fab svg{width:26px; height:26px; filter:drop-shadow(0 0 4px rgba(110,231,211,.5))}
+  .key-fab .k-spark{animation:key-fab-breath 2.6s ease-in-out infinite}
+  @keyframes key-fab-breath{0%,100%{opacity:.5} 50%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){ .key-fab .k-spark{animation:none} }
 </style>
 </head>
 <body>
@@ -304,6 +318,20 @@
     <button class="bd-close" id="bd-close" type="button">Schließen</button>
   </div>
 </div>
+
+<!-- „Intro neu starten" — Schlüssel-Knopf (Funfakt). SVG-Platzhalter für den
+     freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
+<button id="btn-replay-intro" class="key-fab" type="button"
+        title="Intro neu starten" aria-label="Intro neu starten">
+  <svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor"
+       stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="22" cy="22" r="12"/>
+    <circle class="k-spark" cx="22" cy="22" r="4" fill="currentColor" stroke="none"/>
+    <path d="M30.5 30.5 L50 50"/>
+    <path d="M42 46 L48 40"/>
+    <path d="M36 40 L41 35"/>
+  </svg>
+</button>
 
 <!-- ============================================================
      KERN-LOGIK (browser- UND node-tauglich; vom headless Test
@@ -958,6 +986,18 @@
   if(back)  back.addEventListener('click', hide);
   document.addEventListener('keydown', function(e){
     if(!demo.hidden && e.key === 'Escape'){ hide(); }
+  });
+})();
+</script>
+
+<!-- „Intro neu starten"-Schlüssel (Funfakt): Sitzungs-Merker löschen → Intro läuft neu -->
+<script>
+(function(){
+  var b = document.getElementById('btn-replay-intro');
+  if(!b) return;
+  b.addEventListener('click', function(){
+    try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
+    location.reload();
   });
 })();
 </script>
