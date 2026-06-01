@@ -87,9 +87,69 @@
     padding:10px 16px; border-radius:10px; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50}
   .toast.show{opacity:1}
   .hidden{display:none}
+
+  /* ===== Schwelle (Erlebnis-Schale obendrauf; NICHT Teil des JasonLib-Kerns) =====
+     Theater ≠ Schloss: Tür/Schlüssel sind Begrüßung/Navigation. Das echte Schloss
+     bleibt Passwort + AES-256-GCM. Bilder liegen lokal (offline) in assets/erlebnis/. */
+  body.th-lock-scroll{overflow:hidden}
+  #threshold{position:fixed; inset:0; z-index:1000; background:#08081a;
+    overflow:hidden; transition:opacity .8s ease}
+  #threshold[hidden]{display:none}
+  #threshold.is-gone{opacity:0; pointer-events:none}
+  .th-stage{position:absolute; inset:0; cursor:pointer}
+  .th-door,.th-lock{position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none}
+  .th-door{transition:transform 1.4s cubic-bezier(.6,.02,.2,1), filter 1.4s ease}
+  .th-lock{opacity:0; transform:scale(1.15);
+    transition:opacity 1s ease, transform 1.4s cubic-bezier(.6,.02,.2,1); filter:saturate(1.05)}
+  .th-flash{position:absolute; inset:0; pointer-events:none; opacity:0;
+    background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
+  #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
+  #threshold.is-opening .th-lock{opacity:1; transform:scale(1); animation:th-pulse 1.2s ease-in-out infinite}
+  @keyframes th-pulse{0%,100%{filter:saturate(1) brightness(1)} 50%{filter:saturate(1.5) brightness(1.28)}}
+  .th-flash.is-flash{animation:th-flash 1s ease-out forwards}
+  @keyframes th-flash{0%{opacity:0} 35%{opacity:1} 100%{opacity:0}}
+  .th-ui{position:absolute; left:0; right:0; bottom:6vh; z-index:2; text-align:center; padding:0 18px}
+  #threshold.is-opening .th-ui{opacity:0; pointer-events:none; transition:opacity .4s ease}
+  .th-enter{font:inherit; font-size:1.05rem; font-weight:600; color:#08081a;
+    background:linear-gradient(#fcd34d,#f4b435); border:1px solid #c98a16; border-radius:999px;
+    padding:12px 26px; cursor:pointer;
+    box-shadow:0 6px 24px rgba(244,180,53,.35), 0 0 0 1px rgba(255,255,255,.15) inset}
+  .th-enter:hover{filter:brightness(1.06)} .th-enter:active{transform:translateY(1px)}
+  .th-hint{margin:14px auto 0; max-width:540px; color:#bfd8d4; font-size:.86rem; line-height:1.45;
+    text-shadow:0 1px 6px rgba(0,0,0,.7)}
+  .th-hint b{color:#6ee7d3; font-weight:600}
+  .th-skip{display:inline-block; margin-top:10px; color:#8fb3b1; font-size:.8rem;
+    text-decoration:underline; cursor:pointer; background:none; border:0}
+  .th-skip:hover{color:#bfd8d4}
+  @media (prefers-reduced-motion:reduce){
+    .th-door,.th-lock{transition:opacity .4s ease}
+    #threshold.is-opening .th-door{transform:none}
+    .th-flash.is-flash{animation:none}
+  }
 </style>
 </head>
 <body>
+
+<!-- ===== Schwelle: Erlebnis-Schale obendrauf (kein Teil des JasonLib-Kerns) =====
+     Tür (tuer-zu) → Klick → Zoom aufs Schlüsselloch + Schloss-Nahaufnahme mit
+     pulsendem Türkis → warmer Lichtblitz → Bibliothek. Bilder lokal/offline. -->
+<div id="threshold" role="dialog" aria-label="Eingang zum Tresor">
+  <div class="th-stage" id="th-stage">
+    <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.png"
+         alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
+    <img class="th-lock" decoding="async" src="assets/erlebnis/bilder/schluessel-im-schloss.png"
+         alt="Der Schlüssel im glühenden Schloss" />
+    <div class="th-flash" id="th-flash"></div>
+  </div>
+  <div class="th-ui">
+    <button class="th-enter" id="th-enter" type="button">🔑 Tür öffnen</button>
+    <p class="th-hint">Tippe die Tür an, um einzutreten.<br>
+      <b>Ehrlich:</b> Diese Tür ist nur die Begrüßung — das echte Schloss ist dein <b>Passwort</b>.</p>
+    <button class="th-skip" id="th-skip" type="button">überspringen</button>
+  </div>
+</div>
+
 <header>
   <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
           title="Briefkasten der Nachbar-Knoten (Sage + SB-KIMTool-Point) jetzt prüfen"
@@ -724,6 +784,49 @@
   }
   // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
   window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
+</script>
+
+<!-- ===== Schwelle-Steuerung (Erlebnis-Schale; kein Teil des getesteten Kerns) ===== -->
+<script>
+(function(){
+  var th = document.getElementById('threshold');
+  if(!th) return;
+  var enter = document.getElementById('th-enter');
+  var skip  = document.getElementById('th-skip');
+  var stage = document.getElementById('th-stage');
+  var flash = document.getElementById('th-flash');
+  var KEY = 'jt-threshold-seen';
+  // Schon in dieser Sitzung eingetreten? Dann Schwelle still überspringen.
+  try{ if(sessionStorage.getItem(KEY) === '1'){ done(true); return; } }catch(e){}
+  // Hintergrund (Bibliothek) nicht scrollen, solange die Schwelle offen ist.
+  document.body.classList.add('th-lock-scroll');
+
+  var opening = false;
+  function open(){
+    if(opening) return; opening = true;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    th.classList.add('is-opening');                 // Tür zoomt, Schloss blendet ein + pulst
+    if(reduce){ setTimeout(function(){ done(false); }, 200); return; }
+    setTimeout(function(){ flash.classList.add('is-flash'); }, 750);  // warmer Lichtblitz
+    setTimeout(function(){ done(false); }, 1500);   // dann Bibliothek freigeben
+  }
+  function done(instant){
+    try{ sessionStorage.setItem(KEY, '1'); }catch(e){}
+    document.body.classList.remove('th-lock-scroll');
+    if(instant){ th.setAttribute('hidden',''); return; }
+    th.classList.add('is-gone');
+    setTimeout(function(){ th.setAttribute('hidden',''); }, 850);
+  }
+  // Eintreten: Klick auf die Tür, auf den Knopf, oder Enter/Leertaste.
+  stage.addEventListener('click', open);
+  enter.addEventListener('click', function(e){ e.stopPropagation(); open(); });
+  skip.addEventListener('click', function(e){ e.stopPropagation(); done(false); });
+  document.addEventListener('keydown', function(e){
+    if(th.hasAttribute('hidden')) return;
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    else if(e.key === 'Escape'){ done(false); }
+  });
+})();
 </script>
 </body>
 </html>

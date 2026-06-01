@@ -3,6 +3,33 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Schwelle gebaut (Tür → Schloss → Lichtblitz) + erste 2 Bilder (Sitzung 7)
+
+**Getan (headless bewiesen, `npm test` 27/27 grün — Kern unberührt):**
+- **Zwei Bilder von Klaus' externer Bild-KI** abgelegt in `assets/erlebnis/bilder/`:
+  `tuer-zu.png` (geschlossene Tür, 1672×941) + `schluessel-im-schloss.png` (Schloss-
+  Nahaufnahme, aus 3 Varianten gewählt: „ausgewogen", Türkis pulst durch das Metall).
+- **Schwelle als Erlebnis-Schale** in `index.html` gebaut (+ Spiegel `jasons-bibliothek/`):
+  Overlay `#threshold` (Tür → Klick/Enter → Zoom aufs Schlüsselloch + Schloss blendet ein
+  und pulst türkis → warmer Lichtblitz per CSS → Bibliothek). Knöpfe „🔑 Tür öffnen" /
+  „überspringen", Esc; einmal pro Sitzung (`sessionStorage`); `prefers-reduced-motion`
+  respektiert. **Ehrlicher Hinweis im Bild:** „Diese Tür ist nur die Begrüßung — das echte
+  Schloss ist dein Passwort." (Theater ≠ Schloss).
+- **Kein Eingriff in den `JasonLib`-Kern:** Schale liegt komplett außerhalb der Marker;
+  Kern in Wurzel und Spiegel **byte-identisch** (geprüft). Nur der Bildpfad unterscheidet
+  sich (`assets/…` vs. `../assets/…`). **Keine Daten angefasst** (Lösch-Schutz-Regel gewahrt).
+
+**Offen / ehrlich:**
+- **Schwelle im Browser UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
+- Restliche Phase-1-Bilder (freigestellter Schlüssel, Türflügel, Lichtblitz-Sprite) **nicht
+  nötig** für diese einfache Schwelle; volle Animation optional später.
+- **Bibliothek-Hintergrund (Szene 1)** noch offen — Schwelle öffnet bisher in die bestehende App.
+- PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
+
+**Manual-Check:** Headless 27/27 grün. **App-Schwelle im Browser ungeprüft** — wartet auf Klaus.
+
+---
+
 ## 2026-06-01 — Gestaltungsplan „Tresor-Erlebnis" + Bild-Prompts (Sitzung 6, NUR Doku)
 
 **Getan (kein Code — Plan-vor-Code, kein Freibrief):**
