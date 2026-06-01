@@ -311,10 +311,22 @@
   .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf;
     box-shadow:0 0 10px rgba(45,212,191,.85); animation:hud-breath 3.2s ease-in-out infinite}
   @keyframes hud-breath{0%,100%{opacity:.65} 50%{opacity:1}}
-  .hud-seal{font-size:1.05rem; filter:drop-shadow(0 0 5px rgba(201,169,97,.6)); cursor:help}
-  .hud-panik{font:inherit; font-size:.8rem; font-weight:600; color:#fff; background:rgba(150,28,28,.82);
-    border:1px solid rgba(240,90,90,.7); border-radius:10px; padding:6px 12px; cursor:pointer; transition:background .2s, box-shadow .2s}
-  .hud-panik:hover{background:rgba(200,40,40,.95); box-shadow:0 0 14px rgba(220,60,60,.6)}
+  .hud-seal{display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%;
+    background:radial-gradient(circle at 50% 35%, #d9b25a, #7a5a1e); border:1px solid #caa24e;
+    font-size:.85rem; box-shadow:0 0 8px rgba(201,169,97,.5); cursor:help}
+  /* Notfall = messing-orange Lampe (wie die Ecken), blinkt sanft; beim Drücken/Öffnen rot wie Signallampe */
+  .hud-panik{position:relative; font:inherit; font-size:.8rem; font-weight:600; color:#ffe7b8;
+    background:linear-gradient(#2a1d0e,#181106); border:1px solid #c9882f; border-radius:10px;
+    padding:6px 12px 6px 28px; cursor:pointer; transition:background .25s, color .25s, border-color .25s, box-shadow .25s}
+  .hud-panik::before{content:""; position:absolute; left:10px; top:50%; transform:translateY(-50%);
+    width:11px; height:11px; border-radius:50%; background:#f6a52a;
+    box-shadow:0 0 6px #f6a52a, 0 0 12px rgba(246,165,42,.7); animation:panik-blink 1.9s ease-in-out infinite}
+  .hud-panik:hover{border-color:#f0a83a; box-shadow:0 0 14px rgba(244,150,40,.5)}
+  .hud-panik:active, .hud-panik.armed{color:#ffd7d0; border-color:#e23b2e; background:linear-gradient(#34120c,#1f0905)}
+  .hud-panik:active::before, .hud-panik.armed::before{background:#ff3b30;
+    box-shadow:0 0 10px #ff3b30, 0 0 22px rgba(255,59,48,.95); animation:panik-blink-red .6s steps(1,end) infinite}
+  @keyframes panik-blink{0%,100%{opacity:.5} 50%{opacity:1}}
+  @keyframes panik-blink-red{0%,49%{opacity:1} 50%,100%{opacity:.25}}
   #panik{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
     max-width:430px; width:92%; padding:18px}
   #panik::backdrop{background:rgba(0,0,0,.6)}
@@ -324,7 +336,7 @@
   .panik-stufe.s1{border-color:#5a4a17}
   .panik-stufe:hover:not(:disabled){border-color:var(--accent)}
   .panik-stufe:disabled{opacity:.55; cursor:default}
-  @media (prefers-reduced-motion:reduce){ .hud-lamp{animation:none} }
+  @media (prefers-reduced-motion:reduce){ .hud-lamp,.hud-panik::before{animation:none} }
 </style>
 </head>
 <body>
@@ -1400,7 +1412,10 @@
   var open  = document.getElementById('hud-panik');
   var s1     = document.getElementById('panik-1');
   var cancel = document.getElementById('panik-cancel');
-  if(open && panik){ open.addEventListener('click', function(){ if(panik.showModal) panik.showModal(); }); }
+  if(open && panik){
+    open.addEventListener('click', function(){ open.classList.add('armed'); if(panik.showModal) panik.showModal(); });
+    panik.addEventListener('close', function(){ open.classList.remove('armed'); });
+  }
   if(cancel && panik){ cancel.addEventListener('click', function(){ if(panik.close) panik.close(); }); }
   if(s1){ s1.addEventListener('click', function(){
     // Stufe 1 · Verriegeln: zurück zur verschlossenen Tür (umkehrbar). Kein Datenverlust.
