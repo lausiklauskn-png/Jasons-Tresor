@@ -16,6 +16,12 @@
     jetzt ~11–12 s (vorher ~2,7 s). Schwere Tür öffnet bedächtig; Schluss-Ausblendung 1,4 s.
 - **Honesty-Hinweis** „Theater ≠ Schloss" bleibt erhalten (Muster-Buch + Footer), nur von der
   dramatischen Tür entfernt.
+- **Schlüssel-Pulsen 1:1 aus der Sage-Einladung übernommen** (Klaus: „dieselben Effekte wie in
+  der Einladung … Eine Werkstatt, kein Museum"). Quelle: `Sage-Protokol/index.html` `.vp-key-pulse`
+  (rein additives türkises Licht, `mix-blend:screen`, sanftes Atmen `@keyframes vp-key-breath`).
+  Bei uns als `.th-keyglow` über das **Schlüsselloch** der geschlossenen Tür zentriert; dauerhaft
+  leicht sichtbar als **lebendiger Klick-Hinweis** (ersetzt den entfernten Knopf), heller bei Nähe,
+  blendet beim Öffnen aus. Effekt-Code 1:1, nur Position angepasst.
 
 **Offen / ehrlich:**
 - **Browser-Look weiter ungeprüft** — wartet auf Klaus (Timing evtl. nachjustieren).
