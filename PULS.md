@@ -18,7 +18,7 @@
 - **Brief-Kette:** `docs/sessions/BRIEF_tresor-erlebnis.md` neu.
 
 **Entschieden (Klaus, 2026-06-01):** offline **installierbar wie PWA**; alles in EINEM klar
-benannten Ordner **`tresorkammer/`** (Bilder unter `tresorkammer/bilder/`, Schutz-Hinweis
+benannten Ordner **`assets/erlebnis/`** (Bilder unter `assets/erlebnis/bilder/`, Schutz-Hinweis
 `_BITTE-NICHT-LOESCHEN.md`); **harte Regel „nichts versehentlich löschen"** (Daten nie
 zerstörend anfassen, Löschen nur Zwei-Schritt); **Material = flüssiges Spiegel-Metall**
 („Glas und doch nicht Glas") + **Indiana-Jones-Abenteuer** (Jason→Jones), steampunk nur

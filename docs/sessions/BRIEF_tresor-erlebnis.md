@@ -38,7 +38,7 @@ Stand: 2026-06-01 · Von: Design-Sitzung · An: nächste Bau-Sitzung
 - Erlebnis-**Schale** über der App, **`JasonLib`-Kern unverändert** (vom Test geschützt).
 - Pro Phase: `npm test` grün; neue reine Funktionen (Buch↔Sammlung-Mapping, Shamir-Split,
   Köder-Erkennung, Panik-Stufen) headless testbar zwischen Markern schneiden.
-- Bilder + Assets in **einem Ordner `tresorkammer/`** (offline); App **PWA-installierbar**
+- Bilder + Assets in **einem Ordner `assets/erlebnis/`** (offline); App **PWA-installierbar**
   (Service-Worker). Material: **flüssiges Spiegel-Metall** + **Indiana-Jones-Abenteuer**.
 
 ## Datenverträge (nicht brechen)
@@ -58,7 +58,7 @@ Phase 2 … 4. **Kein Schritt ohne Plan-an-Klaus** (kein Freibrief), außer Klau
 
 ## Entscheidungen (durch Klaus, 2026-06-01)
 1. **App-Form:** offline **installierbar wie PWA** (Service-Worker); alle Assets in EINEM klar
-   benannten Ordner **`tresorkammer/`** (Bilder `tresorkammer/bilder/`, Schutz-Hinweis
+   benannten Ordner **`assets/erlebnis/`** (Bilder `assets/erlebnis/bilder/`, Schutz-Hinweis
    `_BITTE-NICHT-LOESCHEN.md`).
 2. **DATENSCHUTZ-REGEL (hart):** „Es darf nicht aus Versehen etwas gelöscht werden." → Bau fasst
    vorhandene Tresor-/Bibliotheks-Daten nie zerstörend an; jede Löschung nur Zwei-Schritt-bestätigt;

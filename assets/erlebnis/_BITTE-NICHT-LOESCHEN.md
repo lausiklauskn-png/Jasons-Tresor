@@ -1,4 +1,4 @@
-# 🗝️ tresorkammer/ — bitte nicht löschen
+# 🗝️ assets/erlebnis/ — bitte nicht löschen
 
 Dies ist die **Schatzkammer** von Jasons-Tresor: ein eigener, klar gekennzeichneter Ordner,
 in dem das **Erlebnis** lebt (Bilder der Tür, des Schlüssels, der Bibliothek und der

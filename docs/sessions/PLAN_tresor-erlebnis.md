@@ -79,15 +79,15 @@ Kopien/Backups überleben Löschen; Fallen nur netz-seitig, nie auf der Offline-
 Klaus' Wunsch: **offline installierbar wie eine PWA**, **alles in einem deutlich
 gekennzeichneten Ordner**, geschützt vor versehentlichem Löschen. Umsetzung:
 
-- **Ordner `tresorkammer/`** (sprechender, in sich geschlossener „Schatz-Ordner"):
-  - `tresorkammer/bilder/` — alle generierten Bilder (Tür, Schlüssel, Schloss, Räume …).
-  - `tresorkammer/_BITTE-NICHT-LOESCHEN.md` — sichtbarer Schutz-Hinweis.
-  - später `tresorkammer/sw.js` — Service-Worker für Offline-Cache (PWA installierbar).
+- **Ordner `assets/erlebnis/`** (sprechender, in sich geschlossener „Schatz-Ordner"):
+  - `assets/erlebnis/bilder/` — alle generierten Bilder (Tür, Schlüssel, Schloss, Räume …).
+  - `assets/erlebnis/_BITTE-NICHT-LOESCHEN.md` — sichtbarer Schutz-Hinweis.
+  - später `assets/erlebnis/sw.js` — Service-Worker für Offline-Cache (PWA installierbar).
 - **Bleibt offline** (kein Netz; lokale Dateien sind kein externer Abruf). *Evolutions-
   Klausel: Regel „eine index.html" — hier bewusst um einen klar benannten Asset-Ordner
   erweitert, „offline/zero-dependency" unberührt.*
 - **PWA:** Manifest ist bereits in `index.html`; ergänzt wird ein Service-Worker, der die
-  `tresorkammer/`-Dateien cached → echte Offline-Installation auf dem Gerät.
+  `assets/erlebnis/`-Dateien cached → echte Offline-Installation auf dem Gerät.
 
 ---
 
@@ -287,8 +287,8 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 
 1. **App-Form + Bild-Ablage:** Der Tresor soll **offline installierbar** sein wie eine
    **PWA** (Service-Worker + Offline-Cache; Manifest ist schon da). **Alle Erlebnis-Dateien
-   in EINEN, deutlich gekennzeichneten Ordner `tresorkammer/`** (Bilder unter
-   `tresorkammer/bilder/`), mit einer Markierungs-Datei `tresorkammer/_BITTE-NICHT-LOESCHEN.md`,
+   in EINEN, deutlich gekennzeichneten Ordner `assets/erlebnis/`** (Bilder unter
+   `assets/erlebnis/bilder/`), mit einer Markierungs-Datei `assets/erlebnis/_BITTE-NICHT-LOESCHEN.md`,
    damit nichts aus Versehen entfernt wird. Bleibt offline (kein Netz). *(Klaus: „ausgefallene
    Ordnerform, lass dir was einfallen" → ein klar benannter, in sich geschlossener Schatz-Ordner.)*
 2. **DATENSCHUTZ-REGEL (Klaus, hart):** **„Es darf nicht aus Versehen etwas gelöscht werden."**
