@@ -65,11 +65,13 @@
   (Bibliothek) — der eigentliche Bibliotheks-Raum (Szene 1) ist aber noch nicht gebaut.
 - **Szene 2 begonnen — Muster-Buch (Klaus: „erst ein Muster-Buch"):** Knopf „📚 Muster-Buch"
   öffnet ein isoliertes Vorschau-Overlay `#bookdemo` — ein Buch (`buch-zu.png`) wird mit dem
-  **eigenen Buch-Schlüssel** `buch-schluessel.png` (Prompt-Schlüssel mit Funke, transparent,
-  Alpha 0 geprüft) geöffnet: Klick → Schlüssel **dreht sich weg + Funke glüht auf**, Buch
-  wechselt zu → `buch-auf.png` (Goldschein) → Platzhalter-Inhalt + ehrlicher Hinweis. **Keine
-  echten Daten, kein Eingriff in `JasonLib`.** Nächster Schritt nach Klaus' OK: Look auf echte
-  Einträge ausrollen (Regal-Ansicht mit Umschalter).
+  **eigenen Buch-Schlüssel** `buch-schluessel.png` (transparent, Alpha 0 geprüft) geöffnet:
+  der Schlüssel **versinkt ins Schlüsselloch und verschwindet langsam** (wie in der Sage),
+  dabei blitzt der **Energie-Funke** `buch-energie.png` (gold↔blau, `mix-blend:screen`) auf,
+  und das Buch wechselt zu → `buch-auf.png` (Goldschein) → Platzhalter-Inhalt + ehrlicher
+  Hinweis. **Zwei Knöpfe:** „📚 Muster-Buch" (selbst per Klick öffnen) und **„▶ Buchsequenz"**
+  (läuft automatisch ab). **Keine echten Daten, kein Eingriff in `JasonLib`.** Nächster Schritt
+  nach Klaus' OK: Look auf echte Einträge ausrollen (Regal-Ansicht mit Umschalter).
 - `tuer-fluegel.png` bleibt als zusätzlicher Buch-Kandidat liegen (nicht eingebaut).
 - PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
 
