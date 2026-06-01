@@ -58,7 +58,12 @@ welchem etwas liegt. (Demo-Code „1234"; echtes Verschließen weiter in der Sic
 - **Panik-Knopf (Notfall)** im HUD: Dialog mit 3 Stufen. **Stufe 1 „Verriegeln"** scharf (zurück
   zur verschlossenen Tür, umkehrbar, kein Datenverlust); **Stufe 2 „Verbergen" / Stufe 3 „Löschen"**
   ehrlich deaktiviert (Hinweis „wird in der Sicherheits-Sitzung scharfgeschaltet").
-- **HUD:** Wächter-Lampe (grün, ruhig) + Siegel-Wappen (bezeugter Endknoten) — ehrliche Anzeige.
+- **HUD:** Wächter-Lampe (grün, ruhig) + **echtes SBKIM-Siegel-Wappen** (Modul 16, `assets/
+  sbkim-siegel-wappen.svg` **1:1** aus Sage-Protokol) + **Andock-Dialog** (`#andock`): Endknoten/
+  Endpunkt/nodeId/Spore + Link zum SBKIM-Werkzeug (SB-KIMTool-Point). Klick aufs Siegel öffnet
+  Andock; first-boot-Animation. **Ehrlich:** sichtbares Siegel + Andock-Verbindung 1:1; die volle
+  Bezeugungs-Prüfung (Modul-Chain init) folgt in eigener Sitzung.
+- **Notfall-Knopf** ans Farbschema (messing-orange Lampe, rot/„armed" beim Drücken).
 - **Navigation/Replay:** Regal ◀▶ (Fackeln) + Pfeiltasten; Funfakt-Schlüssel = „Intro & Tür nochmal
   ansehen"; einmaliger Bedien-Hinweis im Regal (blendet aus, `sessionStorage`).
 - **Bewusst NICHT gemacht (Klaus' Wunsch):** echtes Verschließen/AES-Passwort-Verdrahtung +

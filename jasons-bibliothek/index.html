@@ -327,6 +327,26 @@
     box-shadow:0 0 10px #ff3b30, 0 0 22px rgba(255,59,48,.95); animation:panik-blink-red .6s steps(1,end) infinite}
   @keyframes panik-blink{0%,100%{opacity:.5} 50%{opacity:1}}
   @keyframes panik-blink-red{0%,49%{opacity:1} 50%,100%{opacity:.25}}
+  /* SBKIM-Siegel (Modul 16) — Wappen 1:1 aus Sage-Protokol; Klick öffnet Andock */
+  #sbkim-siegel-badge{width:38px; height:38px; border-radius:50%; background:transparent; border:none;
+    cursor:pointer; display:inline-flex; align-items:center; justify-content:center; overflow:visible; padding:0;
+    transition:filter .25s ease-out, transform .25s ease-out}
+  #sbkim-siegel-badge img{width:38px; height:38px; display:block; pointer-events:none}
+  #sbkim-siegel-badge:hover{filter:drop-shadow(0 0 8px rgba(201,169,97,.55)); transform:scale(1.06)}
+  #sbkim-siegel-badge:focus-visible{outline:2px solid #C9A961; outline-offset:3px}
+  #sbkim-siegel-badge.first-boot{animation:siegel-first-boot 600ms ease-out}
+  @keyframes siegel-first-boot{0%{transform:scale(.7); opacity:0}
+    60%{transform:scale(1.12); opacity:1; filter:drop-shadow(0 0 14px rgba(201,169,97,.55))}
+    100%{transform:scale(1); opacity:1}}
+  #andock{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
+    max-width:470px; width:92%; padding:18px}
+  #andock::backdrop{background:rgba(0,0,0,.6)}
+  .andock-row{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--line); font-size:.9rem}
+  .andock-row span{color:var(--muted)}
+  .andock-row code, .andock-row a{color:var(--accent); font-family:ui-monospace,monospace; font-size:.8rem; word-break:break-all; text-align:right}
+  .andock-tool{display:inline-block; background:var(--accent); color:var(--accent-ink); border:1px solid var(--accent);
+    border-radius:10px; padding:9px 14px; font-weight:600; text-decoration:none}
+  .andock-tool:hover{filter:brightness(1.06)}
   #panik{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
     max-width:430px; width:92%; padding:18px}
   #panik::backdrop{background:rgba(0,0,0,.6)}
@@ -493,9 +513,24 @@
 <!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
 <div id="hud">
   <span class="hud-lamp" title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter ruhig"></span>
-  <span class="hud-seal" title="Bezeugter SBKIM-Endknoten (Siegel)">🛡️</span>
+  <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
+    <img src="../assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
+  </button>
   <button id="hud-panik" class="hud-panik" type="button" title="Notfall — schnell verriegeln">🛑 Notfall</button>
 </div>
+
+<!-- SBKIM · Andock — Verbindung zum Werkzeug (wie im Sage-Protokoll) -->
+<dialog id="andock">
+  <h3 style="margin:0 0 6px">SBKIM · Andock</h3>
+  <p style="color:var(--muted); margin:.2em 0 1em; font-size:.9rem">Dieser Tresor ist ein bezeugter SBKIM-Endknoten am Sage-Protokoll.</p>
+  <div class="andock-row"><span>Endknoten</span><code>Jasons-Tresor</code></div>
+  <div class="andock-row"><span>Endpunkt</span><a href="https://lausiklauskn-png.github.io/Jasons-Tresor/" target="_blank" rel="noopener">…github.io/Jasons-Tresor/ ↗</a></div>
+  <div class="andock-row"><span>nodeId</span><code>7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs</code></div>
+  <div class="andock-row"><span>Spore</span><a href="sbkim/spore.json" target="_blank" rel="noopener">sbkim/spore.json ↗</a></div>
+  <p style="margin:1.1em 0 0"><a class="andock-tool" href="https://lausiklauskn-png.github.io/SB-KIMTool-Point/" target="_blank" rel="noopener">SBKIM-Werkzeug öffnen ↗</a></p>
+  <p style="color:var(--muted); font-size:.78rem; margin:.9em 0 0">Siegel-Wappen + Andock-Verbindung sind 1:1 aus dem Sage-Protokoll. Die vollständige Bezeugungs-Prüfung (Modul-Chain) folgt in einer eigenen Sitzung.</p>
+  <div class="row-end" style="margin-top:12px"><button id="andock-close" class="btn-ghost" type="button">Schließen</button></div>
+</dialog>
 
 <dialog id="panik">
   <h3 style="margin:0 0 6px">🛑 Notfall</h3>
@@ -1422,6 +1457,16 @@
     try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
     location.reload();
   }); }
+
+  // SBKIM-Siegel → Andock-Dialog (Verbindung zum Werkzeug)
+  var siegel = document.getElementById('sbkim-siegel-badge');
+  var andock = document.getElementById('andock');
+  var andockClose = document.getElementById('andock-close');
+  if(siegel && andock){
+    siegel.addEventListener('click', function(){ if(andock.showModal) andock.showModal(); });
+    siegel.classList.add('first-boot'); setTimeout(function(){ siegel.classList.remove('first-boot'); }, 700);
+  }
+  if(andockClose && andock){ andockClose.addEventListener('click', function(){ if(andock.close) andock.close(); }); }
 })();
 </script>
 </body>
