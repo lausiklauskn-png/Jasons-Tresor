@@ -1284,7 +1284,7 @@
   function saveNames(m){ try{ localStorage.setItem('jt-booknames', JSON.stringify(m)); }catch(e){} }
   // Schrift automatisch in Höhe/Breite an den Buchrücken einpassen
   function fitSpineText(el){
-    if(!el) return; var fs = 40, min = 16, guard = 60; el.style.fontSize = fs + 'px';
+    if(!el) return; var fs = 27, min = 14, guard = 60; el.style.fontSize = fs + 'px';
     while(guard-- > 0 && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && fs > min){
       fs -= 1; el.style.fontSize = fs + 'px';
     }
