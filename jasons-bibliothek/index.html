@@ -283,9 +283,9 @@
   .book-dragging{cursor:grabbing !important; z-index:6; filter:drop-shadow(0 16px 26px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(110,231,211,.8)) !important}
   /* Regal-Schild unter dem Buch: cyan/blaues Leuchten wie Ebene 2/3, Breite per JS eingepasst */
   .sb-label{position:absolute; top:100%; left:50%; transform:translateX(-50%); margin-top:2px;
-    width:150%; max-width:none; height:1.25em; display:flex; align-items:center; justify-content:center;
+    width:150%; max-width:none; height:1.35em; display:flex; align-items:center; justify-content:center;
     overflow:hidden; white-space:nowrap; letter-spacing:.06em; font-weight:700; pointer-events:none;
-    color:#d3fbf3; font-size:13px; line-height:1.1;
+    color:#d3fbf3; font-size:16px; line-height:1.1;
     text-shadow:0 0 4px #6ee7d3, 0 0 10px rgba(110,231,211,.85), 0 0 18px rgba(59,130,246,.6), 0 1px 2px #000;
     animation:sb-glow 3s ease-in-out infinite}
   @keyframes sb-glow{
@@ -1271,7 +1271,7 @@
   function saveNames(m){ try{ localStorage.setItem('jt-booknames', JSON.stringify(m)); }catch(e){} }
   // Schrift automatisch in Höhe/Breite an den Buchrücken einpassen
   function fitSpineText(el){
-    if(!el) return; var fs = 22, min = 6, guard = 40; el.style.fontSize = fs + 'px';
+    if(!el) return; var fs = 36, min = 7, guard = 60; el.style.fontSize = fs + 'px';
     while(guard-- > 0 && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && fs > min){
       fs -= 1; el.style.fontSize = fs + 'px';
     }
