@@ -35,10 +35,11 @@ Klick → `jtOpenBook({requireCode:true})` öffnet das Buch-Overlay mit **Code-A
 Code → Öffnen-Sequenz (Schlüssel versinkt + Energie-Funke) + Inhalt; **2× falsch → 1 Min Sperre**
 (Countdown). **Ehrliche Vorschau:** Demo-Code „1234" sichtbar, keine echten Daten, kein echtes
 Passwort — die Verdrahtung an den **AES-Tresor** (echtes Passwort) + echte Einträge folgt.
-**Regal voll statt leer:** 4 Buchrücken-Varianten (`buchruecken-1…4.png`, transparent) — Reihen
-per JS gefüllt (5×6 = Füll-Bücher), die 3 echten anklickbaren dazwischen. **Space-Ebenen:** noch
-Speicherchips offen (Prompt gegeben: Chips = Teile des 2. Schlüssels). Alle 7 Inline-Skripte
-syntaxgeprüft.
+**Regal voll statt leer, auf ALLEN frontalen Ebenen:** 5 Buchrücken-Varianten
+(`buchruecken-1…5.png`, transparent) — `renderBooks(level)` füllt die Mitte (Ebene 1), Ebene 2
+und Ebene 3 mit je 5×6 gemischten Füll-Büchern; echte anklickbare Bücher je Ebene (Ebene 1:
+Rezepte/Reisen/Ideen · Ebene 2: Konten/Verträge · Ebene 3: Schlüssel/Vermächtnis). Sichtbar via
+`.has-books` (frontale Ebenen 1/3/4; die Schwenk-Ansichten links/rechts bleiben buchlos).
 
 **Erlebnis-Schicht zu Ende gebaut (Klaus' Freibrief, `npm test` 27/27 grün, Kern unberührt):**
 - **Panik-Knopf (Notfall)** im HUD: Dialog mit 3 Stufen. **Stufe 1 „Verriegeln"** scharf (zurück
