@@ -55,11 +55,14 @@ Stand: 2026-06-01 · Von: Design-Sitzung · An: nächste Bau-Sitzung
 Klaus-Rückmeldung (4 Fragen unten) → Phase-1-Bilder generieren → Schwelle bauen + testen →
 Phase 2 … 4. **Kein Schritt ohne Plan-an-Klaus** (kein Freibrief), außer Klaus gibt einen.
 
-## Offene Fragen an Klaus
-1. **Bild-Ablage:** `assets/erlebnis/` (A, empfohlen) oder base64 in der HTML (B)?
-2. **Ein Gesicht:** stiller Werttresor (ohne Köder) ODER öffentliche Rätselkiste (mit Köder/Fake)?
-3. **Start:** erst nur Phase-1-Bilder (Tür/Schlüssel/Schloss) machen, Look prüfen, dann weiter?
-4. **Schlüssel-Bedienung:** ins Schloss **ziehen** (Drag) oder per **Klick** einrasten?
+## Entscheidungen (durch Klaus, 2026-06-01)
+1. **Bild-Ablage:** alles in einem Ordner **`assets/erlebnis/`, offline**.
+2. **DATENSCHUTZ-REGEL (hart):** „Es darf nicht aus Versehen etwas gelöscht werden." → Bau fasst
+   vorhandene Tresor-/Bibliotheks-Daten nie zerstörend an; jede Löschung nur Zwei-Schritt-bestätigt;
+   Standard-Aktionen umkehrbar/additiv. **Diese Regel hat im Bau Vorrang.**
+3. **Ein Gesicht:** stiller Werttresor (kein Köder; Köder höchstens später optionaler Schalter).
+4. **Start:** erst nur Phase 1 (Tür/Schlüssel/Schloss + 3 Effekt-Teile), Look prüfen.
+5. **Schlüssel:** Klick zum Einrasten (Drag optional später).
 
 ## Abschluss-Befehl
 `PULS.md` fortschreiben → neuen Brief schreiben (Pflichtlektüre + diesen Abschluss-Befehl

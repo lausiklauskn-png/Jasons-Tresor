@@ -270,15 +270,19 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 - **Nach jeder Phase:** `npm test` grün halten, Browser-Pfade ehrlich „ungeprüft, wartet auf
   Klaus' Browser-Lauf".
 
-## 6. Offene Entscheidungen für Klaus
+## 6. Entscheidungen (durch Klaus, 2026-06-01)
 
-1. **Bild-Ablage:** Variante (A) `assets/erlebnis/` (empfohlen, offline) oder (B) base64 in
-   die HTML (strikt eine Datei, aber groß)?
-2. **Ein Gesicht (Köder/Honig):** **stiller Werttresor** (kein Köder, ernst) ODER **öffentliche
-   Rätselkiste** (mit Köder/Fake)? Das prägt den ganzen Ton.
-3. **Start:** Erst nur Phase 1 generieren + ansehen, dann weiter? (Empfohlen.)
-4. **Schlüssel-Bedienung:** Schlüssel ins Schloss **ziehen** (Drag) oder per **Klick**
-   einrasten lassen?
+1. **Bild-Ablage:** Variante (A) — **alles in einem Ordner `assets/erlebnis/`, offline**. ✅
+2. **DATENSCHUTZ-REGEL (Klaus, hart):** **„Es darf nicht aus Versehen etwas gelöscht werden."**
+   → Der Bau **fasst vorhandene Tresor-/Bibliotheks-Daten nie zerstörend an**. Jede Löschung
+   (auch Panik Stufe 3 / Apoptose 07) **nur** mit ausdrücklicher Zwei-Schritt-Bestätigung;
+   Standard-Aktionen sind **immer umkehrbar oder additiv**. Export bleibt die echte Sicherung.
+3. **Ein Gesicht:** **stiller Werttresor** (ernst, ehrlich; kein Köder). Köder/Honig höchstens
+   später als **optionaler Schalter**, nicht Grundton.
+4. **Start:** **erst nur Phase 1** (Tür/Schlüssel/Schloss + 3 Effekt-Teile) generieren, Look
+   prüfen, dann Phase 2–4.
+5. **Schlüssel-Bedienung:** **Klick zum Einrasten** (klick-klick-klick; funktioniert überall,
+   auch ohne Drag). Drag optional später.
 
 ---
 

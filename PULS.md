@@ -17,9 +17,13 @@
 - **19 Bild-Prompts** (Phasen 1–4) mit gemeinsamem Stil-Anker, je mit Dateiname/Format/Platzierung.
 - **Brief-Kette:** `docs/sessions/BRIEF_tresor-erlebnis.md` neu.
 
+**Entschieden (Klaus, 2026-06-01):** Bild-Ablage = ein Ordner `assets/erlebnis/` (offline);
+**harte Regel „nichts versehentlich löschen"** (Daten nie zerstörend anfassen, Löschen nur
+Zwei-Schritt); Gesicht = stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
+**Klaus: „mergen" → PR #7 gemergt.**
+
 **Offen / ehrlich:**
-- **Wartet auf Klaus:** 4 Entscheidungen (Bild-Ablage assets vs. base64; ein Gesicht still vs.
-  Rätselkiste/Köder; Start nur Phase 1?; Schlüssel ziehen vs. klicken). **Keine Bilder generiert.**
+- **Keine Bilder generiert** — Phase-1-Bilder kommen von Klaus, dann baue ich die Schwelle.
 - **Theater ≠ Schloss** festgehalten: Tür/Schlüssel = Navigation; echtes Schloss = Passwort + AES.
 - `JasonLib`-Kern bleibt unverändert; Erlebnis ist eine Schale obendrauf.
 
