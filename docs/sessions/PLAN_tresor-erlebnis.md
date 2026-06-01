@@ -74,33 +74,42 @@ Kopien/Backups überleben Löschen; Fallen nur netz-seitig, nie auf der Offline-
 
 ---
 
-## 3. Technik-Entscheidung für Klaus (Bilder ablegen)
+## 3. Technik (Bilder ablegen + offline installierbar) — ENTSCHIEDEN
 
-Die Regel „**eine `index.html`, keine externen Abhängigkeiten**" trifft auf Bilder.
-Zwei ehrliche Wege — **beide bleiben offline** (kein Netz):
+Klaus' Wunsch: **offline installierbar wie eine PWA**, **alles in einem deutlich
+gekennzeichneten Ordner**, geschützt vor versehentlichem Löschen. Umsetzung:
 
-- **(A) Bilder als lokale Dateien** unter `assets/erlebnis/…` (so macht es auch Sage:
-  `docs/einladung/vendor/img/`). Sauber, leicht zu tauschen, kleine HTML. **Empfohlen.**
-  *Abweichung von „eine Datei", aber NICHT von „offline".* (Evolutions-Klausel: hiermit
-  ausdrücklich benannt — Regel „eine index.html", Vorschlag „assets-Ordner, weiterhin offline".)
-- **(B) Bilder als base64 in die HTML eingebettet** → bleibt strikt eine Datei, wird aber
-  groß/träge (mehrere MB). Für viele große Szenenbilder unpraktisch.
-
-→ **Frage an Klaus** (siehe unten). Bis zur Antwort plane ich mit (A).
+- **Ordner `tresorkammer/`** (sprechender, in sich geschlossener „Schatz-Ordner"):
+  - `tresorkammer/bilder/` — alle generierten Bilder (Tür, Schlüssel, Schloss, Räume …).
+  - `tresorkammer/_BITTE-NICHT-LOESCHEN.md` — sichtbarer Schutz-Hinweis.
+  - später `tresorkammer/sw.js` — Service-Worker für Offline-Cache (PWA installierbar).
+- **Bleibt offline** (kein Netz; lokale Dateien sind kein externer Abruf). *Evolutions-
+  Klausel: Regel „eine index.html" — hier bewusst um einen klar benannten Asset-Ordner
+  erweitert, „offline/zero-dependency" unberührt.*
+- **PWA:** Manifest ist bereits in `index.html`; ergänzt wird ein Service-Worker, der die
+  `tresorkammer/`-Dateien cached → echte Offline-Installation auf dem Gerät.
 
 ---
 
 ## 4. Bild-Katalog mit Prompts (das Herzstück)
 
-**Gemeinsamer Stil-Anker** (an JEDEN Prompt anhängen, hält alle Bilder zusammen):
+**Gemeinsamer Stil-Anker** (an JEDEN Prompt anhängen, hält alle Bilder zusammen) —
+*verfeinert nach Klaus 2026-06-01: flüssiges Spiegel-Metall + Indiana-Jones-Abenteuer*:
 
 > *Stil: kinematisch, malerisch-fotorealistisch, dramatisches Helldunkel (Chiaroscuro).
 > Palette: tiefes Nachtblau-Schwarz (#08081A), warmes Bernstein-Gold (#F4B435), glühendes
-> Türkis-Cyan (#6EE7D3), zarter violetter Akzent (#8B5CF6). Steampunk trifft kosmische
-> Mystik: Messing, Nieten, Zahnräder, Gaslicht — dazu sanft leuchtende türkise Energie-
-> Adern wie feine Schaltkreise. Stimmung: geheimnisvolle Schatzsuche, einladend und warm,
-> nicht kalt/technisch. Hohe Detailtreue, weiche Lichtsäume, feiner Staub in den Licht-
-> strahlen. KEIN Text, keine Buchstaben, keine Wasserzeichen, keine Logos, keine Rahmen.*
+> Türkis-Cyan (#6EE7D3), zarter violetter Akzent (#8B5CF6).*
+> *Material-Signatur (wichtig): die edlen Teile wirken wie **flüssiges Metall in fester Form**
+> — poliertes Quecksilber / flüssiges Chrom / geschmolzenes Messing, **mitten im Fließen
+> erstarrt**, hoch **spiegelnd**, sodass sich die warme Umgebung und das türkise Glühen
+> darin spiegeln: „Glas und doch nicht Glas". Weiche, fließende Übergänge, kein starres Metall.*
+> *Welt: Steampunk nur ANGEHAUCHT (Messing, Nieten, Zahnräder, Gaslicht — dezent), vermischt
+> mit **Indiana-Jones-Abenteuer-Archäologie**: uralter Tempelstein, abgegriffenes Leder,
+> vergilbte Schatzkarten, der goldene Schimmer eines Relikts, Staub und Fackel-/Gaslicht;
+> dazu sanft leuchtende türkise Energie-Adern wie feine Schaltkreise.*
+> *Stimmung: geheimnisvolle Schatzsuche, einladend und warm, abenteuerlich, nicht kalt/
+> technisch. Hohe Detailtreue, weiche Lichtsäume, feiner Staub in den Lichtstrahlen.
+> KEIN Text, keine Buchstaben, keine Wasserzeichen, keine Logos, keine Rahmen.*
 
 Auflösungen: **Hintergründe 16:9 (2560×1440)**; **Sprites freigestellt, transparenter
 Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
@@ -110,13 +119,15 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 ### PHASE 1 — Die Schwelle (zuerst generieren, Look festzurren)
 
 **Bild 1 — `tuer-zu.webp` · Hintergrund 16:9 · Die geschlossene Tür**
-> Eine gewaltige, kunstvoll geschnitzte Tür aus dunklem Walnussholz und Messing, fest
-> geschlossen, mittig frontal. Tief eingelassene Schnitzereien, Messingbeschläge, Nieten
-> und kleine Zahnräder am Rand. In der Mitte ein **großes verziertes Schlüsselloch aus
-> Messing**, das von innen ganz schwach türkis glimmt. Flankiert von zwei steinernen
-> Säulen, polierter Marmorboden davor, ringsum tiefes Dunkel. Eine einzelne warme
-> Gaslaterne wirft sanftes Goldlicht von links. Ehrfürchtige, ruhige Stimmung — die Tür
-> wartet. *(+ Stil-Anker)*
+> Eine gewaltige, uralte **Tempel-Tresortür**, fest geschlossen, mittig frontal. Aus
+> verwittertem Tempelstein und dunklem Leder-/Holz mit Messingbändern, durchzogen von
+> **Ornamenten aus flüssig wirkendem Spiegel-Metall** (poliertes Chrom/Quecksilber, mitten
+> im Fließen erstarrt), in denen sich das warme Licht und ein türkises Glühen spiegeln —
+> wie geschmolzenes Metall, das zu Ranken erstarrte. In der Mitte ein **großes verziertes
+> Schlüsselloch**, dessen Spiegel-Metall-Ring von innen schwach türkis glimmt. Flankiert
+> von zwei Tempelsäulen mit abenteuerlichen Reliefs, davor staubiger Steinboden, ringsum
+> tiefes Dunkel. Eine warme Fackel/Gaslaterne wirft Goldlicht von links, Staub in der Luft.
+> Ehrfürchtige, abenteuerliche Stille — die Tür wartet. *(+ Stil-Anker)*
 
 **Bild 2 — `tuer-auf.webp` · Hintergrund 16:9 · Die offene Tür**
 > Dieselbe Tür, jetzt **einen Spalt offen** — gleißend warmes Goldlicht flutet durch den
@@ -126,13 +137,15 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 > Magischer Schwellen-Moment. *(+ Stil-Anker)*
 
 **Bild 3 — `schluessel.png` · Sprite freigestellt · Der glühende Schlüssel**
-> Ein einzelner, prachtvoller antiker Schlüssel im **Halbprofil, horizontal liegend**,
-> freigestellt auf transparentem Hintergrund. Korpus aus dunklem Messing mit zarten
-> türkis leuchtenden Energie-Adern, die wie Schaltkreise über das Metall laufen. Der
-> Griff (Reide) ist ein **kunstvoll verschlungenes Kleeblatt-Ornament**, das türkis-cyan
-> pulsiert; der Schaft ist lang und röhrenförmig wie ein **kleines Teleskop** mit feinen
-> Messingringen; der Bart vorn fein gezähnt. Sanftes Glühen, weicher Lichtsaum. Edel,
-> magisch, wertvoll. *(+ Stil-Anker)*
+> Ein einzelner, prachtvoller Schlüssel im **Halbprofil, horizontal liegend**, freigestellt
+> auf transparentem Hintergrund. Korpus aus **flüssigem Spiegel-Metall in fester Form**
+> (poliertes Chrom/Quecksilber, geschmolzenes Messing, mitten im Fließen erstarrt), hoch
+> **spiegelnd** — die warme Umgebung und türkis leuchtende Energie-Adern spiegeln sich
+> darin, „Glas und doch nicht Glas". Der Griff (Reide) ist ein **kunstvoll verschlungenes
+> Kleeblatt-Ornament**, das türkis-cyan pulsiert; der Schaft lang und röhrenförmig wie ein
+> **kleines Teleskop** mit feinen Ringen; der Bart vorn fein gezähnt, wie ein altes
+> Relikt-Artefakt aus einem Abenteuer. Sanftes Glühen, weicher Lichtsaum. Edel, magisch,
+> wertvoll. *(+ Stil-Anker)*
 
 **Bild 4 — `schloss-frame-1..4.png` · 4 Sprites (Stop-Motion) · Schloss-Mechanik**
 > Extreme Nahaufnahme eines **verzierten Messing-Schlüssellochs/Schlossmechanismus** von
@@ -272,13 +285,21 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 
 ## 6. Entscheidungen (durch Klaus, 2026-06-01)
 
-1. **Bild-Ablage:** Variante (A) — **alles in einem Ordner `assets/erlebnis/`, offline**. ✅
+1. **App-Form + Bild-Ablage:** Der Tresor soll **offline installierbar** sein wie eine
+   **PWA** (Service-Worker + Offline-Cache; Manifest ist schon da). **Alle Erlebnis-Dateien
+   in EINEN, deutlich gekennzeichneten Ordner `tresorkammer/`** (Bilder unter
+   `tresorkammer/bilder/`), mit einer Markierungs-Datei `tresorkammer/_BITTE-NICHT-LOESCHEN.md`,
+   damit nichts aus Versehen entfernt wird. Bleibt offline (kein Netz). *(Klaus: „ausgefallene
+   Ordnerform, lass dir was einfallen" → ein klar benannter, in sich geschlossener Schatz-Ordner.)*
 2. **DATENSCHUTZ-REGEL (Klaus, hart):** **„Es darf nicht aus Versehen etwas gelöscht werden."**
    → Der Bau **fasst vorhandene Tresor-/Bibliotheks-Daten nie zerstörend an**. Jede Löschung
    (auch Panik Stufe 3 / Apoptose 07) **nur** mit ausdrücklicher Zwei-Schritt-Bestätigung;
    Standard-Aktionen sind **immer umkehrbar oder additiv**. Export bleibt die echte Sicherung.
-3. **Ein Gesicht:** **stiller Werttresor** (ernst, ehrlich; kein Köder). Köder/Honig höchstens
-   später als **optionaler Schalter**, nicht Grundton.
+3. **Material / Gesicht (Klaus):** **flüssiges Spiegel-Metall in fester Form** (Quecksilber/
+   Chrom/geschmolzenes Messing, spiegelt den Hintergrund, „Glas und doch nicht Glas"),
+   **steampunk nur angehaucht** + **Indiana-Jones-Abenteuer** (Wortwitz Jason→Jones,
+   Schatzsucher-Tresor). Ton: stiller Werttresor (ernst, kein Köder als Grundton; Köder
+   höchstens später optionaler Schalter). Stil-Anker in §4 entsprechend verfeinert.
 4. **Start:** **erst nur Phase 1** (Tür/Schlüssel/Schloss + 3 Effekt-Teile) generieren, Look
    prüfen, dann Phase 2–4.
 5. **Schlüssel-Bedienung:** **Klick zum Einrasten** (klick-klick-klick; funktioniert überall,

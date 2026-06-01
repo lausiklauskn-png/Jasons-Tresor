@@ -17,10 +17,13 @@
 - **19 Bild-Prompts** (Phasen 1–4) mit gemeinsamem Stil-Anker, je mit Dateiname/Format/Platzierung.
 - **Brief-Kette:** `docs/sessions/BRIEF_tresor-erlebnis.md` neu.
 
-**Entschieden (Klaus, 2026-06-01):** Bild-Ablage = ein Ordner `assets/erlebnis/` (offline);
-**harte Regel „nichts versehentlich löschen"** (Daten nie zerstörend anfassen, Löschen nur
-Zwei-Schritt); Gesicht = stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
-**Klaus: „mergen" → PR #7 gemergt.**
+**Entschieden (Klaus, 2026-06-01):** offline **installierbar wie PWA**; alles in EINEM klar
+benannten Ordner **`tresorkammer/`** (Bilder unter `tresorkammer/bilder/`, Schutz-Hinweis
+`_BITTE-NICHT-LOESCHEN.md`); **harte Regel „nichts versehentlich löschen"** (Daten nie
+zerstörend anfassen, Löschen nur Zwei-Schritt); **Material = flüssiges Spiegel-Metall**
+(„Glas und doch nicht Glas") + **Indiana-Jones-Abenteuer** (Jason→Jones), steampunk nur
+angehaucht, stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
+Stil-Anker im Plan §4 verfeinert. **Klaus: „mergen" → PR #7 gemergt.**
 
 **Offen / ehrlich:**
 - **Keine Bilder generiert** — Phase-1-Bilder kommen von Klaus, dann baue ich die Schwelle.

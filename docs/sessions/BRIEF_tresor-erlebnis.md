@@ -38,7 +38,8 @@ Stand: 2026-06-01 · Von: Design-Sitzung · An: nächste Bau-Sitzung
 - Erlebnis-**Schale** über der App, **`JasonLib`-Kern unverändert** (vom Test geschützt).
 - Pro Phase: `npm test` grün; neue reine Funktionen (Buch↔Sammlung-Mapping, Shamir-Split,
   Köder-Erkennung, Panik-Stufen) headless testbar zwischen Markern schneiden.
-- Bilder unter `assets/erlebnis/` (Variante A, offline) **oder** base64 (Variante B) — Klaus wählt.
+- Bilder + Assets in **einem Ordner `tresorkammer/`** (offline); App **PWA-installierbar**
+  (Service-Worker). Material: **flüssiges Spiegel-Metall** + **Indiana-Jones-Abenteuer**.
 
 ## Datenverträge (nicht brechen)
 - Tresor-Umschlag `jason-tresor` v2 (= Modul 02 / `node_key.enc.json`).
@@ -56,11 +57,15 @@ Klaus-Rückmeldung (4 Fragen unten) → Phase-1-Bilder generieren → Schwelle b
 Phase 2 … 4. **Kein Schritt ohne Plan-an-Klaus** (kein Freibrief), außer Klaus gibt einen.
 
 ## Entscheidungen (durch Klaus, 2026-06-01)
-1. **Bild-Ablage:** alles in einem Ordner **`assets/erlebnis/`, offline**.
+1. **App-Form:** offline **installierbar wie PWA** (Service-Worker); alle Assets in EINEM klar
+   benannten Ordner **`tresorkammer/`** (Bilder `tresorkammer/bilder/`, Schutz-Hinweis
+   `_BITTE-NICHT-LOESCHEN.md`).
 2. **DATENSCHUTZ-REGEL (hart):** „Es darf nicht aus Versehen etwas gelöscht werden." → Bau fasst
    vorhandene Tresor-/Bibliotheks-Daten nie zerstörend an; jede Löschung nur Zwei-Schritt-bestätigt;
    Standard-Aktionen umkehrbar/additiv. **Diese Regel hat im Bau Vorrang.**
-3. **Ein Gesicht:** stiller Werttresor (kein Köder; Köder höchstens später optionaler Schalter).
+3. **Material / Gesicht:** **flüssiges Spiegel-Metall in fester Form** („Glas und doch nicht
+   Glas") + **Indiana-Jones-Abenteuer** (Jason→Jones), steampunk nur angehaucht; stiller
+   Werttresor (kein Köder als Grundton). Stil-Anker im Plan §4.
 4. **Start:** erst nur Phase 1 (Tür/Schlüssel/Schloss + 3 Effekt-Teile), Look prüfen.
 5. **Schlüssel:** Klick zum Einrasten (Drag optional später).
 
