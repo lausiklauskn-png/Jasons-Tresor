@@ -24,8 +24,9 @@
   blendet beim Öffnen aus. Effekt-Code 1:1, nur Position angepasst.
 - **„Intro neu starten"-Schlüssel (Funfakt):** kleiner schlüsselförmiger Knopf unten links
   (`#btn-replay-intro` / `.key-fab`) — Klick löscht den Sitzungs-Merker `jt-threshold-seen`
-  und lädt neu → Schwelle läuft erneut. Vorerst **SVG-Platzhalter** mit türkisem Atem-Glühen;
-  tauschbar gegen den freigestellten Schlüssel (Prompt 2, transparentes PNG), sobald vorhanden.
+  und lädt neu → Schwelle läuft erneut. **Jetzt mit dem echten freigestellten Schlüssel**
+  `schluessel.png` (Prompt 2, transparent, 1536×1024, Alpha 0 geprüft) statt SVG-Platzhalter;
+  türkises Atem-Glühen (drop-shadow), heller bei Hover. `prefers-reduced-motion` respektiert.
 
 **Offen / ehrlich:**
 - **Browser-Look weiter ungeprüft** — wartet auf Klaus (Timing evtl. nachjustieren).

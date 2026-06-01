@@ -190,17 +190,18 @@
 
   /* „Intro neu starten" — kleiner Schlüssel-Knopf (Funfakt). SVG-Platzhalter, bis der
      freigestellte Schlüssel (Prompt 2, transparent) als Bild vorliegt. */
-  .key-fab{position:fixed; left:14px; bottom:14px; z-index:60; width:46px; height:46px;
-    display:grid; place-items:center; border-radius:50%; cursor:pointer; color:var(--accent);
-    background:var(--card2); border:1px solid var(--line); box-shadow:0 4px 14px rgba(0,0,0,.35);
-    transition:transform .15s ease, box-shadow .25s ease, border-color .2s ease}
-  .key-fab:hover{transform:translateY(-2px) rotate(-8deg); border-color:var(--accent);
-    box-shadow:0 0 18px rgba(110,231,211,.45), 0 4px 14px rgba(0,0,0,.4)}
-  .key-fab:active{transform:translateY(0) rotate(-8deg)}
-  .key-fab svg{width:26px; height:26px; filter:drop-shadow(0 0 4px rgba(110,231,211,.5))}
-  .key-fab .k-spark{animation:key-fab-breath 2.6s ease-in-out infinite}
-  @keyframes key-fab-breath{0%,100%{opacity:.5} 50%{opacity:1}}
-  @media (prefers-reduced-motion:reduce){ .key-fab .k-spark{animation:none} }
+  .key-fab{position:fixed; left:16px; bottom:14px; z-index:60; padding:0; border:0; background:none;
+    cursor:pointer; line-height:0; transition:transform .18s ease}
+  .key-fab:hover{transform:translateY(-2px) rotate(-6deg)}
+  .key-fab:active{transform:translateY(0) rotate(-6deg)}
+  .key-fab img{width:72px; height:auto; display:block; pointer-events:none; -webkit-user-drag:none;
+    animation:key-fab-breath 2.8s ease-in-out infinite}
+  .key-fab:hover img{animation-play-state:paused;
+    filter:drop-shadow(0 4px 9px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(110,231,211,.9))}
+  @keyframes key-fab-breath{
+    0%,100%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 3px rgba(110,231,211,.35))}
+    50%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 11px rgba(110,231,211,.7))}}
+  @media (prefers-reduced-motion:reduce){ .key-fab img{animation:none} }
 </style>
 </head>
 <body>
@@ -323,14 +324,7 @@
      freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
 <button id="btn-replay-intro" class="key-fab" type="button"
         title="Intro neu starten" aria-label="Intro neu starten">
-  <svg viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor"
-       stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="22" cy="22" r="12"/>
-    <circle class="k-spark" cx="22" cy="22" r="4" fill="currentColor" stroke="none"/>
-    <path d="M30.5 30.5 L50 50"/>
-    <path d="M42 46 L48 40"/>
-    <path d="M36 40 L41 35"/>
-  </svg>
+  <img decoding="async" src="assets/erlebnis/bilder/schluessel.png" alt="Schlüssel — Intro neu starten" />
 </button>
 
 <!-- ============================================================
