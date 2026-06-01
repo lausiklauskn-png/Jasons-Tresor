@@ -30,9 +30,12 @@
 - **Schwelle im Browser UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
 - `tuer-offen.png` dient als Schluss-Frame und taugt zugleich als **Szene-1-Hintergrund**
   (Bibliothek) — der eigentliche Bibliotheks-Raum (Szene 1) ist aber noch nicht gebaut.
-- **Für Szene 2 reserviert (Klaus' Wunsch):** `buch-zu.png` + `buch-auf.png` (1536×1024) —
-  ein verschlossenes Buch und dasselbe Buch offen mit herausflutendem Goldlicht. Gedacht für
-  „jede Sammlung = ein Buch mit Schlüsselloch, antippen → öffnet sich". **Noch nicht eingebaut.**
+- **Szene 2 begonnen — Muster-Buch (Klaus: „erst ein Muster-Buch"):** Knopf „📚 Muster-Buch"
+  öffnet ein isoliertes Vorschau-Overlay `#bookdemo` — ein Buch (`buch-zu.png`) → antippen →
+  öffnet sich (`buch-auf.png` + Goldschein) → Platzhalter-Inhalt + ehrlicher Hinweis. **Keine
+  echten Daten, kein Eingriff in `JasonLib`.** Nächster Schritt nach Klaus' OK: Look auf echte
+  Einträge ausrollen (Regal-Ansicht mit Umschalter).
+- `tuer-fluegel.png` bleibt als zusätzlicher Buch-Kandidat liegen (nicht eingebaut).
 - PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
 
 **Manual-Check:** Headless 27/27 grün. **App-Schwelle im Browser ungeprüft** — wartet auf Klaus.

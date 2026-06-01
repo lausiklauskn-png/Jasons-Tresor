@@ -146,6 +146,42 @@
     .th-flash.is-flash{animation:none}
     .th-burst.is-flash{animation:none}
   }
+
+  /* ===== Muster-Buch (Szene-2-Vorschau; kein Teil des JasonLib-Kerns) ===== */
+  #bookdemo[hidden]{display:none}
+  #bookdemo{position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center; padding:20px}
+  .bd-backdrop{position:absolute; inset:0; background:rgba(4,6,12,.88)}
+  .bd-stage{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;
+    gap:16px; width:100%; max-width:560px}
+  .bd-book{position:relative; width:min(82vw,460px); aspect-ratio:3/2; cursor:pointer;
+    transition:filter .6s ease, transform .3s ease; outline:none}
+  .bd-book:hover{transform:translateY(-2px)}
+  .bd-book:focus-visible{outline:2px solid var(--accent); outline-offset:6px; border-radius:8px}
+  .bd-zu,.bd-auf{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    user-select:none; -webkit-user-drag:none; transition:opacity .6s ease, transform .6s ease}
+  .bd-auf{opacity:0; transform:scale(.97)}
+  .bd-title{position:absolute; top:13%; left:8%; right:8%; text-align:center; color:#f6e6b6;
+    font-weight:700; font-size:1.05rem; letter-spacing:.3px; text-shadow:0 2px 10px rgba(0,0,0,.8);
+    transition:opacity .4s ease; pointer-events:none}
+  .bd-hint{position:absolute; bottom:9%; left:0; right:0; text-align:center; color:#cfe6e2;
+    font-size:.8rem; opacity:.85; text-shadow:0 1px 6px rgba(0,0,0,.8);
+    transition:opacity .4s ease; pointer-events:none}
+  #bookdemo.is-open .bd-zu{opacity:0; transform:scale(1.02)}
+  #bookdemo.is-open .bd-auf{opacity:1; transform:scale(1)}
+  #bookdemo.is-open .bd-book{filter:drop-shadow(0 0 42px rgba(244,180,53,.55))}
+  #bookdemo.is-open .bd-title,#bookdemo.is-open .bd-hint{opacity:0}
+  .bd-content{width:min(88vw,500px); background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:0 16px; max-height:0; opacity:0; overflow:hidden;
+    transition:max-height .5s ease, opacity .5s ease, padding .5s ease}
+  #bookdemo.is-open .bd-content{max-height:340px; opacity:1; padding:16px}
+  .bd-content h3{margin:.2em 0 .4em; color:var(--accent)}
+  .bd-content p{margin:.3em 0; color:var(--muted); font-size:.92rem; line-height:1.5}
+  .bd-close{font:inherit; color:var(--ink); background:var(--card); border:1px solid var(--line);
+    border-radius:10px; padding:9px 16px; cursor:pointer}
+  .bd-close:hover{border-color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){
+    .bd-zu,.bd-auf,.bd-content,.bd-title,.bd-hint{transition:opacity .3s ease}
+  }
 </style>
 </head>
 <body>
@@ -198,6 +234,7 @@
     <button id="btn-export-all" class="btn-ghost">⤓ Bibliothek sichern</button>
     <button id="btn-export-enc" class="btn-ghost">🔒 Verschlüsselt sichern</button>
     <button id="btn-import-lib" class="btn-ghost">⤒ Einlesen / Tresor öffnen</button>
+    <button id="btn-bookdemo" class="btn-ghost" title="Vorschau: wie ein Jason als Buch aussieht">📚 Muster-Buch</button>
     <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
@@ -244,6 +281,27 @@
 </dialog>
 
 <div id="toast" class="toast"></div>
+
+<!-- ===== Muster-Buch (Szene-2-Vorschau; kein Teil des JasonLib-Kerns) ===== -->
+<div id="bookdemo" hidden>
+  <div class="bd-backdrop" id="bd-backdrop"></div>
+  <div class="bd-stage" role="dialog" aria-label="Muster-Buch" aria-modal="true">
+    <div class="bd-book" id="bd-book" role="button" tabindex="0" aria-label="Buch öffnen oder schließen">
+      <img class="bd-zu" decoding="async" src="../assets/erlebnis/bilder/buch-zu.png" alt="Verschlossenes Buch mit Schlüsselloch" />
+      <img class="bd-auf" decoding="async" src="../assets/erlebnis/bilder/buch-auf.png" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
+      <span class="bd-title">Mein erstes Jason</span>
+      <span class="bd-hint">antippen zum Öffnen</span>
+    </div>
+    <div class="bd-content" id="bd-content">
+      <h3>Mein erstes Jason</h3>
+      <p>Hier erscheint später der echte Inhalt dieser Sammlung — genau die Detail- und
+         Bearbeiten-Ansicht, die du heute schon kennst. Nur das Aussehen wird ein Buch.</p>
+      <p><b>Ehrlich:</b> Das ist nur ein Muster ohne echte Daten. Das eigentliche Schloss
+         bleibt dein Passwort (AES-256).</p>
+    </div>
+    <button class="bd-close" id="bd-close" type="button">Schließen</button>
+  </div>
+</div>
 
 <!-- ============================================================
      KERN-LOGIK (browser- UND node-tauglich; vom headless Test
@@ -870,6 +928,35 @@
     if(th.hasAttribute('hidden')) return;
     if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
     else if(e.key === 'Escape'){ done(false); }
+  });
+})();
+</script>
+
+<!-- ===== Muster-Buch-Steuerung (Szene-2-Vorschau; kein Teil des getesteten Kerns) ===== -->
+<script>
+(function(){
+  var demo = document.getElementById('bookdemo');
+  if(!demo) return;
+  var btn   = document.getElementById('btn-bookdemo');
+  var book  = document.getElementById('bd-book');
+  var close = document.getElementById('bd-close');
+  var back  = document.getElementById('bd-backdrop');
+
+  function show(){ demo.hidden = false; demo.classList.remove('is-open'); }
+  function hide(){ demo.classList.remove('is-open'); demo.hidden = true; }
+  function toggleBook(){ demo.classList.toggle('is-open'); }
+
+  if(btn)  btn.addEventListener('click', show);
+  if(book){
+    book.addEventListener('click', toggleBook);
+    book.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleBook(); }
+    });
+  }
+  if(close) close.addEventListener('click', hide);
+  if(back)  back.addEventListener('click', hide);
+  document.addEventListener('keydown', function(e){
+    if(!demo.hidden && e.key === 'Escape'){ hide(); }
   });
 })();
 </script>
