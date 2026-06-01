@@ -200,6 +200,24 @@
   #bookdemo.is-open .bd-content{max-height:340px; opacity:1; padding:16px}
   .bd-content h3{margin:.2em 0 .4em; color:var(--accent)}
   .bd-content p{margin:.3em 0; color:var(--muted); font-size:.92rem; line-height:1.5}
+  /* Code-Abfrage (nur im Regal-Buch-Modus sichtbar) */
+  .bd-code{display:none; flex-direction:column; align-items:center; gap:8px; width:min(88vw,420px);
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
+  #bookdemo.code-mode:not(.is-open) .bd-code{display:flex}
+  .bd-code label{color:var(--muted); font-size:.85rem}
+  .bd-code-row{display:flex; gap:8px; width:100%}
+  .bd-code-row input{flex:1; font:inherit; color:var(--ink); background:#06100f; border:1px solid var(--line);
+    border-radius:10px; padding:10px 12px; letter-spacing:.3em; text-align:center}
+  .bd-code-row input:focus{outline:none; border-color:var(--accent)}
+  .bd-code-go{font:inherit; font-weight:600; color:var(--accent-ink); background:var(--accent);
+    border:1px solid var(--accent); border-radius:10px; padding:10px 16px; cursor:pointer}
+  .bd-code-go:disabled{opacity:.4; cursor:default}
+  .bd-code-hint{color:var(--muted); font-size:.76rem; margin:2px 0 0}
+  .bd-code-lock{color:var(--bad); font-size:.82rem; margin:2px 0 0; font-weight:600}
+  .bd-code.shake{animation:bd-shake .4s}
+  @keyframes bd-shake{0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-7px)} 40%,80%{transform:translateX(7px)}}
+  /* im Code-Modus startet das Buch geschlossen; Klick aufs Buch öffnet NICHT (nur der Code) */
+  #bookdemo.code-mode .bd-book{cursor:default}
   .bd-close{font:inherit; color:var(--ink); background:var(--card); border:1px solid var(--line);
     border-radius:10px; padding:9px 16px; cursor:pointer}
   .bd-close:hover{border-color:var(--accent)}
@@ -245,6 +263,19 @@
   @keyframes torch-flicker{
     0%,100%{filter:drop-shadow(0 0 8px rgba(244,180,53,.45))}
     50%{filter:drop-shadow(0 0 17px rgba(244,180,53,.8))}}
+  /* Bücher auf der mittleren Ebene-1-Ansicht */
+  #regal-books{position:absolute; left:0; right:0; top:40%; z-index:2; display:flex; gap:3%;
+    justify-content:center; align-items:flex-end; padding:0 16%; pointer-events:none}
+  #regal:not(.at-center) #regal-books{display:none}
+  .shelf-book{pointer-events:auto; position:relative; height:26vh; max-height:240px; border:0;
+    background:none; cursor:pointer; padding:0; line-height:0;
+    filter:drop-shadow(0 8px 16px rgba(0,0,0,.55)); transition:transform .25s ease, filter .25s ease}
+  .shelf-book img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none}
+  .shelf-book:hover, .shelf-book:focus-visible{transform:translateY(-12px) rotate(-1deg); outline:none;
+    filter:drop-shadow(0 16px 26px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.6))}
+  .sb-name{position:absolute; left:50%; top:48%; transform:translate(-50%,-50%); width:64%;
+    text-align:center; color:#f3e4bd; font-size:.72rem; font-weight:700; letter-spacing:.02em;
+    text-shadow:0 1px 3px #000; pointer-events:none; word-break:break-word; line-height:1.15}
   #regal-caption{position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#e8dcbf;
     font-size:.92rem; letter-spacing:.05em; text-shadow:0 2px 8px #000; pointer-events:none; z-index:2}
   #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
@@ -284,6 +315,21 @@
      Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
 <div id="regal" aria-label="Tresor — Bücherregal">
   <img id="regal-bg" alt="" decoding="async" src="../assets/erlebnis/bilder/regal-ebene1.png" />
+  <!-- Bücher auf der mittleren Ebene-1-Ansicht (nur sichtbar, wenn at-center) -->
+  <div id="regal-books" aria-label="Bücher im Regal">
+    <button class="shelf-book" type="button" data-name="Rezepte">
+      <img decoding="async" alt="Buch: Rezepte" src="../assets/erlebnis/bilder/buchruecken-1.png" />
+      <span class="sb-name">Rezepte</span>
+    </button>
+    <button class="shelf-book" type="button" data-name="Reisen">
+      <img decoding="async" alt="Buch: Reisen" src="../assets/erlebnis/bilder/buchruecken-2.png" />
+      <span class="sb-name">Reisen</span>
+    </button>
+    <button class="shelf-book" type="button" data-name="Ideen">
+      <img decoding="async" alt="Buch: Ideen" src="../assets/erlebnis/bilder/buchruecken-1.png" />
+      <span class="sb-name">Ideen</span>
+    </button>
+  </div>
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links">
     <img decoding="async" alt="" src="../assets/erlebnis/bilder/fackel.png" />
   </button>
@@ -373,15 +419,24 @@
       <img class="bd-auf" decoding="async" src="../assets/erlebnis/bilder/buch-auf.png" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
       <img class="bd-energy" decoding="async" aria-hidden="true" alt="" src="../assets/erlebnis/bilder/buch-energie.png" />
       <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="../assets/erlebnis/bilder/buch-schluessel.png" />
-      <span class="bd-title">Mein erstes Jason</span>
-      <span class="bd-hint">mit dem Schlüssel öffnen</span>
+      <span class="bd-title" id="bd-title">Mein erstes Jason</span>
+      <span class="bd-hint" id="bd-hint">mit dem Schlüssel öffnen</span>
     </div>
+    <form class="bd-code" id="bd-code" autocomplete="off">
+      <label for="bd-code-input">Code eingeben, um das Buch zu öffnen</label>
+      <div class="bd-code-row">
+        <input id="bd-code-input" type="password" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby="bd-code-hint" />
+        <button type="submit" class="bd-code-go">Öffnen</button>
+      </div>
+      <p class="bd-code-hint" id="bd-code-hint">Vorschau-Code: <b>1234</b> — das echte Passwort (AES-256) folgt.</p>
+      <p class="bd-code-lock" id="bd-code-lock" hidden></p>
+    </form>
     <div class="bd-content" id="bd-content">
-      <h3>Mein erstes Jason</h3>
+      <h3 id="bd-content-title">Mein erstes Jason</h3>
       <p>Hier erscheint später der echte Inhalt dieser Sammlung — genau die Detail- und
          Bearbeiten-Ansicht, die du heute schon kennst. Nur das Aussehen wird ein Buch.</p>
-      <p><b>Ehrlich:</b> Das ist nur ein Muster ohne echte Daten. Das eigentliche Schloss
-         bleibt dein Passwort (AES-256).</p>
+      <p><b>Ehrlich:</b> Vorschau ohne echte Daten. Das eigentliche Schloss bleibt dein
+         Passwort (AES-256) — wird als Nächstes verdrahtet.</p>
     </div>
     <button class="bd-close" id="bd-close" type="button">Schließen</button>
   </div>
@@ -1027,33 +1082,85 @@
 (function(){
   var demo = document.getElementById('bookdemo');
   if(!demo) return;
-  var btn   = document.getElementById('btn-bookdemo');
-  var btnSeq= document.getElementById('btn-bookseq');
-  var book  = document.getElementById('bd-book');
-  var close = document.getElementById('bd-close');
-  var back  = document.getElementById('bd-backdrop');
-  var seqTimer = null;
+  var btn    = document.getElementById('btn-bookdemo');
+  var btnSeq = document.getElementById('btn-bookseq');
+  var book   = document.getElementById('bd-book');
+  var close  = document.getElementById('bd-close');
+  var back   = document.getElementById('bd-backdrop');
+  var titleEl= document.getElementById('bd-title');
+  var ctTitle= document.getElementById('bd-content-title');
+  var hintEl = document.getElementById('bd-hint');
+  var codeForm = document.getElementById('bd-code');
+  var codeIn   = document.getElementById('bd-code-input');
+  var codeGo   = codeForm ? codeForm.querySelector('.bd-code-go') : null;
+  var codeLock = document.getElementById('bd-code-lock');
+  var seqTimer = null, lockTimer = null;
+  var DEMO_CODE = '1234';                 // Vorschau-Code (ehrlich angezeigt); echtes AES-Passwort folgt
+  var attempts = 0, lockedUntil = 0;
 
+  function setTitles(t){ if(titleEl) titleEl.textContent = t; if(ctTitle) ctTitle.textContent = t; }
+  function clearLockTimer(){ if(lockTimer){ clearInterval(lockTimer); lockTimer = null; } }
   function show(){ clearTimeout(seqTimer); demo.hidden = false; demo.classList.remove('is-open'); }
-  function hide(){ clearTimeout(seqTimer); demo.classList.remove('is-open'); demo.hidden = true; }
-  function toggleBook(){ demo.classList.toggle('is-open'); }
-  // Buchsequenz: geschlossen zeigen → nach kurzer Ruhe automatisch öffnen (Schlüssel
-  // versinkt ins Schloss + Energie-Funke → Buch geht auf).
-  function playSeq(){ show(); seqTimer = setTimeout(function(){ demo.classList.add('is-open'); }, 950); }
+  function hide(){ clearTimeout(seqTimer); clearLockTimer(); demo.classList.remove('is-open'); demo.hidden = true; }
+  function openSequence(){ demo.classList.add('is-open'); }      // Schlüssel versinkt + Energie + Buch auf
+  function toggleBook(){ if(demo.classList.contains('code-mode')) return; demo.classList.toggle('is-open'); }
+  function playSeq(){ openBook({requireCode:false}); seqTimer = setTimeout(openSequence, 950); }
 
-  if(btn)    btn.addEventListener('click', show);
+  function updateLockUI(){
+    var now = Date.now();
+    if(now < lockedUntil){
+      var s = Math.ceil((lockedUntil - now)/1000);
+      if(codeLock){ codeLock.hidden = false; codeLock.textContent = 'Zu viele Fehlversuche — bitte ' + s + ' s warten.'; }
+      if(codeIn) codeIn.disabled = true; if(codeGo) codeGo.disabled = true;
+    } else {
+      clearLockTimer();
+      if(codeLock){ codeLock.hidden = true; codeLock.textContent = ''; }
+      if(codeIn) codeIn.disabled = false; if(codeGo) codeGo.disabled = false;
+    }
+  }
+  function startLock(){ lockedUntil = Date.now() + 60000; updateLockUI(); clearLockTimer(); lockTimer = setInterval(updateLockUI, 500); }
+
+  function openBook(opts){
+    opts = opts || {};
+    clearTimeout(seqTimer);
+    setTitles(opts.title || 'Mein erstes Jason');
+    demo.classList.remove('is-open');
+    demo.classList.toggle('code-mode', !!opts.requireCode);
+    if(hintEl) hintEl.textContent = opts.requireCode ? 'Code eingeben, um zu öffnen' : 'mit dem Schlüssel öffnen';
+    attempts = 0;
+    if(codeIn) codeIn.value = '';
+    updateLockUI();
+    demo.hidden = false;
+    if(opts.requireCode && codeIn && Date.now() >= lockedUntil){ setTimeout(function(){ codeIn.focus(); }, 60); }
+  }
+  window.jtOpenBook = openBook;          // von der Regal-Ansicht aufgerufen
+
+  if(codeForm){
+    codeForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(Date.now() < lockedUntil) return;
+      var val = ((codeIn && codeIn.value) || '').trim();
+      if(val === DEMO_CODE){
+        attempts = 0; if(codeLock) codeLock.hidden = true;
+        openSequence();                  // richtiger Code → Energie-Effekt + Buch öffnet + Inhalt
+      } else {
+        attempts++;
+        codeForm.classList.remove('shake'); void codeForm.offsetWidth; codeForm.classList.add('shake');
+        if(codeIn){ codeIn.value = ''; codeIn.focus(); }
+        if(attempts >= 2){ attempts = 0; startLock(); }   // 2× falsch → 1 Minute Sperre
+      }
+    });
+  }
+
+  if(btn)    btn.addEventListener('click', function(){ openBook({requireCode:false}); });
   if(btnSeq) btnSeq.addEventListener('click', playSeq);
   if(book){
     book.addEventListener('click', toggleBook);
-    book.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleBook(); }
-    });
+    book.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleBook(); } });
   }
   if(close) close.addEventListener('click', hide);
   if(back)  back.addEventListener('click', hide);
-  document.addEventListener('keydown', function(e){
-    if(!demo.hidden && e.key === 'Escape'){ hide(); }
-  });
+  document.addEventListener('keydown', function(e){ if(!demo.hidden && e.key === 'Escape'){ hide(); } });
 })();
 </script>
 
@@ -1078,9 +1185,10 @@
   ];
   var i = 1, busy = false;
   function render(){
-    busy = true; regal.classList.add('switching');
+    busy = true; regal.classList.add('switching'); regal.classList.remove('at-center');
     setTimeout(function(){
       bg.src = VIEWS[i].src; cap.textContent = VIEWS[i].cap;
+      regal.classList.toggle('at-center', i === 1);     // Bücher nur auf der Mitte-Ansicht
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
@@ -1088,6 +1196,15 @@
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
+  // Bücher anklicken → Buch-Öffnen mit Code-Abfrage (jedes Buch + richtiger Code → Tresor)
+  var books = regal.querySelectorAll('.shelf-book');
+  for(var b=0; b<books.length; b++){
+    (function(el){
+      el.addEventListener('click', function(){
+        if(window.jtOpenBook) window.jtOpenBook({ title: el.getAttribute('data-name') || 'Buch', requireCode: true });
+      });
+    })(books[b]);
+  }
   if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
   if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
   document.addEventListener('keydown', function(e){
