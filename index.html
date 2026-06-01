@@ -284,6 +284,33 @@
     background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
   #regal-tolist:hover{border-color:var(--accent)}
   @media (prefers-reduced-motion:reduce){ .regal-torch img{animation:none} #regal-bg{transition:opacity .2s} }
+
+  /* Einmaliger Bedien-Hinweis im Regal */
+  #regal-hint{position:absolute; left:50%; top:16px; transform:translateX(-50%); z-index:5; max-width:90%;
+    background:rgba(8,8,26,.72); border:1px solid var(--line); color:#e8dcbf; font-size:.82rem;
+    padding:8px 14px; border-radius:999px; text-align:center; pointer-events:none; transition:opacity .6s ease}
+  #regal-hint.gone{opacity:0}
+
+  /* ===== HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht ===== */
+  #hud{position:fixed; top:12px; left:14px; z-index:55; display:flex; align-items:center; gap:10px}
+  #hud.is-hidden{display:none}
+  .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf;
+    box-shadow:0 0 10px rgba(45,212,191,.85); animation:hud-breath 3.2s ease-in-out infinite}
+  @keyframes hud-breath{0%,100%{opacity:.65} 50%{opacity:1}}
+  .hud-seal{font-size:1.05rem; filter:drop-shadow(0 0 5px rgba(201,169,97,.6)); cursor:help}
+  .hud-panik{font:inherit; font-size:.8rem; font-weight:600; color:#fff; background:rgba(150,28,28,.82);
+    border:1px solid rgba(240,90,90,.7); border-radius:10px; padding:6px 12px; cursor:pointer; transition:background .2s, box-shadow .2s}
+  .hud-panik:hover{background:rgba(200,40,40,.95); box-shadow:0 0 14px rgba(220,60,60,.6)}
+  #panik{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
+    max-width:430px; width:92%; padding:18px}
+  #panik::backdrop{background:rgba(0,0,0,.6)}
+  .panik-stufe{display:block; width:100%; text-align:left; margin:8px 0; padding:12px; border-radius:10px;
+    background:var(--card); border:1px solid var(--line); color:var(--ink); cursor:pointer; font:inherit}
+  .panik-stufe span{display:block; color:var(--muted); font-size:.8rem; margin-top:3px}
+  .panik-stufe.s1{border-color:#5a4a17}
+  .panik-stufe:hover:not(:disabled){border-color:var(--accent)}
+  .panik-stufe:disabled{opacity:.55; cursor:default}
+  @media (prefers-reduced-motion:reduce){ .hud-lamp{animation:none} }
 </style>
 </head>
 <body>
@@ -326,6 +353,7 @@
     <img decoding="async" alt="" src="assets/erlebnis/bilder/fackel.png" />
   </button>
   <div id="regal-caption" aria-live="polite"></div>
+  <div id="regal-hint">Mit den Fackeln ◀ ▶ (oder ←/→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
   <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
 </div>
 
@@ -434,9 +462,31 @@
 <!-- „Intro neu starten" — Schlüssel-Knopf (Funfakt). SVG-Platzhalter für den
      freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
 <button id="btn-replay-intro" class="key-fab" type="button"
-        title="Intro neu starten" aria-label="Intro neu starten">
-  <img decoding="async" src="assets/erlebnis/bilder/schluessel.png" alt="Schlüssel — Intro neu starten" />
+        title="Intro & Tür nochmal ansehen" aria-label="Intro und Tür nochmal ansehen">
+  <img decoding="async" src="assets/erlebnis/bilder/schluessel.png" alt="Schlüssel — Intro nochmal ansehen" />
 </button>
+
+<!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
+<div id="hud">
+  <span class="hud-lamp" title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter ruhig"></span>
+  <span class="hud-seal" title="Bezeugter SBKIM-Endknoten (Siegel)">🛡️</span>
+  <button id="hud-panik" class="hud-panik" type="button" title="Notfall — schnell verriegeln">🛑 Notfall</button>
+</div>
+
+<dialog id="panik">
+  <h3 style="margin:0 0 6px">🛑 Notfall</h3>
+  <p style="color:var(--muted); margin:.2em 0 1em; font-size:.9rem">Was soll geschehen?</p>
+  <button class="panik-stufe s1" id="panik-1" type="button">
+    <b>Stufe 1 · Verriegeln</b><span>Sofort zurück zur verschlossenen Tür — umkehrbar (mit dem Schlüssel wieder hinein).</span>
+  </button>
+  <button class="panik-stufe s2" id="panik-2" type="button" disabled>
+    <b>Stufe 2 · Verbergen</b><span>Abstreitbar verbergen — wird in der Sicherheits-Sitzung scharfgeschaltet.</span>
+  </button>
+  <button class="panik-stufe s3" id="panik-3" type="button" disabled>
+    <b>Stufe 3 · Löschen</b><span>Unwiderruflich, Zwei-Schritt — wird in der Sicherheits-Sitzung scharfgeschaltet.</span>
+  </button>
+  <div class="row-end" style="margin-top:12px"><button id="panik-cancel" class="btn-ghost" type="button">Abbrechen</button></div>
+</dialog>
 
 <!-- ============================================================
      KERN-LOGIK (browser- UND node-tauglich; vom headless Test
@@ -1216,6 +1266,21 @@
     }
   }
   buildShelf();
+
+  // Einmaliger Bedien-Hinweis: blendet nach kurzer Zeit oder bei erster Navigation aus.
+  var hint = document.getElementById('regal-hint');
+  function dismissHint(){
+    if(!hint) return;
+    hint.classList.add('gone');
+    try{ sessionStorage.setItem('jt-regal-hint','1'); }catch(e){}
+    setTimeout(function(){ if(hint) hint.style.display = 'none'; }, 700);
+  }
+  if(hint){
+    try{ if(sessionStorage.getItem('jt-regal-hint') === '1'){ hint.style.display = 'none'; } }catch(e){}
+    setTimeout(dismissHint, 7000);
+    prev.addEventListener('click', dismissHint);
+    next.addEventListener('click', dismissHint);
+  }
   if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
   if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
   document.addEventListener('keydown', function(e){
@@ -1238,6 +1303,23 @@
     try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
     location.reload();
   });
+})();
+</script>
+
+<!-- Notfall (Panik): Stufe 1 verriegelt sofort (zurück zur Tür); Stufe 2/3 folgen in der Sicherheits-Sitzung -->
+<script>
+(function(){
+  var panik = document.getElementById('panik');
+  var open  = document.getElementById('hud-panik');
+  var s1     = document.getElementById('panik-1');
+  var cancel = document.getElementById('panik-cancel');
+  if(open && panik){ open.addEventListener('click', function(){ if(panik.showModal) panik.showModal(); }); }
+  if(cancel && panik){ cancel.addEventListener('click', function(){ if(panik.close) panik.close(); }); }
+  if(s1){ s1.addEventListener('click', function(){
+    // Stufe 1 · Verriegeln: zurück zur verschlossenen Tür (umkehrbar). Kein Datenverlust.
+    try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
+    location.reload();
+  }); }
 })();
 </script>
 </body>

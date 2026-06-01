@@ -40,8 +40,21 @@ per JS gefüllt (5×6 = Füll-Bücher), die 3 echten anklickbaren dazwischen. **
 Speicherchips offen (Prompt gegeben: Chips = Teile des 2. Schlüssels). Alle 7 Inline-Skripte
 syntaxgeprüft.
 
-**Manual-Check:** Headless 27/27 grün. Regal + Bücher + Code/Sperre im Browser **ungeprüft** —
-wartet auf Klaus.
+**Erlebnis-Schicht zu Ende gebaut (Klaus' Freibrief, `npm test` 27/27 grün, Kern unberührt):**
+- **Panik-Knopf (Notfall)** im HUD: Dialog mit 3 Stufen. **Stufe 1 „Verriegeln"** scharf (zurück
+  zur verschlossenen Tür, umkehrbar, kein Datenverlust); **Stufe 2 „Verbergen" / Stufe 3 „Löschen"**
+  ehrlich deaktiviert (Hinweis „wird in der Sicherheits-Sitzung scharfgeschaltet").
+- **HUD:** Wächter-Lampe (grün, ruhig) + Siegel-Wappen (bezeugter Endknoten) — ehrliche Anzeige.
+- **Navigation/Replay:** Regal ◀▶ (Fackeln) + Pfeiltasten; Funfakt-Schlüssel = „Intro & Tür nochmal
+  ansehen"; einmaliger Bedien-Hinweis im Regal (blendet aus, `sessionStorage`).
+- **Bewusst NICHT gemacht (Klaus' Wunsch):** echtes Verschließen/AES-Passwort-Verdrahtung +
+  echte Dateien an die Bücher — **eigene Sicherheits-Sitzung**. Demo-Code „1234" bleibt.
+- **Offen für später:** Speicherchips (Space-Ebenen), Shamir-Aufteilen, gestufte Fächer,
+  Köder/Honig, Membran-15/Siegel-16/Apoptose-07 als echte Logik (1:1 aus Sage/SB-KIMTool).
+- Auf **main gemergt** (Klaus' Freigabe zum Selbst-Mergen).
+
+**Manual-Check:** Headless 27/27 grün. Regal + Bücher + Code/Sperre + HUD/Panik im Browser
+**ungeprüft** — wartet auf Klaus' Browser-Lauf.
 
 ---
 
