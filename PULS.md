@@ -3,6 +3,35 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Gestaltungsplan „Tresor-Erlebnis" + Bild-Prompts (Sitzung 6, NUR Doku)
+
+**Getan (kein Code — Plan-vor-Code, kein Freibrief):**
+- **Vorbilder studiert:** Sage-Einladung `docs/einladung/vendor/img/scene-5-door.webp` (warme
+  Goldtür, Chiaroscuro, Palette #08081A/#6EE7D3/#F4B435/#8B5CF6, „Tür fadet auf Nähe ein →
+  Klick → warmer Blitz"); SB-KIMTool-Point `assets/observatorium-truhe.png` (glühender türkiser
+  Schlüssel im Schloss) + `assets/tool-symbols/*.svg` (15 Membran, 16 Siegel, 07 Apoptose).
+- **Plan geschrieben:** `docs/sessions/PLAN_tresor-erlebnis.md` — 4 Szenen (Schwelle/Tür →
+  Bibliothek → Spielfenster → Tresorräume) + Steampunk-HUD; **Daten-Mapping** (Buch = Sammlung,
+  Buch zu = `jason-tresor` v2, Passwort = AES-Schlüssel) hält die Verträge heil; Einbau der
+  Werkzeugkiste (Membran 15/Siegel 16/Apoptose 07 + Shamir-Aufteilen/gestufte Fächer/Köder/Panik).
+- **19 Bild-Prompts** (Phasen 1–4) mit gemeinsamem Stil-Anker, je mit Dateiname/Format/Platzierung.
+- **Brief-Kette:** `docs/sessions/BRIEF_tresor-erlebnis.md` neu.
+
+**Entschieden (Klaus, 2026-06-01):** Bild-Ablage = ein Ordner `assets/erlebnis/` (offline);
+**harte Regel „nichts versehentlich löschen"** (Daten nie zerstörend anfassen, Löschen nur
+Zwei-Schritt); Gesicht = stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
+**Klaus: „mergen" → PR #7 gemergt.**
+
+**Offen / ehrlich:**
+- **Keine Bilder generiert** — Phase-1-Bilder kommen von Klaus, dann baue ich die Schwelle.
+- **Theater ≠ Schloss** festgehalten: Tür/Schlüssel = Navigation; echtes Schloss = Passwort + AES.
+- `JasonLib`-Kern bleibt unverändert; Erlebnis ist eine Schale obendrauf.
+
+**Manual-Check:** Kein neuer Code → `npm test` unverändert grün (27/27). App-Erlebnis noch nicht
+gebaut → nichts im Browser zu prüfen außer dem bisherigen Stand.
+
+---
+
 ## 2026-05-31 — Drei-Knoten-Netz + Briefkasten quittiert (Sitzung 5)
 
 **Getan (verifiziert, `npm test` 27/27 grün):**
