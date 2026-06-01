@@ -216,13 +216,15 @@
   .key-fab:hover{transform:translateY(-2px) rotate(-6deg)}
   .key-fab:active{transform:translateY(0) rotate(-6deg)}
   .key-fab img{width:72px; height:auto; display:block; pointer-events:none; -webkit-user-drag:none;
-    animation:key-fab-breath 2.8s ease-in-out infinite}
-  .key-fab:hover img{animation-play-state:paused;
-    filter:drop-shadow(0 4px 9px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(110,231,211,.9))}
+    filter:drop-shadow(0 3px 7px rgba(0,0,0,.5))}
+  /* Pulsen NUR bei Maus-Hover (sonst ruhig). */
+  .key-fab:hover img{animation:key-fab-breath 2.8s ease-in-out infinite}
   @keyframes key-fab-breath{
-    0%,100%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 3px rgba(110,231,211,.35))}
-    50%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 11px rgba(110,231,211,.7))}}
-  @media (prefers-reduced-motion:reduce){ .key-fab img{animation:none} }
+    0%,100%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 5px rgba(110,231,211,.4))}
+    50%{filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 16px rgba(244,180,53,.8))}}
+  @media (prefers-reduced-motion:reduce){
+    .key-fab:hover img{animation:none;
+      filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 12px rgba(110,231,211,.7))}}
 </style>
 </head>
 <body>
