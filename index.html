@@ -100,6 +100,17 @@
   .th-door{position:absolute; inset:0; width:100%; height:100%;
     object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none;
     transition:transform 4.2s cubic-bezier(.55,.04,.25,1), filter 4.2s ease}
+  /* Schlüssel-Pulsen — 1:1 aus der Sage-Einladung (.vp-key-pulse): rein additives türkises
+     Licht (mix-blend screen), das sanft atmet. Position auf unser Schlüsselloch zentriert;
+     dauerhaft leicht sichtbar als lebendiger Klick-Hinweis, heller bei Nähe (Werkstatt, kein Museum). */
+  .th-keyglow{position:absolute; left:50%; top:43%; z-index:2; pointer-events:none;
+    width:clamp(150px, 17vmin, 300px); aspect-ratio:1; border-radius:50%; mix-blend-mode:screen;
+    opacity:.5; transform:translate(-50%,-50%) scale(.82);
+    background:radial-gradient(circle, rgba(110,231,211,0.6) 0%, rgba(110,231,211,0.22) 42%, rgba(110,231,211,0) 70%);
+    animation:th-key-breath 2.4s ease-in-out infinite}
+  .th-stage:hover .th-keyglow{opacity:1}
+  @keyframes th-key-breath{0%,100%{transform:translate(-50%,-50%) scale(0.82)} 50%{transform:translate(-50%,-50%) scale(1.08)}}
+  #threshold.is-opening .th-keyglow{opacity:0; animation:none; transition:opacity .5s ease}
   /* Schloss-Sequenz: 5 Frames liegen übereinander und blenden LANGSAM ineinander */
   .th-lock-seq{position:absolute; inset:0; opacity:0; transform:scale(1.12);
     transition:opacity 1s ease, transform 5s cubic-bezier(.55,.04,.25,1)}
@@ -138,6 +149,7 @@
     #threshold.is-opening .th-door{transform:none}
     .th-flash.is-flash{animation:none}
     .th-burst.is-flash{animation:none}
+    .th-keyglow{animation:none}
   }
 
   /* ===== Muster-Buch (Szene-2-Vorschau; kein Teil des JasonLib-Kerns) ===== */
@@ -186,6 +198,8 @@
   <div class="th-stage" id="th-stage">
     <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.png"
          alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
+    <!-- Schlüssel-Pulsen, 1:1 aus der Sage-Einladung (.vp-key-pulse) — lebendiger Klick-Hinweis -->
+    <div class="th-keyglow" aria-hidden="true"></div>
     <div class="th-lock-seq" id="th-lock-seq" aria-hidden="true">
       <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-1.png" alt="Das Schloss lädt sich auf" />
       <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-2.png" alt="" />
