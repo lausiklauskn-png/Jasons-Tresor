@@ -137,15 +137,16 @@ Hintergrund (PNG mit Alpha)**, mittig, großzügiger Rand.
 > Magischer Schwellen-Moment. *(+ Stil-Anker)*
 
 **Bild 3 — `schluessel.png` · Sprite freigestellt · Der glühende Schlüssel**
+> *Look ausgewogen (Klaus 2026-06-01): Spiegelmetall UND Truhen-Schaltkreis-Energie gleich stark.*
 > Ein einzelner, prachtvoller Schlüssel im **Halbprofil, horizontal liegend**, freigestellt
 > auf transparentem Hintergrund. Korpus aus **flüssigem Spiegel-Metall in fester Form**
 > (poliertes Chrom/Quecksilber, geschmolzenes Messing, mitten im Fließen erstarrt), hoch
-> **spiegelnd** — die warme Umgebung und türkis leuchtende Energie-Adern spiegeln sich
-> darin, „Glas und doch nicht Glas". Der Griff (Reide) ist ein **kunstvoll verschlungenes
-> Kleeblatt-Ornament**, das türkis-cyan pulsiert; der Schaft lang und röhrenförmig wie ein
-> **kleines Teleskop** mit feinen Ringen; der Bart vorn fein gezähnt, wie ein altes
-> Relikt-Artefakt aus einem Abenteuer. Sanftes Glühen, weicher Lichtsaum. Edel, magisch,
-> wertvoll. *(+ Stil-Anker)*
+> **spiegelnd** — „Glas und doch nicht Glas". **Deutlich sichtbar durchzogen von türkis-cyanen
+> Schaltkreis-Adern, die wie digitale Energie durch das Metall pulsieren** (wie der
+> Truhen-Schlüssel): uraltes Relikt und lebendige Technik zugleich. Der Griff (Reide) ein
+> **kunstvoll verschlungenes Kleeblatt-Ornament**, das türkis pulsiert; der Schaft lang und
+> röhrenförmig wie ein **kleines Teleskop** mit feinen Ringen; der Bart vorn fein gezähnt,
+> wie ein Abenteuer-Artefakt. Sanftes Glühen, weicher Lichtsaum. *(+ Stil-Anker)*
 
 **Bild 4 — `schloss-frame-1..4.png` · 4 Sprites (Stop-Motion) · Schloss-Mechanik**
 > Extreme Nahaufnahme eines **verzierten Messing-Schlüssellochs/Schlossmechanismus** von
