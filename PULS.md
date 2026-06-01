@@ -72,8 +72,21 @@ welchem etwas liegt. (Demo-Code „1234"; echtes Verschließen weiter in der Sic
   Köder/Honig, Membran-15/Siegel-16/Apoptose-07 als echte Logik (1:1 aus Sage/SB-KIMTool).
 - Auf **main gemergt** (Klaus' Freigabe zum Selbst-Mergen).
 
-**Manual-Check:** Headless 27/27 grün. Regal + Bücher + Code/Sperre + HUD/Panik im Browser
-**ungeprüft** — wartet auf Klaus' Browser-Lauf.
+**Manual-Check (Klaus' Browser-Lauf erfolgt diese Sitzung, per Screenshots):** Schwelle, Regal
+mit Fackel-Navigation, Bücher (ziehen/kippen, beschriften, Code/Sperre), Regal-Schilder, HUD
+(Notfall-Lampe, Siegel/Andock) **im Browser gesehen & live justiert** (Schriftgröße, Schild-
+Abstand, untere Kante/Clipping, Notfall-Farbe, Bücher auf allen Ansichten). Headless 27/27 grün.
+**Offen:** echtes Verschließen (AES) + echte Dateien, voller SBKIM-Bezeugungs-Modul-Chain,
+Buch-Positions-Feinschliff je Ebene — alles eigene Folge-Sitzungen.
+
+**Nächste Schritte (priorisiert):**
+1. **Sicherheits-Sitzung:** Bücher an den echten **AES-Passwort-Tresor** + echte Jason-Dateien
+   koppeln (Demo-Code „1234" ersetzen); Panik Stufe 2/3 scharfschalten.
+2. **SBKIM-Bezeugung:** vollen Modul-Chain (`sbkim-init.js` + `src/modules/*`) 1:1 holen →
+   Siegel echt bronze/gold, Membran-15-Lampen, Apoptose-07, Tool-PWA-Andock-Wizard.
+3. **Regal-Feinschliff:** Buch-Bereiche (`box`-Insets) je Ebene exakt auf die Bretter setzen
+   (v. a. die schrägen Ansichten links/rechts); ggf. Bücher pro Reihe reduzieren.
+4. **Szene-2-Inhalt:** im geöffneten Buch die echte Detail-/Bearbeiten-Ansicht der Sammlung.
 
 ---
 
