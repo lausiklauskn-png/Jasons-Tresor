@@ -14,14 +14,14 @@
   dekodiert/geprüft (Blitz + Flügel minAlpha 0). (`schluessel-im-schloss.png` = Reserve.)
 - **Schwelle als Erlebnis-Schale** in `index.html` gebaut (+ Spiegel `jasons-bibliothek/`):
   Overlay `#threshold` — Tür → Klick/Enter → Zoom aufs Schlüsselloch → **5-Frame-Aufschließ-
-  Sequenz** → **goldener Funken-Blitz** (`licht-blitz.png`, additiv) → **Türflügel schwingt
-  3D um die linke Kante auf** (`tuer-fluegel.png`) und gibt die **Bibliothek** dahinter frei
-  (dunkle Wand-Vignette rahmt) → in die App blenden (~3,4 s). Knöpfe „🔑 Tür öffnen" /
+  Sequenz** → **goldener Funken-Blitz** (`licht-blitz.png`, additiv) → ruhige Überblendung in
+  die **Bibliothek** (`tuer-offen.png`) → in die App blenden (~2,7 s). Knöpfe „🔑 Tür öffnen" /
   „überspringen", Esc; einmal pro Sitzung (`sessionStorage`); `prefers-reduced-motion`
   respektiert; Timer bei Skip sauber gestoppt. **Ehrlicher Hinweis im Bild:** „Diese Tür ist
   nur die Begrüßung — das echte Schloss ist dein Passwort." (Theater ≠ Schloss).
-- **Feinschliff offen:** Flügel-Ausrichtung/Schwenkwinkel sind Startwerte (`--leaf-h` 92 %,
-  `rotateY(-115deg)`) — Klaus prüft im Browser, ich justiere per Zahlenwert.
+- **Türflügel-Schwung wieder entfernt (Klaus, 2026-06-01):** `tuer-fluegel.png` sieht eher
+  wie ein Buch aus → aus der Schwelle herausgenommen. Datei bleibt liegen als **Buch-Kandidat
+  für Szene 2**. Funken-Blitz bleibt.
 - **Kein Eingriff in den `JasonLib`-Kern:** Schale liegt komplett außerhalb der Marker;
   Kern in Wurzel und Spiegel **byte-identisch** (geprüft). Nur der Bildpfad unterscheidet
   sich (`assets/…` vs. `../assets/…`). **Keine Daten angefasst** (Lösch-Schutz-Regel gewahrt).
