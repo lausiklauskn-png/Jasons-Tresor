@@ -3,6 +3,28 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Schwelle entschleunigt + PR #8 gemergt (Sitzung 8)
+
+**Getan (`npm test` 27/27 grün, Kern unberührt):**
+- **PR #8 gemergt** (Klaus: „mergen ansehen") → `main` hat jetzt Schwelle (Szene 1) +
+  Muster-Buch. Pages baut automatisch: https://lausiklauskn-png.github.io/Jasons-Tresor/
+- **Schwelle nach Klaus' Feedback überarbeitet:**
+  - **Erklär-Text + großer „Tür öffnen"-Knopf entfernt** (nahm die Spannung; der Maus-Zeiger
+    zeigt schon, dass man klickt). Nur noch dezentes „überspringen" unten rechts.
+  - **Deutlich entschleunigt:** Tür-Zoom 4,2 s; Schloss-Frames blenden je ~1,2 s **weich
+    ineinander** (Kreuz-Überblendung statt hartem Wechsel), Abstände ~1,4 s; Gesamtablauf
+    jetzt ~11–12 s (vorher ~2,7 s). Schwere Tür öffnet bedächtig; Schluss-Ausblendung 1,4 s.
+- **Honesty-Hinweis** „Theater ≠ Schloss" bleibt erhalten (Muster-Buch + Footer), nur von der
+  dramatischen Tür entfernt.
+
+**Offen / ehrlich:**
+- **Browser-Look weiter ungeprüft** — wartet auf Klaus (Timing evtl. nachjustieren).
+- Muster-Buch-Feinschliff (Titel/Tempo/Größe) + danach Ausrollen auf echte Einträge.
+
+**Manual-Check:** Headless 27/27 grün. Schwelle/Tempo im Browser **ungeprüft** — wartet auf Klaus.
+
+---
+
 ## 2026-06-01 — Schwelle gebaut: Tür → Aufschließ-Sequenz → offene Bibliothek (Sitzung 7)
 
 **Getan (headless bewiesen, `npm test` 27/27 grün — Kern unberührt):**
