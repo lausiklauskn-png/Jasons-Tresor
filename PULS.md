@@ -3,6 +3,45 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Schwelle gebaut: Tür → Aufschließ-Sequenz → offene Bibliothek (Sitzung 7)
+
+**Getan (headless bewiesen, `npm test` 27/27 grün — Kern unberührt):**
+- **Komplette Phase-1-Serie von Klaus' externer Bild-KI** in `assets/erlebnis/bilder/`:
+  `tuer-zu.png` (geschlossene Tür, 1672×941), `schloss-frame-1…5.png` (Aufschließ-Sequenz
+  1536×1024: Türkis lädt → goldener Blitz → Gold flutet), `tuer-offen.png` (Tür offen,
+  Bibliothek/Schatzkammer, 1672×941), `licht-blitz.png` (Prompt 9, transparenter Funken-
+  Blitz) und `tuer-fluegel.png` (Prompt 8, freigestellter Türflügel). PNG-Transparenz exakt
+  dekodiert/geprüft (Blitz + Flügel minAlpha 0). (`schluessel-im-schloss.png` = Reserve.)
+- **Schwelle als Erlebnis-Schale** in `index.html` gebaut (+ Spiegel `jasons-bibliothek/`):
+  Overlay `#threshold` — Tür → Klick/Enter → Zoom aufs Schlüsselloch → **5-Frame-Aufschließ-
+  Sequenz** → **goldener Funken-Blitz** (`licht-blitz.png`, additiv) → ruhige Überblendung in
+  die **Bibliothek** (`tuer-offen.png`) → in die App blenden (~2,7 s). Knöpfe „🔑 Tür öffnen" /
+  „überspringen", Esc; einmal pro Sitzung (`sessionStorage`); `prefers-reduced-motion`
+  respektiert; Timer bei Skip sauber gestoppt. **Ehrlicher Hinweis im Bild:** „Diese Tür ist
+  nur die Begrüßung — das echte Schloss ist dein Passwort." (Theater ≠ Schloss).
+- **Türflügel-Schwung wieder entfernt (Klaus, 2026-06-01):** `tuer-fluegel.png` sieht eher
+  wie ein Buch aus → aus der Schwelle herausgenommen. Datei bleibt liegen als **Buch-Kandidat
+  für Szene 2**. Funken-Blitz bleibt.
+- **Kein Eingriff in den `JasonLib`-Kern:** Schale liegt komplett außerhalb der Marker;
+  Kern in Wurzel und Spiegel **byte-identisch** (geprüft). Nur der Bildpfad unterscheidet
+  sich (`assets/…` vs. `../assets/…`). **Keine Daten angefasst** (Lösch-Schutz-Regel gewahrt).
+
+**Offen / ehrlich:**
+- **Schwelle im Browser UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
+- `tuer-offen.png` dient als Schluss-Frame und taugt zugleich als **Szene-1-Hintergrund**
+  (Bibliothek) — der eigentliche Bibliotheks-Raum (Szene 1) ist aber noch nicht gebaut.
+- **Szene 2 begonnen — Muster-Buch (Klaus: „erst ein Muster-Buch"):** Knopf „📚 Muster-Buch"
+  öffnet ein isoliertes Vorschau-Overlay `#bookdemo` — ein Buch (`buch-zu.png`) → antippen →
+  öffnet sich (`buch-auf.png` + Goldschein) → Platzhalter-Inhalt + ehrlicher Hinweis. **Keine
+  echten Daten, kein Eingriff in `JasonLib`.** Nächster Schritt nach Klaus' OK: Look auf echte
+  Einträge ausrollen (Regal-Ansicht mit Umschalter).
+- `tuer-fluegel.png` bleibt als zusätzlicher Buch-Kandidat liegen (nicht eingebaut).
+- PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
+
+**Manual-Check:** Headless 27/27 grün. **App-Schwelle im Browser ungeprüft** — wartet auf Klaus.
+
+---
+
 ## 2026-06-01 — Gestaltungsplan „Tresor-Erlebnis" + Bild-Prompts (Sitzung 6, NUR Doku)
 
 **Getan (kein Code — Plan-vor-Code, kein Freibrief):**
@@ -17,10 +56,13 @@
 - **19 Bild-Prompts** (Phasen 1–4) mit gemeinsamem Stil-Anker, je mit Dateiname/Format/Platzierung.
 - **Brief-Kette:** `docs/sessions/BRIEF_tresor-erlebnis.md` neu.
 
-**Entschieden (Klaus, 2026-06-01):** Bild-Ablage = ein Ordner `assets/erlebnis/` (offline);
-**harte Regel „nichts versehentlich löschen"** (Daten nie zerstörend anfassen, Löschen nur
-Zwei-Schritt); Gesicht = stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
-**Klaus: „mergen" → PR #7 gemergt.**
+**Entschieden (Klaus, 2026-06-01):** offline **installierbar wie PWA**; alles in EINEM klar
+benannten Ordner **`assets/erlebnis/`** (Bilder unter `assets/erlebnis/bilder/`, Schutz-Hinweis
+`_BITTE-NICHT-LOESCHEN.md`); **harte Regel „nichts versehentlich löschen"** (Daten nie
+zerstörend anfassen, Löschen nur Zwei-Schritt); **Material = flüssiges Spiegel-Metall**
+(„Glas und doch nicht Glas") + **Indiana-Jones-Abenteuer** (Jason→Jones), steampunk nur
+angehaucht, stiller Werttresor (kein Köder); Start = erst Phase 1; Schlüssel = Klick.
+Stil-Anker im Plan §4 verfeinert. **Klaus: „mergen" → PR #7 gemergt.**
 
 **Offen / ehrlich:**
 - **Keine Bilder generiert** — Phase-1-Bilder kommen von Klaus, dann baue ich die Schwelle.

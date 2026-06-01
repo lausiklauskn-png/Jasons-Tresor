@@ -87,9 +87,133 @@
     padding:10px 16px; border-radius:10px; opacity:0; pointer-events:none; transition:opacity .2s; z-index:50}
   .toast.show{opacity:1}
   .hidden{display:none}
+
+  /* ===== Schwelle (Erlebnis-Schale obendrauf; NICHT Teil des JasonLib-Kerns) =====
+     Theater ≠ Schloss: Tür/Schlüssel sind Begrüßung/Navigation. Das echte Schloss
+     bleibt Passwort + AES-256-GCM. Bilder liegen lokal (offline) in assets/erlebnis/. */
+  body.th-lock-scroll{overflow:hidden}
+  #threshold{position:fixed; inset:0; z-index:1000; background:#08081a;
+    overflow:hidden; transition:opacity .8s ease}
+  #threshold[hidden]{display:none}
+  #threshold.is-gone{opacity:0; pointer-events:none}
+  .th-stage{position:absolute; inset:0; cursor:pointer}
+  .th-door{position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none;
+    transition:transform 1.6s cubic-bezier(.6,.02,.2,1), filter 1.6s ease}
+  /* Schloss-Sequenz: 5 Frames (Türkis lädt → goldener Blitz → Gold flutet) */
+  .th-lock-seq{position:absolute; inset:0; opacity:0; transform:scale(1.12);
+    transition:opacity .5s ease, transform 1.3s cubic-bezier(.6,.02,.2,1)}
+  .th-lock-seq img{position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center 45%; opacity:0; transition:opacity .16s linear;
+    user-select:none; -webkit-user-drag:none}
+  .th-lock-seq img.is-on{opacity:1}
+  .th-flash{position:absolute; inset:0; pointer-events:none; opacity:0;
+    background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
+  /* transparenter Funken-Blitz (licht-blitz.png), additiv über dem Gold-Frame */
+  .th-burst{position:absolute; left:50%; top:46%; width:72%; max-width:920px; height:auto;
+    transform:translate(-50%,-50%) scale(.3); opacity:0; pointer-events:none;
+    mix-blend-mode:screen; filter:drop-shadow(0 0 40px rgba(244,180,53,.55))}
+  .th-burst.is-flash{animation:th-burst 1.1s ease-out forwards}
+  @keyframes th-burst{
+    0%{opacity:0; transform:translate(-50%,-50%) scale(.3)}
+    28%{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
+  #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
+  #threshold.is-opening .th-lock-seq{opacity:1; transform:scale(1)}
+  /* Finaler Beat: Tür offen, Blick in die Bibliothek (sanftes Hineingleiten) */
+  .th-open{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    object-position:center; opacity:0; transform:scale(1.06);
+    transition:opacity .7s ease, transform 1.8s ease; user-select:none; -webkit-user-drag:none}
+  #threshold.is-open-final .th-open{opacity:1; transform:scale(1.12)}
+  .th-flash.is-flash{animation:th-flash 1s ease-out forwards}
+  @keyframes th-flash{0%{opacity:0} 35%{opacity:1} 100%{opacity:0}}
+  .th-ui{position:absolute; left:0; right:0; bottom:6vh; z-index:2; text-align:center; padding:0 18px}
+  #threshold.is-opening .th-ui{opacity:0; pointer-events:none; transition:opacity .4s ease}
+  .th-enter{font:inherit; font-size:1.05rem; font-weight:600; color:#08081a;
+    background:linear-gradient(#fcd34d,#f4b435); border:1px solid #c98a16; border-radius:999px;
+    padding:12px 26px; cursor:pointer;
+    box-shadow:0 6px 24px rgba(244,180,53,.35), 0 0 0 1px rgba(255,255,255,.15) inset}
+  .th-enter:hover{filter:brightness(1.06)} .th-enter:active{transform:translateY(1px)}
+  .th-hint{margin:14px auto 0; max-width:540px; color:#bfd8d4; font-size:.86rem; line-height:1.45;
+    text-shadow:0 1px 6px rgba(0,0,0,.7)}
+  .th-hint b{color:#6ee7d3; font-weight:600}
+  .th-skip{display:inline-block; margin-top:10px; color:#8fb3b1; font-size:.8rem;
+    text-decoration:underline; cursor:pointer; background:none; border:0}
+  .th-skip:hover{color:#bfd8d4}
+  @media (prefers-reduced-motion:reduce){
+    .th-door{transition:opacity .4s ease}
+    #threshold.is-opening .th-door{transform:none}
+    .th-flash.is-flash{animation:none}
+    .th-burst.is-flash{animation:none}
+  }
+
+  /* ===== Muster-Buch (Szene-2-Vorschau; kein Teil des JasonLib-Kerns) ===== */
+  #bookdemo[hidden]{display:none}
+  #bookdemo{position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center; padding:20px}
+  .bd-backdrop{position:absolute; inset:0; background:rgba(4,6,12,.88)}
+  .bd-stage{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;
+    gap:16px; width:100%; max-width:560px}
+  .bd-book{position:relative; width:min(82vw,460px); aspect-ratio:3/2; cursor:pointer;
+    transition:filter .6s ease, transform .3s ease; outline:none}
+  .bd-book:hover{transform:translateY(-2px)}
+  .bd-book:focus-visible{outline:2px solid var(--accent); outline-offset:6px; border-radius:8px}
+  .bd-zu,.bd-auf{position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    user-select:none; -webkit-user-drag:none; transition:opacity .6s ease, transform .6s ease}
+  .bd-auf{opacity:0; transform:scale(.97)}
+  .bd-title{position:absolute; top:13%; left:8%; right:8%; text-align:center; color:#f6e6b6;
+    font-weight:700; font-size:1.05rem; letter-spacing:.3px; text-shadow:0 2px 10px rgba(0,0,0,.8);
+    transition:opacity .4s ease; pointer-events:none}
+  .bd-hint{position:absolute; bottom:9%; left:0; right:0; text-align:center; color:#cfe6e2;
+    font-size:.8rem; opacity:.85; text-shadow:0 1px 6px rgba(0,0,0,.8);
+    transition:opacity .4s ease; pointer-events:none}
+  #bookdemo.is-open .bd-zu{opacity:0; transform:scale(1.02)}
+  #bookdemo.is-open .bd-auf{opacity:1; transform:scale(1)}
+  #bookdemo.is-open .bd-book{filter:drop-shadow(0 0 42px rgba(244,180,53,.55))}
+  #bookdemo.is-open .bd-title,#bookdemo.is-open .bd-hint{opacity:0}
+  .bd-content{width:min(88vw,500px); background:var(--card); border:1px solid var(--line);
+    border-radius:var(--radius); padding:0 16px; max-height:0; opacity:0; overflow:hidden;
+    transition:max-height .5s ease, opacity .5s ease, padding .5s ease}
+  #bookdemo.is-open .bd-content{max-height:340px; opacity:1; padding:16px}
+  .bd-content h3{margin:.2em 0 .4em; color:var(--accent)}
+  .bd-content p{margin:.3em 0; color:var(--muted); font-size:.92rem; line-height:1.5}
+  .bd-close{font:inherit; color:var(--ink); background:var(--card); border:1px solid var(--line);
+    border-radius:10px; padding:9px 16px; cursor:pointer}
+  .bd-close:hover{border-color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){
+    .bd-zu,.bd-auf,.bd-content,.bd-title,.bd-hint{transition:opacity .3s ease}
+  }
 </style>
 </head>
 <body>
+
+<!-- ===== Schwelle: Erlebnis-Schale obendrauf (kein Teil des JasonLib-Kerns) =====
+     Tür (tuer-zu) → Klick → Zoom aufs Schlüsselloch + Schloss-Nahaufnahme mit
+     pulsendem Türkis → warmer Lichtblitz → Bibliothek. Bilder lokal/offline. -->
+<div id="threshold" role="dialog" aria-label="Eingang zum Tresor">
+  <div class="th-stage" id="th-stage">
+    <img class="th-door" decoding="async" src="../assets/erlebnis/bilder/tuer-zu.png"
+         alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
+    <div class="th-lock-seq" id="th-lock-seq" aria-hidden="true">
+      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-1.png" alt="Das Schloss lädt sich auf" />
+      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-2.png" alt="" />
+      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-3.png" alt="" />
+      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-4.png" alt="" />
+      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-5.png" alt="Das Schloss öffnet sich, Gold flutet aus" />
+    </div>
+    <div class="th-flash" id="th-flash"></div>
+    <img class="th-burst" id="th-burst" decoding="async" aria-hidden="true" alt=""
+         src="../assets/erlebnis/bilder/licht-blitz.png" />
+    <img class="th-open" decoding="async" src="../assets/erlebnis/bilder/tuer-offen.png"
+         alt="Die Tür steht offen — Blick in die Bibliothek" />
+  </div>
+  <div class="th-ui">
+    <button class="th-enter" id="th-enter" type="button">🔑 Tür öffnen</button>
+    <p class="th-hint">Tippe die Tür an, um einzutreten.<br>
+      <b>Ehrlich:</b> Diese Tür ist nur die Begrüßung — das echte Schloss ist dein <b>Passwort</b>.</p>
+    <button class="th-skip" id="th-skip" type="button">überspringen</button>
+  </div>
+</div>
+
 <header>
   <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
           title="Briefkasten der Nachbar-Knoten (Sage + SB-KIMTool-Point) jetzt prüfen"
@@ -110,6 +234,7 @@
     <button id="btn-export-all" class="btn-ghost">⤓ Bibliothek sichern</button>
     <button id="btn-export-enc" class="btn-ghost">🔒 Verschlüsselt sichern</button>
     <button id="btn-import-lib" class="btn-ghost">⤒ Einlesen / Tresor öffnen</button>
+    <button id="btn-bookdemo" class="btn-ghost" title="Vorschau: wie ein Jason als Buch aussieht">📚 Muster-Buch</button>
     <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
@@ -156,6 +281,27 @@
 </dialog>
 
 <div id="toast" class="toast"></div>
+
+<!-- ===== Muster-Buch (Szene-2-Vorschau; kein Teil des JasonLib-Kerns) ===== -->
+<div id="bookdemo" hidden>
+  <div class="bd-backdrop" id="bd-backdrop"></div>
+  <div class="bd-stage" role="dialog" aria-label="Muster-Buch" aria-modal="true">
+    <div class="bd-book" id="bd-book" role="button" tabindex="0" aria-label="Buch öffnen oder schließen">
+      <img class="bd-zu" decoding="async" src="../assets/erlebnis/bilder/buch-zu.png" alt="Verschlossenes Buch mit Schlüsselloch" />
+      <img class="bd-auf" decoding="async" src="../assets/erlebnis/bilder/buch-auf.png" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
+      <span class="bd-title">Mein erstes Jason</span>
+      <span class="bd-hint">antippen zum Öffnen</span>
+    </div>
+    <div class="bd-content" id="bd-content">
+      <h3>Mein erstes Jason</h3>
+      <p>Hier erscheint später der echte Inhalt dieser Sammlung — genau die Detail- und
+         Bearbeiten-Ansicht, die du heute schon kennst. Nur das Aussehen wird ein Buch.</p>
+      <p><b>Ehrlich:</b> Das ist nur ein Muster ohne echte Daten. Das eigentliche Schloss
+         bleibt dein Passwort (AES-256).</p>
+    </div>
+    <button class="bd-close" id="bd-close" type="button">Schließen</button>
+  </div>
+</div>
 
 <!-- ============================================================
      KERN-LOGIK (browser- UND node-tauglich; vom headless Test
@@ -724,6 +870,95 @@
   }
   // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
   window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
+</script>
+
+<!-- ===== Schwelle-Steuerung (Erlebnis-Schale; kein Teil des getesteten Kerns) ===== -->
+<script>
+(function(){
+  var th = document.getElementById('threshold');
+  if(!th) return;
+  var enter = document.getElementById('th-enter');
+  var skip  = document.getElementById('th-skip');
+  var stage = document.getElementById('th-stage');
+  var flash = document.getElementById('th-flash');
+  var burst = document.getElementById('th-burst');
+  var seq   = document.getElementById('th-lock-seq');
+  var frames = seq ? seq.querySelectorAll('img') : [];
+  var timers = [];
+  var KEY = 'jt-threshold-seen';
+  // Schon in dieser Sitzung eingetreten? Dann Schwelle still überspringen.
+  try{ if(sessionStorage.getItem(KEY) === '1'){ done(true); return; } }catch(e){}
+  // Hintergrund (Bibliothek) nicht scrollen, solange die Schwelle offen ist.
+  document.body.classList.add('th-lock-scroll');
+
+  function showFrame(i){
+    for(var k=0; k<frames.length; k++) frames[k].classList.toggle('is-on', k === i);
+  }
+
+  var opening = false;
+  function at(ms, fn){ timers.push(setTimeout(fn, ms)); }
+  function open(){
+    if(opening) return; opening = true;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    th.classList.add('is-opening');                 // Tür zoomt, Schloss-Sequenz blendet ein
+    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); at(450, function(){ done(false); }); return; }
+    // Frame-Sequenz: Türkis lädt sich auf → goldener Blitz → Gold flutet aus
+    var times = [450, 680, 880, 1120, 1480];        // Einblendzeiten Frame 1..5
+    for(var i=0; i<frames.length; i++){ (function(idx){ at(times[idx], function(){ showFrame(idx); }); })(i); }
+    at(1200, function(){                                             // Lichtblitz mit dem Gold-Frame
+      flash.classList.add('is-flash');
+      if(burst) burst.classList.add('is-flash');                     // transparenter Funken-Blitz
+    });
+    at(1700, function(){ th.classList.add('is-open-final'); });      // Tür offen → Blick in die Bibliothek
+    at(2700, function(){ done(false); });            // dann in die App blenden
+  }
+  function done(instant){
+    for(var i=0;i<timers.length;i++) clearTimeout(timers[i]);   // keine Nachzügler
+    try{ sessionStorage.setItem(KEY, '1'); }catch(e){}
+    document.body.classList.remove('th-lock-scroll');
+    if(instant){ th.setAttribute('hidden',''); return; }
+    th.classList.add('is-gone');
+    setTimeout(function(){ th.setAttribute('hidden',''); }, 850);
+  }
+  // Eintreten: Klick auf die Tür, auf den Knopf, oder Enter/Leertaste.
+  stage.addEventListener('click', open);
+  enter.addEventListener('click', function(e){ e.stopPropagation(); open(); });
+  skip.addEventListener('click', function(e){ e.stopPropagation(); done(false); });
+  document.addEventListener('keydown', function(e){
+    if(th.hasAttribute('hidden')) return;
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    else if(e.key === 'Escape'){ done(false); }
+  });
+})();
+</script>
+
+<!-- ===== Muster-Buch-Steuerung (Szene-2-Vorschau; kein Teil des getesteten Kerns) ===== -->
+<script>
+(function(){
+  var demo = document.getElementById('bookdemo');
+  if(!demo) return;
+  var btn   = document.getElementById('btn-bookdemo');
+  var book  = document.getElementById('bd-book');
+  var close = document.getElementById('bd-close');
+  var back  = document.getElementById('bd-backdrop');
+
+  function show(){ demo.hidden = false; demo.classList.remove('is-open'); }
+  function hide(){ demo.classList.remove('is-open'); demo.hidden = true; }
+  function toggleBook(){ demo.classList.toggle('is-open'); }
+
+  if(btn)  btn.addEventListener('click', show);
+  if(book){
+    book.addEventListener('click', toggleBook);
+    book.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleBook(); }
+    });
+  }
+  if(close) close.addEventListener('click', hide);
+  if(back)  back.addEventListener('click', hide);
+  document.addEventListener('keydown', function(e){
+    if(!demo.hidden && e.key === 'Escape'){ hide(); }
+  });
+})();
 </script>
 </body>
 </html>
