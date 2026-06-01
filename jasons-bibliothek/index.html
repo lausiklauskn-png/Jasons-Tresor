@@ -225,6 +225,32 @@
   @media (prefers-reduced-motion:reduce){
     .key-fab:hover img{animation:none;
       filter:drop-shadow(0 3px 7px rgba(0,0,0,.5)) drop-shadow(0 0 12px rgba(110,231,211,.7))}}
+
+  /* ===== Regal-Ansicht (Szene 1): der Tresor als navigierbares Bücherregal-Safe ===== */
+  #regal{position:fixed; inset:0; z-index:40; background:#08081a; overflow:hidden}
+  #regal.is-hidden{display:none}
+  #regal-bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
+    transition:opacity .45s ease}
+  #regal.switching #regal-bg{opacity:0}
+  .regal-torch{position:absolute; top:50%; transform:translateY(-50%); z-index:3; border:0; background:none;
+    cursor:pointer; padding:0; height:46%; max-height:400px; line-height:0; transition:transform .15s ease}
+  .regal-torch.left{left:1%} .regal-torch.right{right:1%}
+  .regal-torch img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none;
+    animation:torch-flicker 2.6s ease-in-out infinite}
+  .regal-torch.right img{transform:scaleX(-1)}
+  .regal-torch:hover{transform:translateY(-50%) scale(1.04)}
+  .regal-torch:hover img{animation-play-state:paused; filter:drop-shadow(0 0 20px rgba(110,231,211,.9))}
+  .regal-torch:disabled{opacity:.16; cursor:default}
+  .regal-torch:disabled img{animation:none; filter:none}
+  @keyframes torch-flicker{
+    0%,100%{filter:drop-shadow(0 0 8px rgba(244,180,53,.45))}
+    50%{filter:drop-shadow(0 0 17px rgba(244,180,53,.8))}}
+  #regal-caption{position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#e8dcbf;
+    font-size:.92rem; letter-spacing:.05em; text-shadow:0 2px 8px #000; pointer-events:none; z-index:2}
+  #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
+    background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
+  #regal-tolist:hover{border-color:var(--accent)}
+  @media (prefers-reduced-motion:reduce){ .regal-torch img{animation:none} #regal-bg{transition:opacity .2s} }
 </style>
 </head>
 <body>
@@ -254,6 +280,20 @@
   <button class="th-skip" id="th-skip" type="button">überspringen</button>
 </div>
 
+<!-- ===== Regal-Ansicht (Szene 1): der Tresor als navigierbares Bücherregal-Safe.
+     Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
+<div id="regal" aria-label="Tresor — Bücherregal">
+  <img id="regal-bg" alt="" decoding="async" src="../assets/erlebnis/bilder/regal-ebene1.png" />
+  <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links">
+    <img decoding="async" alt="" src="../assets/erlebnis/bilder/fackel.png" />
+  </button>
+  <button id="regal-next" class="regal-torch right" type="button" aria-label="eine Ansicht nach rechts">
+    <img decoding="async" alt="" src="../assets/erlebnis/bilder/fackel.png" />
+  </button>
+  <div id="regal-caption" aria-live="polite"></div>
+  <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
+</div>
+
 <header>
   <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
           title="Briefkasten der Nachbar-Knoten (Sage + SB-KIMTool-Point) jetzt prüfen"
@@ -276,6 +316,7 @@
     <button id="btn-import-lib" class="btn-ghost">⤒ Einlesen / Tresor öffnen</button>
     <button id="btn-bookdemo" class="btn-ghost" title="Vorschau: wie ein Jason als Buch aussieht">📚 Muster-Buch</button>
     <button id="btn-bookseq" class="btn-ghost" title="Die Buch-Öffnen-Sequenz automatisch ansehen">▶ Buchsequenz</button>
+    <button id="btn-regal" class="btn-ghost" title="Zur Regal-Ansicht (Tresor)">📚 Regal</button>
     <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
@@ -1013,6 +1054,50 @@
   document.addEventListener('keydown', function(e){
     if(!demo.hidden && e.key === 'Escape'){ hide(); }
   });
+})();
+</script>
+
+<!-- ===== Regal-Navigation (Szene 1; kein Teil des getesteten Kerns) ===== -->
+<script>
+(function(){
+  var regal = document.getElementById('regal');
+  if(!regal) return;
+  var bg     = document.getElementById('regal-bg');
+  var prev   = document.getElementById('regal-prev');
+  var next   = document.getElementById('regal-next');
+  var cap    = document.getElementById('regal-caption');
+  var toList = document.getElementById('regal-tolist');
+  var toRegal= document.getElementById('btn-regal');
+  var P = '../assets/erlebnis/bilder/';
+  var VIEWS = [
+    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)' },
+    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft' },
+    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts' },
+    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang' },
+    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
+  ];
+  var i = 1, busy = false;
+  function render(){
+    busy = true; regal.classList.add('switching');
+    setTimeout(function(){
+      bg.src = VIEWS[i].src; cap.textContent = VIEWS[i].cap;
+      regal.classList.remove('switching'); busy = false;
+    }, 300);
+    prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
+  }
+  function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
+  prev.addEventListener('click', function(){ go(-1); });
+  next.addEventListener('click', function(){ go(1); });
+  if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
+  if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
+  document.addEventListener('keydown', function(e){
+    if(regal.classList.contains('is-hidden')) return;
+    var th = document.getElementById('threshold');
+    if(th && !th.hasAttribute('hidden')) return;     // während des Intros nichts tun
+    if(e.key === 'ArrowLeft')  go(-1);
+    else if(e.key === 'ArrowRight') go(1);
+  });
+  render();
 })();
 </script>
 

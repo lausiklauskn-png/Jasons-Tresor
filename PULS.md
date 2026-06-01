@@ -17,9 +17,17 @@
 - **Fehlversuch-Sperre:** 2× falsches Buch → 1 Minute warten.
 - **Liste bleibt** als Rückfallebene (Umschalter). `JasonLib`-Kern unberührt, nichts löschen.
 
-**Assets (Klaus liefert; Prompts in `docs/sessions/` / Chat):** benötigt = 3 Regal-Ebenen +
-Fackel(n) + 9 Buchrücken (3/Ebene, leeres Namensfeld).
-- **Schon da:** `regal-ebene1.png` (Ankunft, 1672×941). **Fehlt:** Ebene 2+3, Fackel, 9 Rücken.
+**Assets da:** `regal-ebene1.png` (Ankunft), `regal-ebene2.png` (Übergang, kosmisch),
+`regal-ebene3.png` (Kern, tiefste), `regal-links.png` / `regal-rechts.png` (Schwenk-Ansichten
+von Ebene 1), `fackel.png` (freigestellt, transparent). **Fehlt noch:** 9 Buchrücken.
+
+**Gebaut (Regal-Navigation, `npm test` 27/27 grün, Kern unberührt):** Vollbild-Overlay `#regal`
+als **Standard nach dem Intro** — Hintergrund wechselt durch 5 Ansichten
+`[links, ebene1, rechts, ebene2, ebene3]`; **Fackel-Buttons links/rechts** (rechte per CSS
+`scaleX(-1)` gespiegelt) blättern, Pfeiltasten ←/→ ebenso, sanfte Überblendung, Ebenen-Caption,
+Flammen-Flackern, `prefers-reduced-motion` respektiert. **„☰ Liste"** schaltet zur bewährten
+Listen-Ansicht, Knopf **„📚 Regal"** zurück. Interaktion „jedes Buch + richtiger Code → Tresor"
+**Vereinfachung von Klaus notiert** — Bücher/Code folgen mit den 9 Buchrücken.
 
 **Manual-Check:** Kein neuer App-Code → `npm test` unverändert grün (27/27). Regal-Feature
 wartet auf die restlichen Bilder.
