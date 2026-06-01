@@ -30,6 +30,9 @@
 - **Schwelle im Browser UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
 - `tuer-offen.png` dient als Schluss-Frame und taugt zugleich als **Szene-1-Hintergrund**
   (Bibliothek) — der eigentliche Bibliotheks-Raum (Szene 1) ist aber noch nicht gebaut.
+- **Für Szene 2 reserviert (Klaus' Wunsch):** `buch-zu.png` + `buch-auf.png` (1536×1024) —
+  ein verschlossenes Buch und dasselbe Buch offen mit herausflutendem Goldlicht. Gedacht für
+  „jede Sammlung = ein Buch mit Schlüsselloch, antippen → öffnet sich". **Noch nicht eingebaut.**
 - PWA-Service-Worker (Offline-Cache der Bilder) noch nicht gebaut.
 
 **Manual-Check:** Headless 27/27 grün. **App-Schwelle im Browser ungeprüft** — wartet auf Klaus.
