@@ -46,10 +46,13 @@ Bild vorhandenen Fackeln — Position egal. **Bücher beweg-/kippbar (Klaus):** 
 Pointer **ziehbar** (Mitte greifen = bewegen) und **kippbar** (oben greifen → Drehpunkt unten,
 unten greifen → Drehpunkt oben), Layout pro Buch lokal in `localStorage` (`jt-booklayout`);
 Klick-nach-Ziehen wird unterdrückt. (Unsichtbare Ausricht-Fläche = die Regalreihen als Start.)
-**Buchrücken-Beschriftung:** cyan/blaues Leuchten wie Ebene 2/3 (Text-Shadow + sanftes Pulsen),
-**frei eintippbar** (Feld „Beschriftung" im geöffneten Buch, lokal in `localStorage` gespeichert,
-live auf dem Rücken), und **automatisch in Höhe/Breite eingepasst** (`fitSpineText`, Spationierung
-0.05em). 5. Buchrücken (`buchruecken-5.png`) im Pool.
+**Anonyme Bücher + Regal-Schild UNTER dem Buch (Klaus):** alle Bücher sind gleich/anonym (man
+sieht dem Buch nichts an), **alle anklickbar** und **alle frei beschriftbar** — die Beschriftung
+sitzt als **Regal-Schild unterhalb** (cyan/blaues Leuchten wie Ebene 2/3, auto-eingepasste Breite,
+lokal in `localStorage`). Kippen dreht nur den **Rücken**, das Schild bleibt aufrecht.
+**Sicherheits-Logik:** **2 Fehlversuche gelten GLOBAL** (Versuche werden beim Öffnen NICHT
+zurückgesetzt) → 1 Min Sperre; ein Knacker muss alle Bücher durchprobieren und weiß nicht, hinter
+welchem etwas liegt. (Demo-Code „1234"; echtes Verschließen weiter in der Sicherheits-Sitzung.)
 
 **Erlebnis-Schicht zu Ende gebaut (Klaus' Freibrief, `npm test` 27/27 grün, Kern unberührt):**
 - **Panik-Knopf (Notfall)** im HUD: Dialog mit 3 Stufen. **Stufe 1 „Verriegeln"** scharf (zurück
