@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Vision „Tresor = Bücherregal-Safe" + Tiefen-Ebenen (Sitzung 9, Assets sammeln)
+
+**Neue Richtung (Klaus, 2026-06-01) — noch KEIN Feature-Code, erst Assets sammeln:**
+- **Nach dem Intro steht man vor einem großen Bücherregal = der versteckte Safe.** Bücher =
+  Dateien („Jasons"). Klick auf ein „echtes" Buch → es kippt nach vorn → Öffnen-Sequenz
+  (Buch-Schlüssel versinkt + Energie-Funke, schon gebaut) → **Code-Abfrage** → Safe öffnet sich.
+- **3 Regal-Ansichten = 3 Tiefen-Ebenen**, per **Fackeln links/rechts** navigierbar.
+- **Tiefen-Leitmotiv:** je tiefer, desto mehr **KI / High-End-Technologie**, „nicht von dieser
+  Welt" (Ebene 1 warm/Steampunk+Indiana-Jones mit ersten Tech-Funken → Ebene 2 halb Hightech/
+  Hologramme → Ebene 3 fast reine außerirdische KI-Architektur).
+- **Deko-Bücher:** gleiche Buchrücken, beschriftbar, **nicht** herausziehbar.
+- **Fehlversuch-Sperre:** 2× falsches Buch → 1 Minute warten.
+- **Liste bleibt** als Rückfallebene (Umschalter). `JasonLib`-Kern unberührt, nichts löschen.
+
+**Assets (Klaus liefert; Prompts in `docs/sessions/` / Chat):** benötigt = 3 Regal-Ebenen +
+Fackel(n) + 9 Buchrücken (3/Ebene, leeres Namensfeld).
+- **Schon da:** `regal-ebene1.png` (Ankunft, 1672×941). **Fehlt:** Ebene 2+3, Fackel, 9 Rücken.
+
+**Manual-Check:** Kein neuer App-Code → `npm test` unverändert grün (27/27). Regal-Feature
+wartet auf die restlichen Bilder.
+
+---
+
 ## 2026-06-01 — Schwelle entschleunigt + PR #8 gemergt (Sitzung 8)
 
 **Getan (`npm test` 27/27 grün, Kern unberührt):**
