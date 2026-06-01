@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-01 — Vision „Tresor = Bücherregal-Safe" + Tiefen-Ebenen (Sitzung 9, Assets sammeln)
+
+**Neue Richtung (Klaus, 2026-06-01) — noch KEIN Feature-Code, erst Assets sammeln:**
+- **Nach dem Intro steht man vor einem großen Bücherregal = der versteckte Safe.** Bücher =
+  Dateien („Jasons"). Klick auf ein „echtes" Buch → es kippt nach vorn → Öffnen-Sequenz
+  (Buch-Schlüssel versinkt + Energie-Funke, schon gebaut) → **Code-Abfrage** → Safe öffnet sich.
+- **3 Regal-Ansichten = 3 Tiefen-Ebenen**, per **Fackeln links/rechts** navigierbar.
+- **Tiefen-Leitmotiv:** je tiefer, desto mehr **KI / High-End-Technologie**, „nicht von dieser
+  Welt" (Ebene 1 warm/Steampunk+Indiana-Jones mit ersten Tech-Funken → Ebene 2 halb Hightech/
+  Hologramme → Ebene 3 fast reine außerirdische KI-Architektur).
+- **Deko-Bücher:** gleiche Buchrücken, beschriftbar, **nicht** herausziehbar.
+- **Fehlversuch-Sperre:** 2× falsches Buch → 1 Minute warten.
+- **Liste bleibt** als Rückfallebene (Umschalter). `JasonLib`-Kern unberührt, nichts löschen.
+
+**Assets da:** `regal-ebene1.png` (Ankunft), `regal-ebene2.png` (Übergang, kosmisch),
+`regal-ebene3.png` (Kern, tiefste), `regal-links.png` / `regal-rechts.png` (Schwenk-Ansichten
+von Ebene 1), `fackel.png` (freigestellt, transparent). **Fehlt noch:** 9 Buchrücken.
+
+**Gebaut (Regal-Navigation, `npm test` 27/27 grün, Kern unberührt):** Vollbild-Overlay `#regal`
+als **Standard nach dem Intro** — Hintergrund wechselt durch 5 Ansichten
+`[links, ebene1, rechts, ebene2, ebene3]`; **Fackel-Buttons links/rechts** (rechte per CSS
+`scaleX(-1)` gespiegelt) blättern, Pfeiltasten ←/→ ebenso, sanfte Überblendung, Ebenen-Caption,
+Flammen-Flackern, `prefers-reduced-motion` respektiert. **„☰ Liste"** schaltet zur bewährten
+Listen-Ansicht, Knopf **„📚 Regal"** zurück. Interaktion „jedes Buch + richtiger Code → Tresor"
+**Vereinfachung von Klaus notiert** — Bücher/Code folgen mit den 9 Buchrücken.
+
+**Manual-Check:** Kein neuer App-Code → `npm test` unverändert grün (27/27). Regal-Feature
+wartet auf die restlichen Bilder.
+
+---
+
 ## 2026-06-01 — Schwelle entschleunigt + PR #8 gemergt (Sitzung 8)
 
 **Getan (`npm test` 27/27 grün, Kern unberührt):**
