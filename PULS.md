@@ -29,8 +29,17 @@ Flammen-Flackern, `prefers-reduced-motion` respektiert. **„☰ Liste"** schalt
 Listen-Ansicht, Knopf **„📚 Regal"** zurück. Interaktion „jedes Buch + richtiger Code → Tresor"
 **Vereinfachung von Klaus notiert** — Bücher/Code folgen mit den 9 Buchrücken.
 
-**Manual-Check:** Kein neuer App-Code → `npm test` unverändert grün (27/27). Regal-Feature
-wartet auf die restlichen Bilder.
+**Bücher auf Ebene 1 gebaut (`npm test` 27/27 grün, Kern unberührt):** Auf der Mitte-Ansicht
+(`at-center`) liegen 3 anklickbare Bücher (`buchruecken-1/2.png`, geklont, Name auf dem Rücken).
+Klick → `jtOpenBook({requireCode:true})` öffnet das Buch-Overlay mit **Code-Abfrage**: richtiger
+Code → Öffnen-Sequenz (Schlüssel versinkt + Energie-Funke) + Inhalt; **2× falsch → 1 Min Sperre**
+(Countdown). **Ehrliche Vorschau:** Demo-Code „1234" sichtbar, keine echten Daten, kein echtes
+Passwort — die Verdrahtung an den **AES-Tresor** (echtes Passwort) + echte Einträge folgt.
+`buchruecken-1/2.png` abgelegt (transparent). **Space-Ebenen:** noch Speicherchips offen (Prompt
+gegeben: Chips = Teile des 2. Schlüssels). Alle 7 Inline-Skripte syntaxgeprüft.
+
+**Manual-Check:** Headless 27/27 grün. Regal + Bücher + Code/Sperre im Browser **ungeprüft** —
+wartet auf Klaus.
 
 ---
 
