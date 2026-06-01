@@ -93,53 +93,46 @@
      bleibt Passwort + AES-256-GCM. Bilder liegen lokal (offline) in assets/erlebnis/. */
   body.th-lock-scroll{overflow:hidden}
   #threshold{position:fixed; inset:0; z-index:1000; background:#08081a;
-    overflow:hidden; transition:opacity .8s ease}
+    overflow:hidden; transition:opacity 1.4s ease}
   #threshold[hidden]{display:none}
   #threshold.is-gone{opacity:0; pointer-events:none}
   .th-stage{position:absolute; inset:0; cursor:pointer}
   .th-door{position:absolute; inset:0; width:100%; height:100%;
     object-fit:cover; object-position:center 45%; user-select:none; -webkit-user-drag:none;
-    transition:transform 1.6s cubic-bezier(.6,.02,.2,1), filter 1.6s ease}
-  /* Schloss-Sequenz: 5 Frames (Türkis lädt → goldener Blitz → Gold flutet) */
+    transition:transform 4.2s cubic-bezier(.55,.04,.25,1), filter 4.2s ease}
+  /* Schloss-Sequenz: 5 Frames liegen übereinander und blenden LANGSAM ineinander */
   .th-lock-seq{position:absolute; inset:0; opacity:0; transform:scale(1.12);
-    transition:opacity .5s ease, transform 1.3s cubic-bezier(.6,.02,.2,1)}
+    transition:opacity 1s ease, transform 5s cubic-bezier(.55,.04,.25,1)}
   .th-lock-seq img{position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; object-position:center 45%; opacity:0; transition:opacity .16s linear;
+    object-fit:cover; object-position:center 45%; opacity:0; transition:opacity 1.2s ease;
     user-select:none; -webkit-user-drag:none}
   .th-lock-seq img.is-on{opacity:1}
   .th-flash{position:absolute; inset:0; pointer-events:none; opacity:0;
     background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
+  .th-flash.is-flash{animation:th-flash 2s ease-out forwards}
+  @keyframes th-flash{0%{opacity:0} 40%{opacity:1} 100%{opacity:0}}
   /* transparenter Funken-Blitz (licht-blitz.png), additiv über dem Gold-Frame */
-  .th-burst{position:absolute; left:50%; top:46%; width:72%; max-width:920px; height:auto;
+  .th-burst{position:absolute; left:50%; top:46%; width:74%; max-width:960px; height:auto;
     transform:translate(-50%,-50%) scale(.3); opacity:0; pointer-events:none;
     mix-blend-mode:screen; filter:drop-shadow(0 0 40px rgba(244,180,53,.55))}
-  .th-burst.is-flash{animation:th-burst 1.1s ease-out forwards}
+  .th-burst.is-flash{animation:th-burst 2.4s ease-out forwards}
   @keyframes th-burst{
     0%{opacity:0; transform:translate(-50%,-50%) scale(.3)}
-    28%{opacity:1; transform:translate(-50%,-50%) scale(1)}
-    100%{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
+    32%{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1.75)}}
   #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
   #threshold.is-opening .th-lock-seq{opacity:1; transform:scale(1)}
-  /* Finaler Beat: Tür offen, Blick in die Bibliothek (sanftes Hineingleiten) */
+  /* Finaler Beat: Tür offen, Blick in die Bibliothek (langsames Hineingleiten) */
   .th-open{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
-    object-position:center; opacity:0; transform:scale(1.06);
-    transition:opacity .7s ease, transform 1.8s ease; user-select:none; -webkit-user-drag:none}
+    object-position:center; opacity:0; transform:scale(1.05);
+    transition:opacity 1.8s ease, transform 3.5s ease; user-select:none; -webkit-user-drag:none}
   #threshold.is-open-final .th-open{opacity:1; transform:scale(1.12)}
-  .th-flash.is-flash{animation:th-flash 1s ease-out forwards}
-  @keyframes th-flash{0%{opacity:0} 35%{opacity:1} 100%{opacity:0}}
-  .th-ui{position:absolute; left:0; right:0; bottom:6vh; z-index:2; text-align:center; padding:0 18px}
-  #threshold.is-opening .th-ui{opacity:0; pointer-events:none; transition:opacity .4s ease}
-  .th-enter{font:inherit; font-size:1.05rem; font-weight:600; color:#08081a;
-    background:linear-gradient(#fcd34d,#f4b435); border:1px solid #c98a16; border-radius:999px;
-    padding:12px 26px; cursor:pointer;
-    box-shadow:0 6px 24px rgba(244,180,53,.35), 0 0 0 1px rgba(255,255,255,.15) inset}
-  .th-enter:hover{filter:brightness(1.06)} .th-enter:active{transform:translateY(1px)}
-  .th-hint{margin:14px auto 0; max-width:540px; color:#bfd8d4; font-size:.86rem; line-height:1.45;
-    text-shadow:0 1px 6px rgba(0,0,0,.7)}
-  .th-hint b{color:#6ee7d3; font-weight:600}
-  .th-skip{display:inline-block; margin-top:10px; color:#8fb3b1; font-size:.8rem;
-    text-decoration:underline; cursor:pointer; background:none; border:0}
-  .th-skip:hover{color:#bfd8d4}
+  /* Kein Erklärtext (der Zeiger zeigt schon, dass man klickt) — nur ein dezenter Ausstieg */
+  .th-skip{position:absolute; right:16px; bottom:14px; z-index:2; color:#6f8c8a; font-size:.75rem;
+    text-decoration:underline; cursor:pointer; background:none; border:0; opacity:.5;
+    transition:opacity .3s ease}
+  .th-skip:hover{opacity:1; color:#bfd8d4}
+  #threshold.is-opening .th-skip{opacity:0; pointer-events:none; transition:opacity .5s ease}
   @media (prefers-reduced-motion:reduce){
     .th-door{transition:opacity .4s ease}
     #threshold.is-opening .th-door{transform:none}
@@ -206,12 +199,7 @@
     <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.png"
          alt="Die Tür steht offen — Blick in die Bibliothek" />
   </div>
-  <div class="th-ui">
-    <button class="th-enter" id="th-enter" type="button">🔑 Tür öffnen</button>
-    <p class="th-hint">Tippe die Tür an, um einzutreten.<br>
-      <b>Ehrlich:</b> Diese Tür ist nur die Begrüßung — das echte Schloss ist dein <b>Passwort</b>.</p>
-    <button class="th-skip" id="th-skip" type="button">überspringen</button>
-  </div>
+  <button class="th-skip" id="th-skip" type="button">überspringen</button>
 </div>
 
 <header>
@@ -877,7 +865,6 @@
 (function(){
   var th = document.getElementById('threshold');
   if(!th) return;
-  var enter = document.getElementById('th-enter');
   var skip  = document.getElementById('th-skip');
   var stage = document.getElementById('th-stage');
   var flash = document.getElementById('th-flash');
@@ -901,16 +888,17 @@
     if(opening) return; opening = true;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
     th.classList.add('is-opening');                 // Tür zoomt, Schloss-Sequenz blendet ein
-    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); at(450, function(){ done(false); }); return; }
-    // Frame-Sequenz: Türkis lädt sich auf → goldener Blitz → Gold flutet aus
-    var times = [450, 680, 880, 1120, 1480];        // Einblendzeiten Frame 1..5
+    if(reduce){ showFrame(frames.length - 1); th.classList.add('is-open-final'); at(800, function(){ done(false); }); return; }
+    // Frame-Sequenz LANGSAM: jeder Frame blendet über ~1,2 s ein und überlagert den
+    // vorherigen (weiche Kreuz-Überblendung), mit Ruhe dazwischen — schwere Tür, viel Spannung.
+    var times = [1600, 3000, 4400, 5900, 7400];     // Einblendzeiten Frame 1..5 (Türkis → Gold)
     for(var i=0; i<frames.length; i++){ (function(idx){ at(times[idx], function(){ showFrame(idx); }); })(i); }
-    at(1200, function(){                                             // Lichtblitz mit dem Gold-Frame
+    at(6000, function(){                                             // Lichtblitz mit dem Gold-Frame
       flash.classList.add('is-flash');
       if(burst) burst.classList.add('is-flash');                     // transparenter Funken-Blitz
     });
-    at(1700, function(){ th.classList.add('is-open-final'); });      // Tür offen → Blick in die Bibliothek
-    at(2700, function(){ done(false); });            // dann in die App blenden
+    at(9000, function(){ th.classList.add('is-open-final'); });      // Tür geht langsam auf → Bibliothek
+    at(11800, function(){ done(false); });           // dann ruhig in die App blenden
   }
   function done(instant){
     for(var i=0;i<timers.length;i++) clearTimeout(timers[i]);   // keine Nachzügler
@@ -918,12 +906,11 @@
     document.body.classList.remove('th-lock-scroll');
     if(instant){ th.setAttribute('hidden',''); return; }
     th.classList.add('is-gone');
-    setTimeout(function(){ th.setAttribute('hidden',''); }, 850);
+    setTimeout(function(){ th.setAttribute('hidden',''); }, 1450);
   }
-  // Eintreten: Klick auf die Tür, auf den Knopf, oder Enter/Leertaste.
+  // Eintreten: Klick irgendwo auf die Tür, oder Enter/Leertaste (der Zeiger lädt zum Klick ein).
   stage.addEventListener('click', open);
-  enter.addEventListener('click', function(e){ e.stopPropagation(); open(); });
-  skip.addEventListener('click', function(e){ e.stopPropagation(); done(false); });
+  if(skip) skip.addEventListener('click', function(e){ e.stopPropagation(); done(false); });
   document.addEventListener('keydown', function(e){
     if(th.hasAttribute('hidden')) return;
     if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
