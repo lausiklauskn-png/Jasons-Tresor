@@ -269,7 +269,7 @@
   .regal-torch:disabled{cursor:default}
   .regal-torch:disabled::before{display:none}
   /* Bücher auf der mittleren Ebene-1-Ansicht — volle Regalreihen (kein leeres Regal) */
-  #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:9%; z-index:2; overflow:hidden;
+  #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:14%; z-index:2;
     display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
   #regal:not(.has-books) #regal-books{display:none}
   .shelf-row{display:flex; justify-content:center; align-items:flex-end; gap:1.4%; height:17%}
@@ -1241,11 +1241,11 @@
   var toRegal= document.getElementById('btn-regal');
   var P = 'assets/erlebnis/bilder/';
   var VIEWS = [
-    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:40,r:7,t:12,b:12} },
-    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:17,r:17,t:11,b:9} },
-    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:7,r:40,t:12,b:12} },
-    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:15,r:15,t:12,b:10} },
-    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:15,r:15,t:13,b:11} }
+    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:40,r:7,t:12,b:16} },
+    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:17,r:17,t:11,b:15} },
+    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:7,r:40,t:12,b:16} },
+    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:15,r:15,t:12,b:15} },
+    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:15,r:15,t:13,b:15} }
   ];
   var i = 1, busy = false;
   function render(){
