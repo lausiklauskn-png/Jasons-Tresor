@@ -263,19 +263,21 @@
   @keyframes torch-flicker{
     0%,100%{filter:drop-shadow(0 0 8px rgba(244,180,53,.45))}
     50%{filter:drop-shadow(0 0 17px rgba(244,180,53,.8))}}
-  /* Bücher auf der mittleren Ebene-1-Ansicht */
-  #regal-books{position:absolute; left:0; right:0; top:40%; z-index:2; display:flex; gap:3%;
-    justify-content:center; align-items:flex-end; padding:0 16%; pointer-events:none}
+  /* Bücher auf der mittleren Ebene-1-Ansicht — volle Regalreihen (kein leeres Regal) */
+  #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:9%; z-index:2; overflow:hidden;
+    display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
   #regal:not(.at-center) #regal-books{display:none}
-  .shelf-book{pointer-events:auto; position:relative; height:26vh; max-height:240px; border:0;
-    background:none; cursor:pointer; padding:0; line-height:0;
-    filter:drop-shadow(0 8px 16px rgba(0,0,0,.55)); transition:transform .25s ease, filter .25s ease}
+  .shelf-row{display:flex; justify-content:center; align-items:flex-end; gap:.5%; height:17%}
+  .filler{height:94%; width:auto; opacity:.9; pointer-events:none; -webkit-user-drag:none;
+    filter:drop-shadow(0 5px 10px rgba(0,0,0,.5))}
+  .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:pointer;
+    padding:0; line-height:0; filter:drop-shadow(0 6px 12px rgba(0,0,0,.55)); transition:transform .2s ease, filter .2s ease}
   .shelf-book img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none}
-  .shelf-book:hover, .shelf-book:focus-visible{transform:translateY(-12px) rotate(-1deg); outline:none;
-    filter:drop-shadow(0 16px 26px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.6))}
-  .sb-name{position:absolute; left:50%; top:48%; transform:translate(-50%,-50%); width:64%;
-    text-align:center; color:#f3e4bd; font-size:.72rem; font-weight:700; letter-spacing:.02em;
-    text-shadow:0 1px 3px #000; pointer-events:none; word-break:break-word; line-height:1.15}
+  .shelf-book:hover, .shelf-book:focus-visible{transform:translateY(-10px); outline:none;
+    filter:drop-shadow(0 14px 22px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.65))}
+  .sb-name{position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); width:62%; text-align:center;
+    color:#f3e4bd; font-size:.62rem; font-weight:700; text-shadow:0 1px 3px #000; pointer-events:none;
+    line-height:1.1; word-break:break-word}
   #regal-caption{position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#e8dcbf;
     font-size:.92rem; letter-spacing:.05em; text-shadow:0 2px 8px #000; pointer-events:none; z-index:2}
   #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
@@ -315,21 +317,8 @@
      Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
 <div id="regal" aria-label="Tresor — Bücherregal">
   <img id="regal-bg" alt="" decoding="async" src="../assets/erlebnis/bilder/regal-ebene1.png" />
-  <!-- Bücher auf der mittleren Ebene-1-Ansicht (nur sichtbar, wenn at-center) -->
-  <div id="regal-books" aria-label="Bücher im Regal">
-    <button class="shelf-book" type="button" data-name="Rezepte">
-      <img decoding="async" alt="Buch: Rezepte" src="../assets/erlebnis/bilder/buchruecken-1.png" />
-      <span class="sb-name">Rezepte</span>
-    </button>
-    <button class="shelf-book" type="button" data-name="Reisen">
-      <img decoding="async" alt="Buch: Reisen" src="../assets/erlebnis/bilder/buchruecken-2.png" />
-      <span class="sb-name">Reisen</span>
-    </button>
-    <button class="shelf-book" type="button" data-name="Ideen">
-      <img decoding="async" alt="Buch: Ideen" src="../assets/erlebnis/bilder/buchruecken-1.png" />
-      <span class="sb-name">Ideen</span>
-    </button>
-  </div>
+  <!-- Bücher auf der mittleren Ebene-1-Ansicht (Reihen per JS gefüllt; nur sichtbar at-center) -->
+  <div id="regal-books" aria-label="Bücher im Regal"></div>
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links">
     <img decoding="async" alt="" src="../assets/erlebnis/bilder/fackel.png" />
   </button>
@@ -1196,15 +1185,37 @@
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
-  // Bücher anklicken → Buch-Öffnen mit Code-Abfrage (jedes Buch + richtiger Code → Tresor)
-  var books = regal.querySelectorAll('.shelf-book');
-  for(var b=0; b<books.length; b++){
-    (function(el){
-      el.addEventListener('click', function(){
-        if(window.jtOpenBook) window.jtOpenBook({ title: el.getAttribute('data-name') || 'Buch', requireCode: true });
-      });
-    })(books[b]);
+  // Regal füllen: volle Reihen aus Füll-Büchern + echte anklickbare Bücher dazwischen,
+  // damit das Regal nie leer aussieht. Echte Bücher: Klick → Code-Abfrage → Tresor.
+  var SPINES = [P+'buchruecken-1.png', P+'buchruecken-2.png', P+'buchruecken-3.png', P+'buchruecken-4.png'];
+  var REAL = [ {name:'Rezepte', row:1, col:1}, {name:'Reisen', row:2, col:3}, {name:'Ideen', row:3, col:4} ];
+  function realAt(r,c){ for(var k=0;k<REAL.length;k++){ if(REAL[k].row===r && REAL[k].col===c) return REAL[k]; } return null; }
+  function buildShelf(){
+    var wrap = document.getElementById('regal-books');
+    if(!wrap || wrap.getAttribute('data-built')) return;
+    wrap.setAttribute('data-built','1');
+    var ROWS = 5, PER = 6, si = 0;
+    for(var r=0; r<ROWS; r++){
+      var row = document.createElement('div'); row.className = 'shelf-row';
+      for(var c=0; c<PER; c++){
+        var real = realAt(r, c);
+        if(real){
+          var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book';
+          var im = document.createElement('img'); im.src = SPINES[(r + c) % SPINES.length]; im.alt = 'Buch: ' + real.name;
+          var sp = document.createElement('span'); sp.className = 'sb-name'; sp.textContent = real.name;
+          btn.appendChild(im); btn.appendChild(sp);
+          (function(nm){ btn.addEventListener('click', function(){ if(window.jtOpenBook) window.jtOpenBook({ title: nm, requireCode: true }); }); })(real.name);
+          row.appendChild(btn);
+        } else {
+          var f = document.createElement('img'); f.className = 'filler'; f.alt = ''; f.setAttribute('aria-hidden', 'true');
+          f.src = SPINES[si % SPINES.length]; si++;
+          row.appendChild(f);
+        }
+      }
+      wrap.appendChild(row);
+    }
   }
+  buildShelf();
   if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
   if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
   document.addEventListener('keydown', function(e){
