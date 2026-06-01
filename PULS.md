@@ -40,6 +40,12 @@ Passwort — die Verdrahtung an den **AES-Tresor** (echtes Passwort) + echte Ein
 und Ebene 3 mit je 5×6 gemischten Füll-Büchern; echte anklickbare Bücher je Ebene (Ebene 1:
 Rezepte/Reisen/Ideen · Ebene 2: Konten/Verträge · Ebene 3: Schlüssel/Vermächtnis). Sichtbar via
 `.has-books` (frontale Ebenen 1/3/4; die Schwenk-Ansichten links/rechts bleiben buchlos).
+**Navigation = Fackeln im Bild (Klaus):** eigene Fackel-Buttons entfernt; stattdessen Rand-
+Klickflächen links/rechts mit **Hover-Halo** („da ist ein Link", fadet zurück) über den im Regal-
+Bild vorhandenen Fackeln — Position egal. **Bücher beweg-/kippbar (Klaus):** alle Bücher per
+Pointer **ziehbar** (Mitte greifen = bewegen) und **kippbar** (oben greifen → Drehpunkt unten,
+unten greifen → Drehpunkt oben), Layout pro Buch lokal in `localStorage` (`jt-booklayout`);
+Klick-nach-Ziehen wird unterdrückt. (Unsichtbare Ausricht-Fläche = die Regalreihen als Start.)
 **Buchrücken-Beschriftung:** cyan/blaues Leuchten wie Ebene 2/3 (Text-Shadow + sanftes Pulsen),
 **frei eintippbar** (Feld „Beschriftung" im geöffneten Buch, lokal in `localStorage` gespeichert,
 live auf dem Rücken), und **automatisch in Höhe/Breite eingepasst** (`fitSpineText`, Spationierung
