@@ -266,7 +266,7 @@
   /* Bücher auf der mittleren Ebene-1-Ansicht — volle Regalreihen (kein leeres Regal) */
   #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:9%; z-index:2; overflow:hidden;
     display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
-  #regal:not(.at-center) #regal-books{display:none}
+  #regal:not(.has-books) #regal-books{display:none}
   .shelf-row{display:flex; justify-content:center; align-items:flex-end; gap:.5%; height:17%}
   .filler{height:94%; width:auto; opacity:.9; pointer-events:none; -webkit-user-drag:none;
     filter:drop-shadow(0 5px 10px rgba(0,0,0,.5))}
@@ -344,7 +344,7 @@
      Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
 <div id="regal" aria-label="Tresor — Bücherregal">
   <img id="regal-bg" alt="" decoding="async" src="assets/erlebnis/bilder/regal-ebene1.png" />
-  <!-- Bücher auf der mittleren Ebene-1-Ansicht (Reihen per JS gefüllt; nur sichtbar at-center) -->
+  <!-- Bücher auf den frontalen Ebenen (Reihen per JS gefüllt; sichtbar via .has-books) -->
   <div id="regal-books" aria-label="Bücher im Regal"></div>
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links">
     <img decoding="async" alt="" src="assets/erlebnis/bilder/fackel.png" />
@@ -1223,11 +1223,12 @@
     { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
   ];
   var i = 1, busy = false;
+  var BOOK_LEVELS = { 1:true, 3:true, 4:true };   // frontale Ebenen mit Büchern
   function render(){
-    busy = true; regal.classList.add('switching'); regal.classList.remove('at-center');
+    busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
       bg.src = VIEWS[i].src; cap.textContent = VIEWS[i].cap;
-      regal.classList.toggle('at-center', i === 1);     // Bücher nur auf der Mitte-Ansicht
+      if(BOOK_LEVELS[i]){ renderBooks(i); regal.classList.add('has-books'); }
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
@@ -1236,22 +1237,26 @@
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
   // Regal füllen: volle Reihen aus Füll-Büchern + echte anklickbare Bücher dazwischen,
-  // damit das Regal nie leer aussieht. Echte Bücher: Klick → Code-Abfrage → Tresor.
-  var SPINES = [P+'buchruecken-1.png', P+'buchruecken-2.png', P+'buchruecken-3.png', P+'buchruecken-4.png'];
-  var REAL = [ {name:'Rezepte', row:1, col:1}, {name:'Reisen', row:2, col:3}, {name:'Ideen', row:3, col:4} ];
-  function realAt(r,c){ for(var k=0;k<REAL.length;k++){ if(REAL[k].row===r && REAL[k].col===c) return REAL[k]; } return null; }
-  function buildShelf(){
-    var wrap = document.getElementById('regal-books');
-    if(!wrap || wrap.getAttribute('data-built')) return;
-    wrap.setAttribute('data-built','1');
-    var ROWS = 5, PER = 6, si = 0;
+  // auf allen FRONTALEN Ebenen (Mitte=1, Ebene2=3, Ebene3=4), gemischt — nie leer.
+  var SPINES = [P+'buchruecken-1.png', P+'buchruecken-2.png', P+'buchruecken-3.png', P+'buchruecken-4.png', P+'buchruecken-5.png'];
+  var REALS = {
+    1: [ {name:'Rezepte', row:1, col:1}, {name:'Reisen', row:2, col:3}, {name:'Ideen', row:3, col:4} ],
+    3: [ {name:'Konten', row:1, col:2}, {name:'Verträge', row:3, col:3} ],
+    4: [ {name:'Schlüssel', row:2, col:2}, {name:'Vermächtnis', row:3, col:4} ]
+  };
+  function realAt(list, r, c){ for(var k=0;k<list.length;k++){ if(list[k].row===r && list[k].col===c) return list[k]; } return null; }
+  function renderBooks(level){
+    var wrap = document.getElementById('regal-books'); if(!wrap) return;
+    wrap.innerHTML = '';
+    var list = REALS[level] || [];
+    var ROWS = 5, PER = 6, si = level;     // si=level → je Ebene andere Misch-Reihenfolge
     for(var r=0; r<ROWS; r++){
       var row = document.createElement('div'); row.className = 'shelf-row';
       for(var c=0; c<PER; c++){
-        var real = realAt(r, c);
+        var real = realAt(list, r, c);
         if(real){
           var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book';
-          var im = document.createElement('img'); im.src = SPINES[(r + c) % SPINES.length]; im.alt = 'Buch: ' + real.name;
+          var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = 'Buch: ' + real.name;
           var sp = document.createElement('span'); sp.className = 'sb-name'; sp.textContent = real.name;
           btn.appendChild(im); btn.appendChild(sp);
           (function(nm){ btn.addEventListener('click', function(){ if(window.jtOpenBook) window.jtOpenBook({ title: nm, requireCode: true }); }); })(real.name);
@@ -1265,7 +1270,6 @@
       wrap.appendChild(row);
     }
   }
-  buildShelf();
 
   // Einmaliger Bedien-Hinweis: blendet nach kurzer Zeit oder bei erster Navigation aus.
   var hint = document.getElementById('regal-hint');
