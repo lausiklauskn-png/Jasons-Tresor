@@ -199,6 +199,12 @@
     transition:max-height .5s ease, opacity .5s ease, padding .5s ease}
   #bookdemo.is-open .bd-content{max-height:340px; opacity:1; padding:16px}
   .bd-content h3{margin:.2em 0 .4em; color:var(--accent)}
+  .bd-rename-row{display:none; margin:0 0 10px}
+  #bookdemo.has-rename .bd-rename-row{display:block}
+  .bd-rename-row span{display:block; font-size:.78rem; color:var(--muted); margin-bottom:4px}
+  .bd-rename-row input{width:100%; font:inherit; color:var(--ink); background:#06100f;
+    border:1px solid var(--line); border-radius:10px; padding:9px 12px}
+  .bd-rename-row input:focus{outline:none; border-color:var(--accent)}
   .bd-content p{margin:.3em 0; color:var(--muted); font-size:.92rem; line-height:1.5}
   /* Code-Abfrage (nur im Regal-Buch-Modus sichtbar) */
   .bd-code{display:none; flex-direction:column; align-items:center; gap:8px; width:min(88vw,420px);
@@ -275,9 +281,18 @@
   .shelf-book img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none}
   .shelf-book:hover, .shelf-book:focus-visible{transform:translateY(-10px); outline:none;
     filter:drop-shadow(0 14px 22px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.65))}
-  .sb-name{position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); width:62%; text-align:center;
-    color:#f3e4bd; font-size:.62rem; font-weight:700; text-shadow:0 1px 3px #000; pointer-events:none;
-    line-height:1.1; word-break:break-word}
+  /* Buchrücken-Beschriftung: cyan/blaues Leuchten wie Ebene 2/3, auto-skaliert (JS),
+     spationiert. Box ist fest (% des Buches), Schriftgröße wird per JS eingepasst. */
+  .sb-name{position:absolute; left:50%; top:46%; transform:translate(-50%,-50%);
+    width:56%; height:36%; display:flex; align-items:center; justify-content:center; text-align:center;
+    overflow:hidden; line-height:1.05; letter-spacing:.05em; font-weight:700; word-break:break-word;
+    pointer-events:none; color:#d3fbf3; font-size:14px;
+    text-shadow:0 0 4px #6ee7d3, 0 0 10px rgba(110,231,211,.85), 0 0 18px rgba(59,130,246,.6), 0 1px 2px #000;
+    animation:sb-glow 3s ease-in-out infinite}
+  @keyframes sb-glow{
+    0%,100%{text-shadow:0 0 4px #6ee7d3, 0 0 9px rgba(110,231,211,.7), 0 0 16px rgba(59,130,246,.5), 0 1px 2px #000}
+    50%{text-shadow:0 0 6px #9af3e6, 0 0 14px rgba(110,231,211,.95), 0 0 26px rgba(59,130,246,.8), 0 1px 2px #000}}
+  @media (prefers-reduced-motion:reduce){ .sb-name{animation:none} }
   #regal-caption{position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#e8dcbf;
     font-size:.92rem; letter-spacing:.05em; text-shadow:0 2px 8px #000; pointer-events:none; z-index:2}
   #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
@@ -450,6 +465,8 @@
     </form>
     <div class="bd-content" id="bd-content">
       <h3 id="bd-content-title">Mein erstes Jason</h3>
+      <label class="bd-rename-row"><span>Beschriftung (leuchtet auf dem Buchrücken)</span>
+        <input id="bd-rename" type="text" maxlength="24" autocomplete="off" placeholder="Name auf dem Buch" /></label>
       <p>Hier erscheint später der echte Inhalt dieser Sammlung — genau die Detail- und
          Bearbeiten-Ansicht, die du heute schon kennst. Nur das Aussehen wird ein Buch.</p>
       <p><b>Ehrlich:</b> Vorschau ohne echte Daten. Das eigentliche Schloss bleibt dein
@@ -1133,6 +1150,8 @@
   var codeIn   = document.getElementById('bd-code-input');
   var codeGo   = codeForm ? codeForm.querySelector('.bd-code-go') : null;
   var codeLock = document.getElementById('bd-code-lock');
+  var renameIn = document.getElementById('bd-rename');
+  var curId = null, curEl = null;
   var seqTimer = null, lockTimer = null;
   var DEMO_CODE = '1234';                 // Vorschau-Code (ehrlich angezeigt); echtes AES-Passwort folgt
   var attempts = 0, lockedUntil = 0;
@@ -1166,6 +1185,9 @@
     demo.classList.remove('is-open');
     demo.classList.toggle('code-mode', !!opts.requireCode);
     if(hintEl) hintEl.textContent = opts.requireCode ? 'Code eingeben, um zu öffnen' : 'mit dem Schlüssel öffnen';
+    curId = opts.id || null; curEl = opts.el || null;
+    demo.classList.toggle('has-rename', !!curId);             // Beschriftung nur bei echten Regal-Büchern
+    if(renameIn) renameIn.value = opts.title || '';
     attempts = 0;
     if(codeIn) codeIn.value = '';
     updateLockUI();
@@ -1188,6 +1210,14 @@
         if(codeIn){ codeIn.value = ''; codeIn.focus(); }
         if(attempts >= 2){ attempts = 0; startLock(); }   // 2× falsch → 1 Minute Sperre
       }
+    });
+  }
+
+  if(renameIn){
+    renameIn.addEventListener('input', function(){
+      var v = renameIn.value;
+      setTitles(v || 'Mein erstes Jason');
+      if(curId && window.jtRenameBook) window.jtRenameBook(curId, v);
     });
   }
 
@@ -1228,11 +1258,12 @@
     busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
       bg.src = VIEWS[i].src; cap.textContent = VIEWS[i].cap;
-      if(BOOK_LEVELS[i]){ renderBooks(i); regal.classList.add('has-books'); }
+      if(BOOK_LEVELS[i]){ renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines); }
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
   }
+  window.addEventListener('resize', function(){ if(regal.classList.contains('has-books')) fitAllSpines(); });
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
@@ -1245,21 +1276,43 @@
     4: [ {name:'Schlüssel', row:2, col:2}, {name:'Vermächtnis', row:3, col:4} ]
   };
   function realAt(list, r, c){ for(var k=0;k<list.length;k++){ if(list[k].row===r && list[k].col===c) return list[k]; } return null; }
+  // Frei wählbare Beschriftungen (nur lokal im Browser gespeichert)
+  function loadNames(){ try{ return JSON.parse(localStorage.getItem('jt-booknames') || '{}') || {}; }catch(e){ return {}; } }
+  function saveNames(m){ try{ localStorage.setItem('jt-booknames', JSON.stringify(m)); }catch(e){} }
+  // Schrift automatisch in Höhe/Breite an den Buchrücken einpassen
+  function fitSpineText(el){
+    if(!el) return; var fs = 22, min = 6, guard = 40; el.style.fontSize = fs + 'px';
+    while(guard-- > 0 && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && fs > min){
+      fs -= 1; el.style.fontSize = fs + 'px';
+    }
+  }
+  function fitAllSpines(){ var ns = document.querySelectorAll('#regal-books .sb-name'); for(var i=0;i<ns.length;i++) fitSpineText(ns[i]); }
+  window.jtFitSpine = fitSpineText;
+  window.jtRenameBook = function(id, name){
+    var m = loadNames(); m[id] = name; saveNames(m);
+    var sp = document.querySelector('#regal-books .shelf-book[data-id="' + id + '"] .sb-name');
+    if(sp){ sp.textContent = name; fitSpineText(sp); }
+  };
   function renderBooks(level){
     var wrap = document.getElementById('regal-books'); if(!wrap) return;
     wrap.innerHTML = '';
-    var list = REALS[level] || [];
+    var list = REALS[level] || [], names = loadNames();
     var ROWS = 5, PER = 6, si = level;     // si=level → je Ebene andere Misch-Reihenfolge
     for(var r=0; r<ROWS; r++){
       var row = document.createElement('div'); row.className = 'shelf-row';
       for(var c=0; c<PER; c++){
         var real = realAt(list, r, c);
         if(real){
-          var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book';
-          var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = 'Buch: ' + real.name;
-          var sp = document.createElement('span'); sp.className = 'sb-name'; sp.textContent = real.name;
+          var id = level + '-' + r + '-' + c;
+          var nm = names[id] || real.name;
+          var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book'; btn.setAttribute('data-id', id);
+          var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = 'Buch: ' + nm;
+          var sp = document.createElement('span'); sp.className = 'sb-name'; sp.textContent = nm;
           btn.appendChild(im); btn.appendChild(sp);
-          (function(nm){ btn.addEventListener('click', function(){ if(window.jtOpenBook) window.jtOpenBook({ title: nm, requireCode: true }); }); })(real.name);
+          (function(bid, el){ el.addEventListener('click', function(){
+            var s = el.querySelector('.sb-name'); var t = s ? s.textContent : 'Buch';
+            if(window.jtOpenBook) window.jtOpenBook({ title: t, requireCode: true, id: bid, el: el });
+          }); })(id, btn);
           row.appendChild(btn);
         } else {
           var f = document.createElement('img'); f.className = 'filler'; f.alt = ''; f.setAttribute('aria-hidden', 'true');
