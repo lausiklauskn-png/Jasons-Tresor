@@ -35,8 +35,10 @@ Klick → `jtOpenBook({requireCode:true})` öffnet das Buch-Overlay mit **Code-A
 Code → Öffnen-Sequenz (Schlüssel versinkt + Energie-Funke) + Inhalt; **2× falsch → 1 Min Sperre**
 (Countdown). **Ehrliche Vorschau:** Demo-Code „1234" sichtbar, keine echten Daten, kein echtes
 Passwort — die Verdrahtung an den **AES-Tresor** (echtes Passwort) + echte Einträge folgt.
-`buchruecken-1/2.png` abgelegt (transparent). **Space-Ebenen:** noch Speicherchips offen (Prompt
-gegeben: Chips = Teile des 2. Schlüssels). Alle 7 Inline-Skripte syntaxgeprüft.
+**Regal voll statt leer:** 4 Buchrücken-Varianten (`buchruecken-1…4.png`, transparent) — Reihen
+per JS gefüllt (5×6 = Füll-Bücher), die 3 echten anklickbaren dazwischen. **Space-Ebenen:** noch
+Speicherchips offen (Prompt gegeben: Chips = Teile des 2. Schlüssels). Alle 7 Inline-Skripte
+syntaxgeprüft.
 
 **Manual-Check:** Headless 27/27 grün. Regal + Bücher + Code/Sperre im Browser **ungeprüft** —
 wartet auf Klaus.
