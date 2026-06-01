@@ -1241,19 +1241,20 @@
   var toRegal= document.getElementById('btn-regal');
   var P = '../assets/erlebnis/bilder/';
   var VIEWS = [
-    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)' },
-    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft' },
-    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts' },
-    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang' },
-    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
+    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:40,r:7,t:12,b:12} },
+    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:17,r:17,t:11,b:9} },
+    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:7,r:40,t:12,b:12} },
+    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:15,r:15,t:12,b:10} },
+    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:15,r:15,t:13,b:11} }
   ];
   var i = 1, busy = false;
-  var BOOK_LEVELS = { 1:true, 3:true, 4:true };   // frontale Ebenen mit Büchern
   function render(){
     busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
-      bg.src = VIEWS[i].src; cap.textContent = VIEWS[i].cap;
-      if(BOOK_LEVELS[i]){ renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines); }
+      var v = VIEWS[i]; bg.src = v.src; cap.textContent = v.cap;
+      var bk = document.getElementById('regal-books');
+      if(bk && v.box){ bk.style.left = v.box.l + '%'; bk.style.right = v.box.r + '%'; bk.style.top = v.box.t + '%'; bk.style.bottom = v.box.b + '%'; }
+      renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines);   // jede Ansicht bekommt Bücher
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
