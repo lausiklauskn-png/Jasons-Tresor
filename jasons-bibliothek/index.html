@@ -109,6 +109,15 @@
   .th-lock-seq img.is-on{opacity:1}
   .th-flash{position:absolute; inset:0; pointer-events:none; opacity:0;
     background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
+  /* transparenter Funken-Blitz (licht-blitz.png), additiv über dem Gold-Frame */
+  .th-burst{position:absolute; left:50%; top:46%; width:72%; max-width:920px; height:auto;
+    transform:translate(-50%,-50%) scale(.3); opacity:0; pointer-events:none;
+    mix-blend-mode:screen; filter:drop-shadow(0 0 40px rgba(244,180,53,.55))}
+  .th-burst.is-flash{animation:th-burst 1.1s ease-out forwards}
+  @keyframes th-burst{
+    0%{opacity:0; transform:translate(-50%,-50%) scale(.3)}
+    28%{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(1.6)}}
   #threshold.is-opening .th-door{transform:scale(2.6); filter:brightness(1.12)}
   #threshold.is-opening .th-lock-seq{opacity:1; transform:scale(1)}
   /* Finaler Beat: Tür offen, Blick in die Bibliothek (sanftes Hineingleiten) */
@@ -155,6 +164,8 @@
       <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-5.png" alt="Das Schloss öffnet sich, Gold flutet aus" />
     </div>
     <div class="th-flash" id="th-flash"></div>
+    <img class="th-burst" id="th-burst" decoding="async" aria-hidden="true" alt=""
+         src="../assets/erlebnis/bilder/licht-blitz.png" />
     <img class="th-open" decoding="async" src="../assets/erlebnis/bilder/tuer-offen.png"
          alt="Die Tür steht offen — Blick in die Bibliothek" />
   </div>
@@ -811,6 +822,7 @@
   var skip  = document.getElementById('th-skip');
   var stage = document.getElementById('th-stage');
   var flash = document.getElementById('th-flash');
+  var burst = document.getElementById('th-burst');
   var seq   = document.getElementById('th-lock-seq');
   var frames = seq ? seq.querySelectorAll('img') : [];
   var timers = [];
@@ -834,7 +846,10 @@
     // Frame-Sequenz: Türkis lädt sich auf → goldener Blitz → Gold flutet aus
     var times = [450, 680, 880, 1120, 1480];        // Einblendzeiten Frame 1..5
     for(var i=0; i<frames.length; i++){ (function(idx){ at(times[idx], function(){ showFrame(idx); }); })(i); }
-    at(1200, function(){ flash.classList.add('is-flash'); });        // Lichtblitz mit dem Gold-Frame
+    at(1200, function(){                                             // Lichtblitz mit dem Gold-Frame
+      flash.classList.add('is-flash');
+      if(burst) burst.classList.add('is-flash');                     // transparenter Funken-Blitz
+    });
     at(1750, function(){ th.classList.add('is-open-final'); });      // Tür offen → Blick in die Bibliothek
     at(2650, function(){ done(false); });            // dann in die App blenden
   }
