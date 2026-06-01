@@ -22,6 +22,10 @@
   Bei uns als `.th-keyglow` über das **Schlüsselloch** der geschlossenen Tür zentriert; dauerhaft
   leicht sichtbar als **lebendiger Klick-Hinweis** (ersetzt den entfernten Knopf), heller bei Nähe,
   blendet beim Öffnen aus. Effekt-Code 1:1, nur Position angepasst.
+- **„Intro neu starten"-Schlüssel (Funfakt):** kleiner schlüsselförmiger Knopf unten links
+  (`#btn-replay-intro` / `.key-fab`) — Klick löscht den Sitzungs-Merker `jt-threshold-seen`
+  und lädt neu → Schwelle läuft erneut. Vorerst **SVG-Platzhalter** mit türkisem Atem-Glühen;
+  tauschbar gegen den freigestellten Schlüssel (Prompt 2, transparentes PNG), sobald vorhanden.
 
 **Offen / ehrlich:**
 - **Browser-Look weiter ungeprüft** — wartet auf Klaus (Timing evtl. nachjustieren).
