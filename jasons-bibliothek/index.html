@@ -1287,12 +1287,16 @@
   var toList = document.getElementById('regal-tolist');
   var toRegal= document.getElementById('btn-regal');
   var P = '../assets/erlebnis/bilder/';
+  // box = Bücher-Bereich je Ansicht (l/r/t/b in %, auf die sichtbaren Bretter gesetzt).
+  // tilt = perspektivische Y-Neigung (Grad) NUR für die schrägen Ansichten links/rechts,
+  // damit das Raster mit der fliehenden Regalwand kippt (nahe Kante = Drehpunkt); 0 = frontal.
+  // Werte aus den Hintergrundbildern abgeschätzt — Browser-Feinschliff steht bei Klaus aus.
   var VIEWS = [
-    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:40,r:7,t:12,b:16} },
-    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:17,r:17,t:11,b:15} },
-    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:7,r:40,t:12,b:16} },
-    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:15,r:15,t:12,b:15} },
-    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:15,r:15,t:13,b:15} }
+    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:37,r:4,t:11,b:13},  tilt:26 },
+    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:21,r:21,t:16,b:19}, tilt:0 },
+    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:4,r:37,t:11,b:13},  tilt:-26 },
+    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:18,r:18,t:14,b:17}, tilt:0 },
+    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:17,r:17,t:15,b:20}, tilt:0 }
   ];
   var i = 1, busy = false;
   function render(){
@@ -1300,7 +1304,11 @@
     setTimeout(function(){
       var v = VIEWS[i]; bg.src = v.src; cap.textContent = v.cap;
       var bk = document.getElementById('regal-books');
-      if(bk && v.box){ bk.style.left = v.box.l + '%'; bk.style.right = v.box.r + '%'; bk.style.top = v.box.t + '%'; bk.style.bottom = v.box.b + '%'; }
+      if(bk && v.box){ bk.style.left = v.box.l + '%'; bk.style.right = v.box.r + '%'; bk.style.top = v.box.t + '%'; bk.style.bottom = v.box.b + '%';
+        // schräge Ansichten: Raster mit der fliehenden Wand neigen (Drehpunkt an der nahen Kante)
+        if(v.tilt){ bk.style.transform = 'perspective(1100px) rotateY(' + v.tilt + 'deg)';
+          bk.style.transformOrigin = v.tilt > 0 ? 'left center' : 'right center'; }
+        else { bk.style.transform = ''; bk.style.transformOrigin = ''; } }
       renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines);   // jede Ansicht bekommt Bücher
       regal.classList.remove('switching'); busy = false;
     }, 300);
