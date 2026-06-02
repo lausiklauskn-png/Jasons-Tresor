@@ -430,7 +430,8 @@
     <button id="row-add" type="button">+ Reihe</button>
     <button id="row-del" type="button">− Reihe</button>
     <button id="row-reset" type="button">↺ Diese Ebene zurücksetzen</button>
-    <span id="row-hint">Reihe ziehen = verschieben · linke/rechte Kante = Breite · Unterkante = Höhe</span>
+    <button id="books-align" type="button">⬇ Bücher unten ausrichten</button>
+    <span id="row-hint">Reihe ziehen = verschieben · linke/rechte Kante = Breite · Unterkante = Höhe · Bücher richten sich unten aus</span>
   </div>
 </div>
 
@@ -1473,6 +1474,9 @@
       if(rows.length > 1){ rows.pop(); saveRows(i, rows); renderBooks(i); } });
     if(rr) rr.addEventListener('click', function(){ var a = allRows(); delete a[i];
       try{ localStorage.setItem('jt-shelfrows', JSON.stringify(a)); }catch(e){} renderBooks(i); });
+    // Alle Einzel-Versätze der Bücher löschen → jedes Buch rutscht an die Container-Unterkante.
+    var ba = document.getElementById('books-align');
+    if(ba) ba.addEventListener('click', function(){ try{ localStorage.removeItem('jt-booklayout'); }catch(e){} renderBooks(i); });
   })();
 
   function renderBooks(level){
