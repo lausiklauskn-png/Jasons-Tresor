@@ -290,6 +290,7 @@
   .rh-l{left:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
   .rh-r{right:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
   .rh-b{left:0; right:0; bottom:-7px; height:14px; cursor:ns-resize}
+  .rh-p{left:50%; top:-12px; margin-left:-12px; width:24px; height:24px; border-radius:50%; cursor:ew-resize}
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
   .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:grab;
@@ -431,7 +432,7 @@
     <button id="row-del" type="button">− Reihe</button>
     <button id="row-reset" type="button">↺ Diese Ebene zurücksetzen</button>
     <button id="books-align" type="button">⬇ Bücher unten ausrichten</button>
-    <span id="row-hint">Reihe ziehen = verschieben · linke/rechte Kante = Breite · Unterkante = Höhe · Bücher richten sich unten aus</span>
+    <span id="row-hint">Reihe ziehen = verschieben · Kanten = Breite · Unterkante = Höhe · Kreis oben = Perspektive neigen · Bücher sitzen verankert unten</span>
   </div>
 </div>
 
@@ -1419,13 +1420,14 @@
     var bx = VIEWS[level].box, N = 5, gap = 1.6;
     var top = bx.t, bottom = 100 - bx.b, avail = bottom - top;
     var rh = (avail - gap*(N-1)) / N, rows = [];
-    for(var k=0;k<N;k++) rows.push({ l:bx.l, r:bx.r, t:+(top + k*(rh+gap)).toFixed(2), h:+rh.toFixed(2) });
+    for(var k=0;k<N;k++) rows.push({ l:bx.l, r:bx.r, t:+(top + k*(rh+gap)).toFixed(2), h:+rh.toFixed(2), ry:0 });
     return rows;
   }
   function allRows(){ try{ return JSON.parse(localStorage.getItem('jt-shelfrows') || '{}') || {}; }catch(e){ return {}; } }
   function getRows(level){ var a = allRows(); return (a[level] && a[level].length) ? a[level] : defaultRows(level); }
   function saveRows(level, rows){ try{ var a = allRows(); a[level] = rows; localStorage.setItem('jt-shelfrows', JSON.stringify(a)); }catch(e){} }
-  function applyRowStyle(el, d){ el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%'; }
+  function applyRowStyle(el, d){ el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%';
+    el.style.transform = d.ry ? ('perspective(1200px) rotateY(' + d.ry + 'deg)') : ''; el.style.transformOrigin = 'center center'; }
 
   var editing = false, currentRows = [];
   function setEditing(on){
@@ -1443,18 +1445,19 @@
     var ri = +rowEl.getAttribute('data-row'); var cur = currentRows[ri] || {};
     RDRAG = { ri:ri, el:rowEl, mode: handle ? handle.getAttribute('data-h') : 'move',
               sx:e.clientX, sy:e.clientY, W:rect.width||1, H:rect.height||1,
-              s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h } };
+              s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h, ry:cur.ry||0 } };
     e.preventDefault(); e.stopPropagation();
   }
   function rowMove(e){
     if(!RDRAG) return;
     var dxp = (e.clientX - RDRAG.sx) / RDRAG.W * 100, dyp = (e.clientY - RDRAG.sy) / RDRAG.H * 100;
-    var d = { l:RDRAG.s.l, r:RDRAG.s.r, t:RDRAG.s.t, h:RDRAG.s.h };
+    var d = { l:RDRAG.s.l, r:RDRAG.s.r, t:RDRAG.s.t, h:RDRAG.s.h, ry:RDRAG.s.ry };
     if(RDRAG.mode === 'move'){ d.t = RDRAG.s.t + dyp; d.l = RDRAG.s.l + dxp; d.r = RDRAG.s.r - dxp; }
     else if(RDRAG.mode === 'l'){ d.l = RDRAG.s.l + dxp; }
     else if(RDRAG.mode === 'r'){ d.r = RDRAG.s.r - dxp; }
     else if(RDRAG.mode === 'b'){ d.h = RDRAG.s.h + dyp; }
-    d.t = clamp(d.t, -5, 98); d.l = clamp(d.l, -5, 92); d.r = clamp(d.r, -5, 92); d.h = clamp(d.h, 3, 96);
+    else if(RDRAG.mode === 'p'){ d.ry = RDRAG.s.ry + dxp * 2; }   // Kreis oben ziehen → Perspektive neigen
+    d.t = clamp(d.t, -5, 98); d.l = clamp(d.l, -5, 92); d.r = clamp(d.r, -5, 92); d.h = clamp(d.h, 3, 96); d.ry = clamp(d.ry, -60, 60);
     currentRows[RDRAG.ri] = d; if(RDRAG.el) applyRowStyle(RDRAG.el, d);
     e.preventDefault();
   }
@@ -1467,8 +1470,8 @@
   (function(){
     var ra = document.getElementById('row-add'), rd = document.getElementById('row-del'), rr = document.getElementById('row-reset');
     if(ra) ra.addEventListener('click', function(){ var rows = getRows(i).slice();
-      var last = rows[rows.length-1] || {l:18,r:18,t:18,h:12};
-      rows.push({ l:last.l, r:last.r, t:clamp((last.t||18)+(last.h||12)+2, 0, 92), h:last.h||12 });
+      var last = rows[rows.length-1] || {l:18,r:18,t:18,h:12,ry:0};
+      rows.push({ l:last.l, r:last.r, t:clamp((last.t||18)+(last.h||12)+2, 0, 92), h:last.h||12, ry:last.ry||0 });
       saveRows(i, rows); renderBooks(i); });
     if(rd) rd.addEventListener('click', function(){ var rows = getRows(i).slice();
       if(rows.length > 1){ rows.pop(); saveRows(i, rows); renderBooks(i); } });
@@ -1494,17 +1497,16 @@
         var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = '';
         var lb = document.createElement('span'); lb.className = 'sb-label'; lb.textContent = names[id] || '';
         btn.appendChild(im); btn.appendChild(lb);
-        if(lay[id]) applyTransform(btn, lay[id]);
-        btn.addEventListener('pointerdown', bookDown);
+        // Bücher sind VERANKERT: kein freies Ziehen mehr — sie sitzen fest unten auf der Reihe.
         (function(bid, el){ el.addEventListener('click', function(){
-          if(el._suppressClick) return;                  // nach echtem Ziehen nicht öffnen
+          if(el._suppressClick) return;                  // (Rest aus früherer Drag-Logik, schadet nicht)
           var s = el.querySelector('.sb-label'); var lblTxt = (s && s.textContent) ? s.textContent : '';
           if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, requireCode: true, id: bid, el: el });
         }); })(id, btn);
         row.appendChild(btn);
       }
       // Griffe für den Einricht-Modus (per CSS nur sichtbar, wenn #regal.editing)
-      ['l','r','b'].forEach(function(h){ var hd = document.createElement('div'); hd.className = 'rh rh-'+h; hd.setAttribute('data-h', h); row.appendChild(hd); });
+      ['l','r','b','p'].forEach(function(h){ var hd = document.createElement('div'); hd.className = 'rh rh-'+h; hd.setAttribute('data-h', h); row.appendChild(hd); });
       row.addEventListener('pointerdown', rowDown);
       wrap.appendChild(row);
     }
