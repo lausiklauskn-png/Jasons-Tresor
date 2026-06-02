@@ -268,11 +268,22 @@
   .regal-torch:focus-visible{outline:none}
   .regal-torch:disabled{cursor:default}
   .regal-torch:disabled::before{display:none}
-  /* Bücher auf der mittleren Ebene-1-Ansicht — volle Regalreihen (kein leeres Regal) */
-  #regal-books{position:absolute; left:17%; right:17%; top:11%; bottom:14%; z-index:2;
-    display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
+  /* Bücher liegen in einrichtbaren Regalreihen: jede Reihe ein eigener Container,
+     den Klaus per „Regal einrichten" aufs Brett im Bild zieht (Position/Breite/Höhe),
+     lokal je Ebene gespeichert. Normal transparent — sichtbar nur im Einricht-Modus. */
+  #regal-books{position:absolute; inset:0; z-index:2; pointer-events:none}
   #regal:not(.has-books) #regal-books{display:none}
-  .shelf-row{display:flex; justify-content:center; align-items:flex-end; gap:1.4%; height:17%}
+  .shelf-row{position:absolute; display:flex; justify-content:center; align-items:flex-end;
+    gap:1.4%; pointer-events:none}   /* left/right/top/height je Reihe per JS gesetzt */
+  /* Einricht-Modus: Reihen sichtbar (helle Unterkante = „Regal-Linie"), Bücher passiv */
+  #regal.editing .shelf-row{pointer-events:auto; cursor:move; background:rgba(255,255,255,.12);
+    outline:1px dashed rgba(110,231,211,.65); box-shadow:inset 0 -4px 0 rgba(110,231,211,.95)}
+  #regal.editing .shelf-book{pointer-events:none}
+  .rh{position:absolute; display:none; z-index:7; background:rgba(110,231,211,.85); border-radius:3px}
+  #regal.editing .rh{display:block}
+  .rh-l{left:-5px; top:0; bottom:0; width:10px; cursor:ew-resize}
+  .rh-r{right:-5px; top:0; bottom:0; width:10px; cursor:ew-resize}
+  .rh-b{left:0; right:0; bottom:-5px; height:10px; cursor:ns-resize}
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
   .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:grab;
@@ -297,6 +308,17 @@
   #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
     background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
   #regal-tolist:hover{border-color:var(--accent)}
+  /* Einricht-Knopf + Werkzeugleiste (Regalreihen aufs Bild legen) */
+  #regal-edit{position:absolute; top:14px; right:120px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
+    background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
+  #regal-edit:hover{border-color:var(--accent)}
+  #regal-edit-tools{position:absolute; top:56px; right:14px; z-index:5; display:none; gap:8px; align-items:center;
+    flex-wrap:wrap; max-width:64%; background:rgba(8,8,26,.85); border:1px solid var(--line);
+    border-radius:10px; padding:8px 10px}
+  #regal-edit-tools button{font:inherit; cursor:pointer; color:var(--ink); background:rgba(17,37,42,.8);
+    border:1px solid var(--line); border-radius:8px; padding:6px 10px}
+  #regal-edit-tools button:hover{border-color:var(--accent)}
+  #row-hint{color:#bcd; font-size:.74rem; opacity:.85; flex-basis:100%}
   @media (prefers-reduced-motion:reduce){ .regal-torch img{animation:none} #regal-bg{transition:opacity .2s} }
 
   /* Einmaliger Bedien-Hinweis im Regal */
@@ -397,6 +419,13 @@
   <div id="regal-caption" aria-live="polite"></div>
   <div id="regal-hint">Mit den Fackeln ◀ ▶ (oder ←/→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
   <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
+  <button id="regal-edit" type="button" title="Regalreihen aufs Bild einrichten">📐 Regal einrichten</button>
+  <div id="regal-edit-tools" aria-label="Regalreihen bearbeiten">
+    <button id="row-add" type="button">+ Reihe</button>
+    <button id="row-del" type="button">− Reihe</button>
+    <button id="row-reset" type="button">↺ Diese Ebene zurücksetzen</button>
+    <span id="row-hint">Reihe ziehen = verschieben · linke/rechte Kante = Breite · Unterkante = Höhe</span>
+  </div>
 </div>
 
 <header>
@@ -1286,29 +1315,24 @@
   var cap    = document.getElementById('regal-caption');
   var toList = document.getElementById('regal-tolist');
   var toRegal= document.getElementById('btn-regal');
+  var editBtn  = document.getElementById('regal-edit');
+  var editTools= document.getElementById('regal-edit-tools');
   var P = '../assets/erlebnis/bilder/';
-  // box = Bücher-Bereich je Ansicht (l/r/t/b in %, auf die sichtbaren Bretter gesetzt).
-  // tilt = perspektivische Y-Neigung (Grad) NUR für die schrägen Ansichten links/rechts,
-  // damit das Raster mit der fliehenden Regalwand kippt (nahe Kante = Drehpunkt); 0 = frontal.
-  // Werte aus den Hintergrundbildern abgeschätzt — Browser-Feinschliff steht bei Klaus aus.
+  // box = Grund-Insets je Ansicht (l/r/t/b in %); daraus werden die START-Regalreihen erzeugt.
+  // Klaus richtet die Reihen danach selbst aufs Bild ein (Knopf „Regal einrichten"); seine
+  // Einstellung wird lokal je Ebene gespeichert (jt-shelfrows) und gilt dann vorrangig.
   var VIEWS = [
-    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:37,r:4,t:11,b:13},  tilt:26 },
-    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:21,r:21,t:16,b:19}, tilt:0 },
-    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:4,r:37,t:11,b:13},  tilt:-26 },
-    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:18,r:18,t:14,b:17}, tilt:0 },
-    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:17,r:17,t:15,b:20}, tilt:0 }
+    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)', box:{l:37,r:4,t:11,b:13} },
+    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft',         box:{l:21,r:21,t:16,b:19} },
+    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts',          box:{l:4,r:37,t:11,b:13} },
+    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang',        box:{l:18,r:18,t:14,b:17} },
+    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt', box:{l:17,r:17,t:15,b:20} }
   ];
   var i = 1, busy = false;
   function render(){
     busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
       var v = VIEWS[i]; bg.src = v.src; cap.textContent = v.cap;
-      var bk = document.getElementById('regal-books');
-      if(bk && v.box){ bk.style.left = v.box.l + '%'; bk.style.right = v.box.r + '%'; bk.style.top = v.box.t + '%'; bk.style.bottom = v.box.b + '%';
-        // schräge Ansichten: Raster mit der fliehenden Wand neigen (Drehpunkt an der nahen Kante)
-        if(v.tilt){ bk.style.transform = 'perspective(1100px) rotateY(' + v.tilt + 'deg)';
-          bk.style.transformOrigin = v.tilt > 0 ? 'left center' : 'right center'; }
-        else { bk.style.transform = ''; bk.style.transformOrigin = ''; } }
       renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines);   // jede Ansicht bekommt Bücher
       regal.classList.remove('switching'); busy = false;
     }, 300);
@@ -1382,13 +1406,77 @@
   document.addEventListener('pointerup', bookUp);
   document.addEventListener('pointercancel', bookUp);
 
+  // --- Einrichtbare Regalreihen: je Ebene eine Liste {l,r,t,h} in % (Klaus zieht sie aufs Bild) ---
+  function clamp(v, lo, hi){ return v < lo ? lo : (v > hi ? hi : v); }
+  function defaultRows(level){
+    var bx = VIEWS[level].box, N = 5, gap = 1.6;
+    var top = bx.t, bottom = 100 - bx.b, avail = bottom - top;
+    var rh = (avail - gap*(N-1)) / N, rows = [];
+    for(var k=0;k<N;k++) rows.push({ l:bx.l, r:bx.r, t:+(top + k*(rh+gap)).toFixed(2), h:+rh.toFixed(2) });
+    return rows;
+  }
+  function allRows(){ try{ return JSON.parse(localStorage.getItem('jt-shelfrows') || '{}') || {}; }catch(e){ return {}; } }
+  function getRows(level){ var a = allRows(); return (a[level] && a[level].length) ? a[level] : defaultRows(level); }
+  function saveRows(level, rows){ try{ var a = allRows(); a[level] = rows; localStorage.setItem('jt-shelfrows', JSON.stringify(a)); }catch(e){} }
+  function applyRowStyle(el, d){ el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%'; }
+
+  var editing = false, currentRows = [];
+  function setEditing(on){
+    editing = on; regal.classList.toggle('editing', on);
+    if(editBtn)   editBtn.textContent   = on ? '✓ Fertig' : '📐 Regal einrichten';
+    if(editTools) editTools.style.display = on ? 'flex' : 'none';
+  }
+  // Reihe ziehen = verschieben; linke/rechte Kante = Breite; Unterkante = Höhe. Live + lokal sichern.
+  var RDRAG = null;
+  function rowDown(e){
+    if(!editing || !e.target.closest) return;
+    var rowEl = e.target.closest('.shelf-row'); if(!rowEl) return;
+    var handle = e.target.closest('[data-h]');
+    var rect = regal.getBoundingClientRect();
+    var ri = +rowEl.getAttribute('data-row'); var cur = currentRows[ri] || {};
+    RDRAG = { ri:ri, el:rowEl, mode: handle ? handle.getAttribute('data-h') : 'move',
+              sx:e.clientX, sy:e.clientY, W:rect.width||1, H:rect.height||1,
+              s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h } };
+    e.preventDefault(); e.stopPropagation();
+  }
+  function rowMove(e){
+    if(!RDRAG) return;
+    var dxp = (e.clientX - RDRAG.sx) / RDRAG.W * 100, dyp = (e.clientY - RDRAG.sy) / RDRAG.H * 100;
+    var d = { l:RDRAG.s.l, r:RDRAG.s.r, t:RDRAG.s.t, h:RDRAG.s.h };
+    if(RDRAG.mode === 'move'){ d.t = RDRAG.s.t + dyp; d.l = RDRAG.s.l + dxp; d.r = RDRAG.s.r - dxp; }
+    else if(RDRAG.mode === 'l'){ d.l = RDRAG.s.l + dxp; }
+    else if(RDRAG.mode === 'r'){ d.r = RDRAG.s.r - dxp; }
+    else if(RDRAG.mode === 'b'){ d.h = RDRAG.s.h + dyp; }
+    d.t = clamp(d.t, -5, 98); d.l = clamp(d.l, -5, 92); d.r = clamp(d.r, -5, 92); d.h = clamp(d.h, 3, 96);
+    currentRows[RDRAG.ri] = d; if(RDRAG.el) applyRowStyle(RDRAG.el, d);
+    e.preventDefault();
+  }
+  function rowUp(){ if(!RDRAG) return; saveRows(i, currentRows); RDRAG = null; }
+  document.addEventListener('pointermove', rowMove);
+  document.addEventListener('pointerup', rowUp);
+  document.addEventListener('pointercancel', rowUp);
+
+  if(editBtn) editBtn.addEventListener('click', function(){ setEditing(!editing); });
+  (function(){
+    var ra = document.getElementById('row-add'), rd = document.getElementById('row-del'), rr = document.getElementById('row-reset');
+    if(ra) ra.addEventListener('click', function(){ var rows = getRows(i).slice();
+      var last = rows[rows.length-1] || {l:18,r:18,t:18,h:12};
+      rows.push({ l:last.l, r:last.r, t:clamp((last.t||18)+(last.h||12)+2, 0, 92), h:last.h||12 });
+      saveRows(i, rows); renderBooks(i); });
+    if(rd) rd.addEventListener('click', function(){ var rows = getRows(i).slice();
+      if(rows.length > 1){ rows.pop(); saveRows(i, rows); renderBooks(i); } });
+    if(rr) rr.addEventListener('click', function(){ var a = allRows(); delete a[i];
+      try{ localStorage.setItem('jt-shelfrows', JSON.stringify(a)); }catch(e){} renderBooks(i); });
+  })();
+
   function renderBooks(level){
     var wrap = document.getElementById('regal-books'); if(!wrap) return;
     wrap.innerHTML = '';
     var names = loadNames(), lay = getLayout();
-    var ROWS = 5, PER = 6;
-    for(var r=0; r<ROWS; r++){
-      var row = document.createElement('div'); row.className = 'shelf-row';
+    currentRows = getRows(level); var PER = 6;
+    for(var r=0; r<currentRows.length; r++){
+      var row = document.createElement('div'); row.className = 'shelf-row'; row.setAttribute('data-row', r);
+      applyRowStyle(row, currentRows[r]);
       for(var c=0; c<PER; c++){
         var id = level + '-' + r + '-' + c;
         var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book';
@@ -1405,6 +1493,9 @@
         }); })(id, btn);
         row.appendChild(btn);
       }
+      // Griffe für den Einricht-Modus (per CSS nur sichtbar, wenn #regal.editing)
+      ['l','r','b'].forEach(function(h){ var hd = document.createElement('div'); hd.className = 'rh rh-'+h; hd.setAttribute('data-h', h); row.appendChild(hd); });
+      row.addEventListener('pointerdown', rowDown);
       wrap.appendChild(row);
     }
   }
