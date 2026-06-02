@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-02 — Einrichtbare Regalreihen: Klaus legt die Reihen selbst aufs Bild (Sitzung 11)
+
+**Klaus' Idee (besser als Auto-Schätzung):** statt jedes Buch einzeln auszurichten, pro
+Regalreihe einen **Container/Linie**, den er selbst aufs Brett im Bild zieht; Bücher stehen
+darauf. Screenshots (Ansicht „rechts") bestätigten: das automatische Raster saß **nicht** auf
+den fliehenden Brettern. Umgesetzt.
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch 9694 B, Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **Einrichtbare Regalreihen:** je Ebene eine Liste von Reihen `{l,r,t,h}` (in %), lokal
+  gespeichert (`jt-shelfrows`). Jede Reihe ist ein absolut positionierter Container; die
+  **Unterkante** = „Regal-Linie", auf der die Bücher (mit Schild) stehen.
+- **Knopf „📐 Regal einrichten"** schaltet den Einricht-Modus: Reihen sichtbar (weiß/durchschein
+  + helle Linie), Bücher passiv. **Reihe ziehen = verschieben · linke/rechte Kante = Breite ·
+  Unterkante = Höhe.** Werkzeuge **„+ Reihe / − Reihe / Diese Ebene zurücksetzen"**. Außerhalb
+  des Modus transparent — nur Bücher sichtbar. Jede Ebene wird einzeln eingerichtet.
+- **Perspektivische Auto-Neigung (tilt) entfernt** — ersetzt durch die manuelle Einrichtung
+  (pro Reihe eigene Breite/Höhe deckt die Perspektive der schrägen Ansichten ab). `box`-Werte
+  je Ansicht dienen nur noch als **Start-Reihen**, danach gilt Klaus' Einstellung.
+- Identisch in Wurzel + Spiegel (nur Bildpfad `P` unterscheidet); Kern unberührt (Schale).
+
+**Offen / ehrlich:**
+- **Browser-Lauf nötig:** Klaus zieht die Reihen je Ebene aufs Bild (einmalig); Einstellung
+  bleibt lokal erhalten. Look bis dahin **ungeprüft**. Bücher-Zahl je Reihe fest 6 — bei sehr
+  schmalen (fernen) Reihen ggf. Überstand; dann Reihe breiter ziehen oder später Zahl je Reihe.
+- Echtes Verschließen (AES), SBKIM-Bezeugung, Szene-2-Inhalt weiter offen (eigene Sitzungen).
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; Regal-Skript syntaxgeprüft (Wurzel
++ Spiegel). **Regal-Einrichtung im Browser ungeprüft — wartet auf Klaus.**
+
+---
+
 ## 2026-06-02 — Regal-Feinschliff: Bücher-Bereich je Ansicht + perspektivische Neigung (Sitzung 10)
 
 **Plan-vor-Code befolgt:** Pflichtlektüre durch, zwei Entscheidungen an Klaus gestellt →
