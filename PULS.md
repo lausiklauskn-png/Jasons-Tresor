@@ -3,6 +3,47 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-02 — Regal-Feinschliff: Bücher-Bereich je Ansicht + perspektivische Neigung (Sitzung 10)
+
+**Plan-vor-Code befolgt:** Pflichtlektüre durch, zwei Entscheidungen an Klaus gestellt →
+(1) nächster Bau = **Regal-Feinschliff (#3)**; (2) schräge Ansichten links/rechts = **perspektivisch
+neigen** (Bücher bleiben auf allen Ansichten, Klaus' früherer Wunsch).
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch in Wurzel & Spiegel, Skripte syntaxgeprüft):**
+- **Fünf Hintergrundbilder gesichtet** und die `box`-Insets (Bücher-Bereich je Ansicht, in %)
+  auf die **sichtbaren Bretter** gesetzt — vorher standen die Bücher zu breit (in den Rahmen)
+  und zu hoch (in den Bogen):
+  - Ebene 1 (warm): `{l:21,r:21,t:16,b:19}` · Ebene 2 (kosmisch): `{l:18,r:18,t:14,b:17}` ·
+    Ebene 3 (Kern, Podest unten frei): `{l:17,r:17,t:15,b:20}`.
+  - links: `{l:37,r:4,t:11,b:13}` · rechts: `{l:4,r:37,t:11,b:13}`.
+- **Perspektivische Neigung für die schrägen Ansichten:** neues Feld `tilt` pro Ansicht
+  (links `+26`, rechts `−26`, frontale `0`). In `render()` bekommt `#regal-books` ein
+  `transform:perspective(1100px) rotateY(tilt)` mit Drehpunkt an der **nahen Kante**
+  (links→`left center`, rechts→`right center`), damit das Bücher-Raster mit der fliehenden
+  Regalwand kippt. Frontale Ansichten setzen `transform` sauber zurück (`''`).
+- **Schale, kein Kerneingriff:** alles außerhalb der Test-Marker (Kern endet Zeile 786, Regal
+  ab 1290). Kern zwischen den Markern in beiden Dateien **byte-identisch (9694 Bytes)**;
+  einziger Unterschied im Regal-Skript bleibt der Bildpfad `P` (`assets/` ↔ `../assets/`).
+
+**Offen / ehrlich:**
+- **Browser-Look UNGEPRÜFT** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
+  Werte aus den Bildern abgeschätzt; sitzen die Bücher noch nicht perfekt, sind nur die
+  `box`-Zahlen je Ansicht zu justieren. **Neigungs-Richtung** begründet, aber browser-
+  ungeprüft: kippt links/rechts falsch herum, genügt das **Umdrehen der zwei `tilt`-Vorzeichen**.
+- Echtes Verschließen (AES), SBKIM-Bezeugungs-Chain, Szene-2-Inhalt weiterhin offen (eigene Sitzungen).
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; Regal-Skript syntaxgeprüft (Wurzel
++ Spiegel). **Regal-Optik im Browser ungeprüft — wartet auf Klaus.**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf** des Regals: sitzen die Bücher je Ansicht auf den Brettern?
+   Neigt sich links/rechts korrekt? → ggf. `box`/`tilt` live nachjustieren.
+2. **Sicherheits-Sitzung (#1):** Bücher an den echten AES-Tresor koppeln; Panik 2/3 scharf.
+3. **SBKIM-Bezeugung (#2):** vollen Modul-Chain 1:1 holen.
+4. **Szene-2-Inhalt (#4):** echte Detail-/Bearbeiten-Ansicht im geöffneten Buch.
+
+---
+
 ## 2026-06-01 — Vision „Tresor = Bücherregal-Safe" + Tiefen-Ebenen (Sitzung 9, Assets sammeln)
 
 **Neue Richtung (Klaus, 2026-06-01) — noch KEIN Feature-Code, erst Assets sammeln:**
