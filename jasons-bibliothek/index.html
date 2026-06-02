@@ -275,15 +275,21 @@
   #regal:not(.has-books) #regal-books{display:none}
   .shelf-row{position:absolute; display:flex; justify-content:center; align-items:flex-end;
     gap:1.4%; pointer-events:none}   /* left/right/top/height je Reihe per JS gesetzt */
-  /* Einricht-Modus: Reihen sichtbar (helle Unterkante = „Regal-Linie"), Bücher passiv */
-  #regal.editing .shelf-row{pointer-events:auto; cursor:move; background:rgba(255,255,255,.12);
-    outline:1px dashed rgba(110,231,211,.65); box-shadow:inset 0 -4px 0 rgba(110,231,211,.95)}
-  #regal.editing .shelf-book{pointer-events:none}
-  .rh{position:absolute; display:none; z-index:7; background:rgba(110,231,211,.85); border-radius:3px}
+  /* Einricht-Modus deutlich sichtbar: Hintergrund abdunkeln, Bücher geistern, Reihen leuchten */
+  #regal.editing #regal-bg{filter:brightness(.4) saturate(.7)}
+  #regal.editing .shelf-book{pointer-events:none; opacity:.45}
+  #regal.editing .shelf-row{pointer-events:auto; cursor:move; background:rgba(110,231,211,.22);
+    outline:2px dashed #6ee7d3; outline-offset:-1px;
+    box-shadow:inset 0 -7px 0 #6ee7d3, 0 0 22px rgba(110,231,211,.55)}
+  #regal.editing .shelf-row::before{content:"⇕ Reihe ziehen"; position:absolute; left:4px; top:2px;
+    font-size:12px; font-weight:700; color:#08131a; background:#6ee7d3; padding:1px 6px;
+    border-radius:6px; pointer-events:none}
+  .rh{position:absolute; display:none; z-index:7; background:#6ee7d3; border:1px solid #08131a;
+    border-radius:3px; box-shadow:0 0 8px rgba(110,231,211,.8)}
   #regal.editing .rh{display:block}
-  .rh-l{left:-5px; top:0; bottom:0; width:10px; cursor:ew-resize}
-  .rh-r{right:-5px; top:0; bottom:0; width:10px; cursor:ew-resize}
-  .rh-b{left:0; right:0; bottom:-5px; height:10px; cursor:ns-resize}
+  .rh-l{left:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
+  .rh-r{right:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
+  .rh-b{left:0; right:0; bottom:-7px; height:14px; cursor:ns-resize}
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
   .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:grab;
