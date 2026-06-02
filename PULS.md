@@ -127,6 +127,10 @@ Buch-Positions-Feinschliff je Ebene — alles eigene Folge-Sitzungen.
    Siegel echt bronze/gold, Membran-15-Lampen, Apoptose-07, Tool-PWA-Andock-Wizard.
 3. **Regal-Feinschliff:** Buch-Bereiche (`box`-Insets) je Ebene exakt auf die Bretter setzen
    (v. a. die schrägen Ansichten links/rechts); ggf. Bücher pro Reihe reduzieren.
+   → **Besser (Klaus' Idee):** verstellbare **Ausricht-Linie** pro Ansicht (Knopf „📐 Ausrichten",
+   zwei Griffe: strecken/drehen/neigen/verschieben), an der sich die Bücher live ausrichten;
+   pro Ansicht lokal gespeichert; default-sicher (ohne gespeicherte Linie bleibt alles wie jetzt).
+   Am besten mit Klaus' Live-Browser-Blick bauen/kalibrieren.
 4. **Szene-2-Inhalt:** im geöffneten Buch die echte Detail-/Bearbeiten-Ansicht der Sammlung.
 
 ---
