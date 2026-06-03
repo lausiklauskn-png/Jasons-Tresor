@@ -426,6 +426,8 @@
     <button id="shelf-add" type="button">+ Boden</button>
     <button id="shelf-del" type="button">− Boden</button>
     <button id="shelf-reset" type="button">↺ Diese Ebene zurücksetzen</button>
+    <button id="shelf-export" type="button">⬇ Export (an Claude schicken)</button>
+    <button id="shelf-import" type="button">⬆ Import</button>
     <span id="row-hint">Ziehe die 4 Endpunkte: obere Linie (gold) = Oberkante, untere Linie (cyan) = wo die Bücher stehen. Bücher füllen sich automatisch dazwischen.</span>
   </div>
 </div>
@@ -1513,6 +1515,13 @@
       saveShelves(i, rows); renderBooks(i); });
     if(del) del.addEventListener('click', function(){ var rows=shelfRows(i).slice(); if(rows.length>1){ rows.pop(); saveShelves(i, rows); renderBooks(i); } });
     if(rst) rst.addEventListener('click', function(){ var a=allShelves(); delete a[i]; try{ localStorage.setItem('jt-shelves2', JSON.stringify(a)); }catch(e){} renderBooks(i); });
+    // Export: gespeicherte Einrichtung als Text ausgeben (Klaus schickt ihn mir → ich backe ihn fest ein)
+    var exp=document.getElementById('shelf-export'), imp=document.getElementById('shelf-import');
+    if(exp) exp.addEventListener('click', function(){ var data=localStorage.getItem('jt-shelves2')||'{}';
+      try{ if(navigator.clipboard) navigator.clipboard.writeText(data); }catch(e){}
+      window.prompt('Deine Regal-Einrichtung — markieren & kopieren, dann mir im Chat schicken:', data); });
+    if(imp) imp.addEventListener('click', function(){ var t=window.prompt('Regal-Einrichtung einfügen:'); if(!t) return;
+      try{ JSON.parse(t); localStorage.setItem('jt-shelves2', t); renderBooks(i); }catch(e){ alert('Ungültiger Text.'); } });
   })();
 
   function renderBooks(level){
