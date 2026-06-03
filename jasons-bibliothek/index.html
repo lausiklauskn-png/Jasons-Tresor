@@ -273,9 +273,9 @@
      lokal je Ebene gespeichert. Normal transparent — sichtbar nur im Einricht-Modus. */
   #regal-books{position:absolute; inset:0; z-index:2; pointer-events:none}
   #regal:not(.has-books) #regal-books{display:none}
-  .shelf-row{position:absolute; display:flex; justify-content:center; align-items:center;
+  .shelf-row{position:absolute; display:flex; justify-content:center; align-items:flex-end;
     gap:1.4%; pointer-events:none}   /* Boden-Band: Position/Höhe/Verzerrung automatisch per JS;
-                                        Bücher sitzen vertikal mittig zwischen den beiden Böden */
+                                        Bücher stehen UNTEN auf dem Regalboden (an den Böden ausgerichtet) */
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
   .shelf-book{pointer-events:auto; position:relative; height:90%; border:0; background:none; cursor:grab;
