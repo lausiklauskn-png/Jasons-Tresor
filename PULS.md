@@ -3,6 +3,35 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-02 — Regalreihen: Perspektive je Reihe + Bücher verankert (Sitzung 12)
+
+**Klaus live im Browser (Screenshots):** Einricht-Modus läuft (abgedunkelt, leuchtende Reihen,
+Werkzeugleiste, „⬇ Bücher unten ausrichten"). Zwei Folge-Wünsche umgesetzt:
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch, Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **Sichtbarkeit Einricht-Modus** (vorher unsichtbar): Hintergrund abdunkeln, Bücher
+  durchscheinend, Reihen kräftig cyan (Füllung + dashed + dicke Unterkante + Glow), Badge
+  „⇕ Reihe ziehen", große Griffe. (PR #36, gemergt.)
+- **„⬇ Bücher unten ausrichten":** löscht alle Einzel-Versätze (`jt-booklayout`) → Bücher an
+  die Container-Unterkante. (PR #37, gemergt.)
+- **Perspektive je Reihe:** Reihen-Modell um `ry` (rotateY-Grad) erweitert; neuer **Kreis-Griff
+  oben** an jeder Reihe → horizontal ziehen neigt die Reihe perspektivisch
+  (`perspective(1200px) rotateY(ry)`), für links/rechts UND Mitte. `defaultRows`/`+Reihe`/
+  Reset führen `ry:0`. Clamp ±60°.
+- **Bücher verankert:** freies Ziehen der Bücher entfernt (war Ursache des Versatzes) — Bücher
+  sitzen fest unten auf der Reihe, nur Klick öffnet. „Bücher unten ausrichten" bleibt für
+  Alt-Versätze.
+
+**Offen / ehrlich:**
+- **Browser-Lauf:** Perspektive-Griff + Verankerung im Browser ungeprüft — wartet auf Klaus.
+  Falls „auf der Linie verschieben" gewünscht: gezielter Nudge-Modus wäre Folgeschritt.
+- AES-Verschluss, SBKIM-Bezeugung, Szene-2-Inhalt weiter offen (eigene Sitzungen).
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; Regal-Skript syntaxgeprüft (beide).
+**Perspektive/Verankerung im Browser ungeprüft — wartet auf Klaus.**
+
+---
+
 ## 2026-06-02 — Einrichtbare Regalreihen: Klaus legt die Reihen selbst aufs Bild (Sitzung 11)
 
 **Klaus' Idee (besser als Auto-Schätzung):** statt jedes Buch einzeln auszurichten, pro
