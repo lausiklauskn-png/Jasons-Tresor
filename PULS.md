@@ -3,6 +3,33 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-03 — Reihen mit freier Eck-Verzerrung (Free-Distort) + Bücher-Modi (Sitzung 13)
+
+**Klaus (Screenshots):** Perspektive läuft oft diagonal (bergauf/bergab) — eine Achse reicht
+nicht. Lösung: **freie Eck-Verzerrung je Reihe** wie im Vektorprogramm.
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch, Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **4 frei ziehbare Eckpunkte** je Reihe (weiße runde Griffe tl/tr/bl/br) → echte projektive
+  Verzerrung via **Homographie → CSS `matrix3d`** (`warp()` + `adjugate/basisToPoints`). Bücher
+  (und die Schild-Linie) folgen der verzerrten Reihe, auch diagonal. Reihen-Modell: `c:{tl,tr,bl,br}`
+  Offsets in %. Einzel-Achsen-Perspektive (`ry`/Kreis-Griff) dadurch ersetzt.
+- **Kanten-Griffe** l/r/b von den Ecken eingerückt (kein Überlappen), Body = verschieben.
+- `defaultRows`/`+Reihe`/Reset führen Null-Ecken; Resize wendet die matrix3d neu an
+  (Pixel-basiert). Reihe wird erst nach dem Einhängen verzerrt (offsetWidth/Height nötig).
+- **Bücher-Modi geklärt (frühere Sitzung, jetzt stabil):** Einricht-Modus AN → Reihen
+  positionieren (Bücher passiv); „Fertig" → Bücher wieder einzeln frei beweglich/drehbar.
+
+**Offen / ehrlich:**
+- **Browser-Lauf:** Eck-Verzerrung im Browser ungeprüft — wartet auf Klaus.
+- **Drehen beim 2. Klick** (Klaus' Zusatzwunsch) noch NICHT gebaut — nächster kleiner Schritt,
+  sobald die Ecken passen.
+- AES-Verschluss, SBKIM-Bezeugung, Szene-2-Inhalt weiter offen.
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; beide Regal-Skripte syntaxgeprüft.
+**Eck-Verzerrung im Browser ungeprüft — wartet auf Klaus.**
+
+---
+
 ## 2026-06-02 — Regalreihen: Perspektive je Reihe + Bücher verankert (Sitzung 12)
 
 **Klaus live im Browser (Screenshots):** Einricht-Modus läuft (abgedunkelt, leuchtende Reihen,
