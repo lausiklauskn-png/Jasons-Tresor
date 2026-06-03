@@ -3,6 +3,30 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-03 — Linien-Editor: Klaus richtet je Boden 2 Linien (Ober-/Unterkante) ein (Sitzung 15)
+
+**Klaus:** Auto-Treffen der Böden gelingt mir grafisch nicht zuverlässig (Brettdicke/Kante nicht
+messbar). Lösung: **er** legt je Boden zwei Linien fest (oben/unten), je 2 frei ziehbare
+Endpunkte; ich fülle die Bücher automatisch dazwischen und skaliere sie.
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch, Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **Linien-Editor** zurück (Knopf „📐 Regale einrichten"): je Boden eine **goldene Oberlinie**
+  und **cyane Unterlinie** (= die Reihen-Borders der matrix3d-Quad), mit **4 frei ziehbaren
+  Endpunkten** (tl/tr/bl/br). Drag eines Endpunkts verschiebt nur diesen (Höhe+Seite), die
+  anderen bleiben. Bücher stehen auf der Unterlinie, Größe = Abstand der Linien.
+- **Speicherung je Ansicht** (`jt-shelves2`), Default = bisherige SHELVES-Aufteilung. Werkzeuge
+  **„+ Boden / − Boden / Diese Ebene zurücksetzen"**. Außerhalb des Modus alles unsichtbar.
+- Auto-Verteilung (SHELVES) bleibt als **Startwert**; Klaus' Einrichtung gilt vorrangig.
+
+**Offen / ehrlich:**
+- **Browser-Lauf:** Klaus richtet die Böden je Ansicht ein (einmalig, bleibt gespeichert).
+- AES-Verschluss, SBKIM-Bezeugung, Szene-2-Inhalt weiter offen.
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; beide Regal-Skripte syntaxgeprüft.
+**Linien-Editor im Browser ungeprüft — wartet auf Klaus.**
+
+---
+
 ## 2026-06-03 — Automatische Bücher-Verteilung je Boden; „Regal einrichten" entfernt (Sitzung 14)
 
 **Klaus:** Bücher von Hand ausrichten ist eine Katastrophe — kein Nutzer will das. Bücher sind
