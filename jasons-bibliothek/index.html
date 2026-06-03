@@ -287,10 +287,16 @@
   .rh{position:absolute; display:none; z-index:7; background:#6ee7d3; border:1px solid #08131a;
     border-radius:3px; box-shadow:0 0 8px rgba(110,231,211,.8)}
   #regal.editing .rh{display:block}
-  .rh-l{left:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
-  .rh-r{right:-7px; top:0; bottom:0; width:14px; cursor:ew-resize}
-  .rh-b{left:0; right:0; bottom:-7px; height:14px; cursor:ns-resize}
-  .rh-p{left:50%; top:-12px; margin-left:-12px; width:24px; height:24px; border-radius:50%; cursor:ew-resize}
+  .rh-l{left:-7px; top:24px; bottom:24px; width:14px; cursor:ew-resize}
+  .rh-r{right:-7px; top:24px; bottom:24px; width:14px; cursor:ew-resize}
+  .rh-b{left:24px; right:24px; bottom:-7px; height:14px; cursor:ns-resize}
+  /* Frei ziehbare Ecken (wie Ankerpunkte im Vektorprogramm) */
+  .rh-c{width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid #08131a;
+    box-shadow:0 0 10px rgba(110,231,211,.95); z-index:8}
+  .rh-tl{left:-11px; top:-11px; cursor:nwse-resize}
+  .rh-tr{right:-11px; top:-11px; cursor:nesw-resize}
+  .rh-bl{left:-11px; bottom:-11px; cursor:nesw-resize}
+  .rh-br{right:-11px; bottom:-11px; cursor:nwse-resize}
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
   .shelf-book{pointer-events:auto; position:relative; height:100%; border:0; background:none; cursor:grab;
@@ -432,7 +438,7 @@
     <button id="row-del" type="button">− Reihe</button>
     <button id="row-reset" type="button">↺ Diese Ebene zurücksetzen</button>
     <button id="books-align" type="button">⬇ Bücher unten ausrichten</button>
-    <span id="row-hint">Reihe ziehen = verschieben · Kanten = Breite · Unterkante = Höhe · Kreis oben = Perspektive · nach „Fertig" sind die Bücher wieder einzeln frei beweglich</span>
+    <span id="row-hint">Reihe ziehen = verschieben · Kanten = Breite/Höhe · weiße Ecken frei ziehen = perspektivisch verzerren · nach „Fertig" sind die Bücher wieder einzeln frei beweglich</span>
   </div>
 </div>
 
@@ -1346,7 +1352,10 @@
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
   }
-  window.addEventListener('resize', function(){ if(regal.classList.contains('has-books')) fitAllSpines(); });
+  window.addEventListener('resize', function(){ if(!regal.classList.contains('has-books')) return;
+    var rs = document.querySelectorAll('#regal-books .shelf-row');
+    for(var k=0;k<rs.length;k++){ if(currentRows[k]) applyRowStyle(rs[k], currentRows[k]); }
+    fitAllSpines(); });
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
@@ -1420,14 +1429,45 @@
     var bx = VIEWS[level].box, N = 5, gap = 1.6;
     var top = bx.t, bottom = 100 - bx.b, avail = bottom - top;
     var rh = (avail - gap*(N-1)) / N, rows = [];
-    for(var k=0;k<N;k++) rows.push({ l:bx.l, r:bx.r, t:+(top + k*(rh+gap)).toFixed(2), h:+rh.toFixed(2), ry:0 });
+    for(var k=0;k<N;k++) rows.push({ l:bx.l, r:bx.r, t:+(top + k*(rh+gap)).toFixed(2), h:+rh.toFixed(2),
+      c:{ tl:[0,0], tr:[0,0], bl:[0,0], br:[0,0] } });
     return rows;
   }
   function allRows(){ try{ return JSON.parse(localStorage.getItem('jt-shelfrows') || '{}') || {}; }catch(e){ return {}; } }
   function getRows(level){ var a = allRows(); return (a[level] && a[level].length) ? a[level] : defaultRows(level); }
   function saveRows(level, rows){ try{ var a = allRows(); a[level] = rows; localStorage.setItem('jt-shelfrows', JSON.stringify(a)); }catch(e){} }
-  function applyRowStyle(el, d){ el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%';
-    el.style.transform = d.ry ? ('perspective(1200px) rotateY(' + d.ry + 'deg)') : ''; el.style.transformOrigin = 'center center'; }
+  // --- Eck-Verzerrung (Free-Distort) je Reihe: 4 Eckpunkte frei ziehbar (Homographie → matrix3d) ---
+  function adjugate(m){ return [
+    m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+    m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+    m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3] ]; }
+  function multmm(a,b){ var c=[]; for(var x=0;x<3;x++){ for(var y=0;y<3;y++){ var s=0;
+    for(var k=0;k<3;k++) s+=a[3*x+k]*b[3*k+y]; c[3*x+y]=s; } } return c; }
+  function multmv(m,v){ return [ m[0]*v[0]+m[1]*v[1]+m[2]*v[2], m[3]*v[0]+m[4]*v[1]+m[5]*v[2], m[6]*v[0]+m[7]*v[1]+m[8]*v[2] ]; }
+  function basisToPoints(x1,y1,x2,y2,x3,y3,x4,y4){ var m=[x1,x2,x3, y1,y2,y3, 1,1,1];
+    var v=multmv(adjugate(m),[x4,y4,1]); return multmm(m,[v[0],0,0, 0,v[1],0, 0,0,v[2]]); }
+  function warp(w,h, ax,ay,bx,by,cx,cy,dx,dy){   // Quelle (0,0)(w,0)(0,h)(w,h) → Ziel A,B,C,D
+    var s=basisToPoints(0,0, w,0, 0,h, w,h), t=basisToPoints(ax,ay, bx,by, cx,cy, dx,dy);
+    var p=multmm(t, adjugate(s)); for(var k=0;k<9;k++) p[k]=p[k]/p[8];
+    return 'matrix3d('+[p[0],p[3],0,p[6], p[1],p[4],0,p[7], 0,0,1,0, p[2],p[5],0,p[8]].join(',')+')'; }
+  function hasCorners(c){ return c && (c.tl[0]||c.tl[1]||c.tr[0]||c.tr[1]||c.bl[0]||c.bl[1]||c.br[0]||c.br[1]); }
+  function applyRowStyle(el, d){
+    el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%';
+    if(hasCorners(d.c)){
+      var R = regal.getBoundingClientRect(), W = el.offsetWidth, H = el.offsetHeight;
+      if(W>0 && H>0){
+        var fx = R.width/100, fy = R.height/100, c = d.c;
+        el.style.transformOrigin = '0 0';
+        el.style.transform = warp(W, H,
+          c.tl[0]*fx,     c.tl[1]*fy,
+          W + c.tr[0]*fx, c.tr[1]*fy,
+          c.bl[0]*fx,     H + c.bl[1]*fy,
+          W + c.br[0]*fx, H + c.br[1]*fy);
+        return;
+      }
+    }
+    el.style.transform = ''; el.style.transformOrigin = '';
+  }
 
   var editing = false, currentRows = [];
   function setEditing(on){
@@ -1443,21 +1483,24 @@
     var handle = e.target.closest('[data-h]');
     var rect = regal.getBoundingClientRect();
     var ri = +rowEl.getAttribute('data-row'); var cur = currentRows[ri] || {};
+    var cc = cur.c ? { tl:cur.c.tl.slice(), tr:cur.c.tr.slice(), bl:cur.c.bl.slice(), br:cur.c.br.slice() }
+                   : { tl:[0,0], tr:[0,0], bl:[0,0], br:[0,0] };
     RDRAG = { ri:ri, el:rowEl, mode: handle ? handle.getAttribute('data-h') : 'move',
               sx:e.clientX, sy:e.clientY, W:rect.width||1, H:rect.height||1,
-              s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h, ry:cur.ry||0 } };
+              s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h, c:cc } };
     e.preventDefault(); e.stopPropagation();
   }
   function rowMove(e){
     if(!RDRAG) return;
     var dxp = (e.clientX - RDRAG.sx) / RDRAG.W * 100, dyp = (e.clientY - RDRAG.sy) / RDRAG.H * 100;
-    var d = { l:RDRAG.s.l, r:RDRAG.s.r, t:RDRAG.s.t, h:RDRAG.s.h, ry:RDRAG.s.ry };
-    if(RDRAG.mode === 'move'){ d.t = RDRAG.s.t + dyp; d.l = RDRAG.s.l + dxp; d.r = RDRAG.s.r - dxp; }
-    else if(RDRAG.mode === 'l'){ d.l = RDRAG.s.l + dxp; }
-    else if(RDRAG.mode === 'r'){ d.r = RDRAG.s.r - dxp; }
-    else if(RDRAG.mode === 'b'){ d.h = RDRAG.s.h + dyp; }
-    else if(RDRAG.mode === 'p'){ d.ry = RDRAG.s.ry + dxp * 2; }   // Kreis oben ziehen → Perspektive neigen
-    d.t = clamp(d.t, -5, 98); d.l = clamp(d.l, -5, 92); d.r = clamp(d.r, -5, 92); d.h = clamp(d.h, 3, 96); d.ry = clamp(d.ry, -60, 60);
+    var s = RDRAG.s, m = RDRAG.mode;
+    var d = { l:s.l, r:s.r, t:s.t, h:s.h, c:{ tl:s.c.tl.slice(), tr:s.c.tr.slice(), bl:s.c.bl.slice(), br:s.c.br.slice() } };
+    if(m === 'move'){ d.t = s.t + dyp; d.l = s.l + dxp; d.r = s.r - dxp; }
+    else if(m === 'l'){ d.l = s.l + dxp; }
+    else if(m === 'r'){ d.r = s.r - dxp; }
+    else if(m === 'b'){ d.h = s.h + dyp; }
+    else if(d.c[m]){ d.c[m] = [ s.c[m][0] + dxp, s.c[m][1] + dyp ]; }   // Ecke tl/tr/bl/br frei ziehen
+    d.t = clamp(d.t, -20, 98); d.l = clamp(d.l, -20, 95); d.r = clamp(d.r, -20, 95); d.h = clamp(d.h, 3, 110);
     currentRows[RDRAG.ri] = d; if(RDRAG.el) applyRowStyle(RDRAG.el, d);
     e.preventDefault();
   }
@@ -1470,8 +1513,9 @@
   (function(){
     var ra = document.getElementById('row-add'), rd = document.getElementById('row-del'), rr = document.getElementById('row-reset');
     if(ra) ra.addEventListener('click', function(){ var rows = getRows(i).slice();
-      var last = rows[rows.length-1] || {l:18,r:18,t:18,h:12,ry:0};
-      rows.push({ l:last.l, r:last.r, t:clamp((last.t||18)+(last.h||12)+2, 0, 92), h:last.h||12, ry:last.ry||0 });
+      var last = rows[rows.length-1] || {l:18,r:18,t:18,h:12};
+      rows.push({ l:last.l, r:last.r, t:clamp((last.t||18)+(last.h||12)+2, 0, 92), h:last.h||12,
+        c:{ tl:[0,0], tr:[0,0], bl:[0,0], br:[0,0] } });
       saveRows(i, rows); renderBooks(i); });
     if(rd) rd.addEventListener('click', function(){ var rows = getRows(i).slice();
       if(rows.length > 1){ rows.pop(); saveRows(i, rows); renderBooks(i); } });
@@ -1489,7 +1533,6 @@
     currentRows = getRows(level); var PER = 6;
     for(var r=0; r<currentRows.length; r++){
       var row = document.createElement('div'); row.className = 'shelf-row'; row.setAttribute('data-row', r);
-      applyRowStyle(row, currentRows[r]);
       for(var c=0; c<PER; c++){
         var id = level + '-' + r + '-' + c;
         var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'shelf-book';
@@ -1508,10 +1551,12 @@
         }); })(id, btn);
         row.appendChild(btn);
       }
-      // Griffe für den Einricht-Modus (per CSS nur sichtbar, wenn #regal.editing)
-      ['l','r','b','p'].forEach(function(h){ var hd = document.createElement('div'); hd.className = 'rh rh-'+h; hd.setAttribute('data-h', h); row.appendChild(hd); });
+      // Griffe (nur im Einricht-Modus sichtbar): Kanten l/r/b + 4 frei ziehbare Ecken tl/tr/bl/br
+      ['l','r','b','tl','tr','bl','br'].forEach(function(h){ var hd = document.createElement('div');
+        hd.className = 'rh rh-' + h + (h.length === 2 ? ' rh-c' : ''); hd.setAttribute('data-h', h); row.appendChild(hd); });
       row.addEventListener('pointerdown', rowDown);
       wrap.appendChild(row);
+      applyRowStyle(row, currentRows[r]);   // nach dem Einhängen: jetzt hat die Reihe eine Pixelgröße (für matrix3d)
     }
   }
 
