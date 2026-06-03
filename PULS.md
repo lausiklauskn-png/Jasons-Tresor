@@ -3,6 +3,36 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-03 — Automatische Bücher-Verteilung je Boden; „Regal einrichten" entfernt (Sitzung 14)
+
+**Klaus:** Bücher von Hand ausrichten ist eine Katastrophe — kein Nutzer will das. Bücher sind
+nur noch Symbole; sie sollen **automatisch mittig von Boden zu Boden** sitzen, perspektivisch
+(kleiner werdender Boden → kleineres Buch). „Regal einrichten" komplett raus; Einzel-Nachjustieren
+(verschieben/kippen/drehen) bleibt.
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch, beide Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **`SHELVES` je Ansicht** (aus den Hintergrundbildern abgelesen): ein Boden-Viereck (4 Eckpunkte
+  in %), frontale = Rechteck, schräge (links/rechts) = Trapez. `shelfRows()` teilt es in n Böden
+  und gibt je Boden eine perspektivisch verzerrte Reihe (matrix3d-Homographie aus PR #40 bleibt).
+- **Bücher automatisch** je Boden verteilt, **vertikal mittig zwischen den zwei Böden**
+  (`align-items:center`, Buch-Höhe 85 %); perspektivisch kleiner, wo der Boden kleiner wird.
+- **„Regal einrichten" komplett entfernt** (Knopf, Werkzeugleiste, Reihen-Drag, Eck-Griffe,
+  `jt-shelfrows`). Einzel-Nachjustieren der Bücher (Drag/Kippen/Drehen, `jt-booklayout`) bleibt.
+- **Einmalige Umstellung** beim Laden: alte `jt-shelfrows`/`jt-booklayout` werden geleert
+  (Versionsflag `jt-shelf-v=2`) — nur Anzeige-Layout, KEINE Tresor-/Jason-Daten.
+
+**Offen / ehrlich:**
+- **Browser-Lauf nötig:** `SHELVES`-Werte sind aus den Bildern **abgeschätzt** — sitzen die
+  Böden noch nicht perfekt (v. a. schräge Ansichten), sage mir „Ebene X, Boden Y zu hoch/tief"
+  und ich justiere die Konstanten. Kein Hand-Ausrichten mehr nötig.
+- **Drehen beim 2. Klick** (früherer Wunsch) entfällt mit dem Editor; Einzel-Drehen je Buch bleibt.
+- AES-Verschluss, SBKIM-Bezeugung, Szene-2-Inhalt weiter offen.
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; beide Regal-Skripte syntaxgeprüft.
+**Automatische Verteilung im Browser ungeprüft — wartet auf Klaus.**
+
+---
+
 ## 2026-06-03 — Reihen mit freier Eck-Verzerrung (Free-Distort) + Bücher-Modi (Sitzung 13)
 
 **Klaus (Screenshots):** Perspektive läuft oft diagonal (bergauf/bergab) — eine Achse reicht
