@@ -278,7 +278,7 @@
                                         Bücher sitzen vertikal mittig zwischen den beiden Böden */
   /* Alle Bücher sind gleich (anonym), greifbar (ziehen=bewegen, oben/unten greifen=kippen)
      und tragen ein Regal-Schild UNTERHALB — niemand sieht dem Buch an, was drin ist. */
-  .shelf-book{pointer-events:auto; position:relative; height:85%; border:0; background:none; cursor:grab;
+  .shelf-book{pointer-events:auto; position:relative; height:90%; border:0; background:none; cursor:grab;
     padding:0; touch-action:none; filter:drop-shadow(0 6px 12px rgba(0,0,0,.55)); transition:filter .2s ease}
   .shelf-book img{height:100%; width:auto; display:block; -webkit-user-drag:none; pointer-events:none; transform-origin:center bottom}
   .shelf-book:hover, .shelf-book:focus-visible{outline:none;
@@ -1387,11 +1387,11 @@
   //     in n Böden geteilt; die Buchrücken werden je Boden automatisch mittig verteilt.
   //     tl/tr/bl/br = Eckpunkte in % der Bühne. Frontale Ansicht = Rechteck; schräge = Trapez. ---
   var SHELVES = [
-    { tl:[40,5],  tr:[97,19], bl:[40,93], br:[97,73], n:6 },   // 0 links (flieht nach rechts)
-    { tl:[21,18], tr:[79,18], bl:[21,80], br:[79,80], n:5 },   // 1 Ankunft (frontal)
-    { tl:[3,18],  tr:[58,5],  bl:[3,73],  br:[58,93], n:6 },   // 2 rechts (flieht nach links)
-    { tl:[17,14], tr:[83,14], bl:[17,83], br:[83,83], n:6 },   // 3 Übergang (frontal)
-    { tl:[16,15], tr:[84,15], bl:[16,77], br:[84,77], n:5 }    // 4 Kern (frontal)
+    { tl:[39,8],  tr:[98,18], bl:[39,97], br:[98,82], n:6 },   // 0 links (flieht nach rechts)
+    { tl:[21,17], tr:[79,17], bl:[21,84], br:[79,84], n:5 },   // 1 Ankunft (frontal)
+    { tl:[3,15],  tr:[57,4],  bl:[3,80],  br:[57,99], n:6 },   // 2 rechts (flieht nach links)
+    { tl:[17,16], tr:[83,16], bl:[17,86], br:[83,86], n:6 },   // 3 Übergang (frontal)
+    { tl:[16,17], tr:[84,17], bl:[16,82], br:[84,82], n:5 }    // 4 Kern (frontal)
   ];
   function lerp(a,b,f){ return [ a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f ]; }
   // Viereck in n Böden teilen; jeder Boden eine perspektivisch verzerrte Reihe {l,r,t,h,c}.
