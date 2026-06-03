@@ -1340,15 +1340,16 @@
     busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
       var v = VIEWS[i]; bg.src = v.src; cap.textContent = v.cap;
-      renderBooks(i); regal.classList.add('has-books'); requestAnimationFrame(fitAllSpines);   // jede Ansicht bekommt Bücher
+      regal.classList.add('has-books');     // sichtbar machen, BEVOR die Reihen vermessen werden (matrix3d braucht echte Pixelgröße)
+      renderBooks(i);
+      requestAnimationFrame(function(){ reapplyRows(); fitAllSpines(); });   // nach dem Layout: Perspektive sicher anwenden
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
   }
-  window.addEventListener('resize', function(){ if(!regal.classList.contains('has-books')) return;
-    var rs = document.querySelectorAll('#regal-books .shelf-row');
-    for(var k=0;k<rs.length;k++){ if(currentRows[k]) applyRowStyle(rs[k], currentRows[k]); }
-    fitAllSpines(); });
+  function reapplyRows(){ var rs = document.querySelectorAll('#regal-books .shelf-row');
+    for(var k=0;k<rs.length;k++){ if(currentRows[k]) applyRowStyle(rs[k], currentRows[k]); } }
+  window.addEventListener('resize', function(){ if(!regal.classList.contains('has-books')) return; reapplyRows(); fitAllSpines(); });
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
