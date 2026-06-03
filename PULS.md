@@ -3,6 +3,40 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-03 — Linien-Editor + Export/Import; alle 5 Regalböden kalibriert & eingebacken (Sitzung 16)
+
+**Klaus hat live im Browser kalibriert** — und das Ergebnis ist jetzt fest im Repo.
+
+**Getan (`npm test` 27/27 grün, Kern byte-identisch, Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **Linien-Editor** („📐 Regale einrichten"): je Boden goldene Oberlinie + cyane Unterlinie,
+  4 frei ziehbare Endpunkte (matrix3d-Homographie). +/− Boden, Reset, **Export/Import**.
+- **Bug behoben (wichtig):** Reihen wurden vermessen, während `#regal-books` noch `display:none`
+  war → matrix3d-Verzerrung übersprungen, Reihen sprangen erst beim Anfassen. Fix: `has-books`
+  VOR `renderBooks`, danach `reapplyRows()` im rAF. **Kein** Stale-Storage-Problem.
+- **Navigation (Fackeln + Pfeiltasten) im Einricht-Modus gesperrt**, nach „Fertig" wieder aktiv.
+- **Alle 5 Ansichten kalibriert & eingebacken** (`BAKED` 0–4, je 5 Böden, aus Klaus' Export):
+  links · Mitte · rechts · Übergang · Kern. Priorität: localStorage > BAKED > Auto-Aufteilung.
+  `BAKED` in Wurzel & Spiegel **identisch**; als JSON geprüft.
+- **Export/Import** ist der saubere Übergabeweg (Klaus' localStorage → mir → fest eingebacken),
+  ohne Mess-Ungenauigkeit von Screenshots.
+
+**Offen / ehrlich:**
+- **Browser-Feinschliff:** einzelne Böden evtl. noch minimal verschoben — Klaus exportiert neu,
+  ich tausche die Werte. (Übergang Boden 2 hat großen Versatz — von Klaus so belassen.)
+- AES-Verschluss, SBKIM-Bezeugung, Szene-2-Inhalt weiter offen (eigene Sitzungen).
+
+**Manual-Check:** Headless 27/27 grün; Kern byte-identisch; beide Regal-Skripte syntaxgeprüft.
+**Von Klaus im Browser kalibriert (alle 5 Ansichten); eingebackene Werte 1:1 aus seinem Export.**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Sichtprüfung** der eingebackenen 5 Ansichten (zur Kontrolle „↺ zurücksetzen" je Ebene,
+   damit nicht localStorage, sondern BAKED greift); bei Bedarf neuer Export → ich tausche Werte.
+2. **Sicherheits-Sitzung (#1):** Bücher an den echten AES-Tresor; Panik 2/3 scharf.
+3. **SBKIM-Bezeugung (#2):** Modul-Chain 1:1.
+4. **Szene-2-Inhalt (#4):** echte Detail-/Bearbeiten-Ansicht im Buch.
+
+---
+
 ## 2026-06-03 — Linien-Editor: Klaus richtet je Boden 2 Linien (Ober-/Unterkante) ein (Sitzung 15)
 
 **Klaus:** Auto-Treffen der Böden gelingt mir grafisch nicht zuverlässig (Brettdicke/Kante nicht
