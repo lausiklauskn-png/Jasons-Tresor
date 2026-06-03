@@ -432,7 +432,7 @@
     <button id="row-del" type="button">− Reihe</button>
     <button id="row-reset" type="button">↺ Diese Ebene zurücksetzen</button>
     <button id="books-align" type="button">⬇ Bücher unten ausrichten</button>
-    <span id="row-hint">Reihe ziehen = verschieben · Kanten = Breite · Unterkante = Höhe · Kreis oben = Perspektive neigen · Bücher sitzen verankert unten</span>
+    <span id="row-hint">Reihe ziehen = verschieben · Kanten = Breite · Unterkante = Höhe · Kreis oben = Perspektive · nach „Fertig" sind die Bücher wieder einzeln frei beweglich</span>
   </div>
 </div>
 
@@ -1497,9 +1497,12 @@
         var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = '';
         var lb = document.createElement('span'); lb.className = 'sb-label'; lb.textContent = names[id] || '';
         btn.appendChild(im); btn.appendChild(lb);
-        // Bücher sind VERANKERT: kein freies Ziehen mehr — sie sitzen fest unten auf der Reihe.
+        // Normal-Modus: Bücher einzeln frei beweglich/drehbar (gespeicherte Position anwenden).
+        // Einricht-Modus: Bücher passiv (CSS pointer-events:none) → man positioniert die Reihen.
+        if(lay[id]) applyTransform(btn, lay[id]);
+        btn.addEventListener('pointerdown', bookDown);
         (function(bid, el){ el.addEventListener('click', function(){
-          if(el._suppressClick) return;                  // (Rest aus früherer Drag-Logik, schadet nicht)
+          if(el._suppressClick) return;                  // nach echtem Ziehen nicht öffnen
           var s = el.querySelector('.sb-label'); var lblTxt = (s && s.textContent) ? s.textContent : '';
           if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, requireCode: true, id: bid, el: el });
         }); })(id, btn);
