@@ -3,6 +3,49 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-04 — Shamir 3-von-5 scharf: echter Kern + Tests + UI (Sitzung 19)
+
+**Plan-vor-Code befolgt** (kein Freibrief, echte Krypto + berührt Daten): Pflichtlektüre durch →
+Plan + 3 Entscheidungen an Klaus → **Klaus' OK**:
+- **Shamir-Kern zuerst**, dann UI; Honigtopf eigene Folge-Sitzung.
+- **Teil-Format: Text-Code** (Datei/QR später).
+- **Alle drei Sicherheits-Extras** eingebaut: Selbsttest nach dem Aufteilen, Prüfziffer je Teil,
+  Probelauf im Test-Buch.
+
+**Getan (`npm test` 39/39 grün [+11], Kern byte-identisch [Hash gleich Wurzel & Spiegel], alle 8
+Skriptblöcke je Datei `node --check` ok, Schale nach P-Normalisierung identisch):**
+- **Shamir-Kern im JasonLib-Kern** (zwischen den Markern, exportiert): `splitSecret` / `combineShares`.
+  Echte Mathematik über **GF(256)** (Polynom 0x11b, Generator 3), Lagrange-Interpolation bei x=0;
+  **K=3, N=5**. Jedes Byte ein eigenes Polynom Grad 2 (höchster Koeffizient ≠ 0 erzwungen → Grad
+  genau 2, „3 nötig"). Zufall aus **WebCrypto `getRandomValues`**.
+- **Teil-Format** `JT3v5-<i>-<base64url>` mit **CRC32-Prüfziffer** (Tippfehler genau am Teil),
+  **4-Byte-SHA-256-Fingerabdruck** + zufälliger **Split-ID** (erkennt fremde/manipulierte Teile beim
+  Zusammensetzen). Ehrliche Fehlermeldungen (verschrieben / zu wenige / doppelt / gehören nicht zusammen).
+- **11 headless-Testfälle (`test/shamir.test.js`):** alle 10 „3-aus-5"-Kombinationen == Original;
+  2 Teile scheitern; manipuliertes/verschriebenes Teil fällt auf; fremde Aufteilung erkannt; doppeltes
+  Teil erkannt; UTF-8 byte-genau (Umlaute/Emoji/Sonderzeichen, 1..512 B); **GF(256) selbst geprüft**
+  (AES-Bekanntwert `0x53·0xCA=0x01`, jedes Element invertierbar, Distributivität); Zufall belegt.
+- **UI (Buch-Overlay, Schale; browser-ungeprüft):** Knopf **„🗝️ Passwort aufteilen (3 von 5)"** (nutzt
+  das echte Buch-Passwort) → Panel mit 5 Text-Codes + Kopier-Knopf + **Selbsttest** („✓ 3 Teile ergeben
+  wieder dein Passwort") + ehrliche Grenze. **„Passwort vergessen? Aus 3 Teilen wiederherstellen"** am
+  Passwort-Feld → Panel mit 5 Feldern → Wiederherstellen → zeigt Passwort + „🔓 Buch jetzt öffnen".
+  Im **🧪 Test-Buch** zwei gefahrlose Probelauf-Knöpfe (Demo-Passwort, keine echten Daten).
+- **Nichts zerstörend:** Shamir erzeugt nur **zusätzlich** die 5 Teile; Buch/Passwort/Daten unberührt.
+  Codes/Passwort erscheinen nur im Speicher/DOM, werden beim Schließen geleert, nie gespeichert.
+
+**Manual-Check:** Headless 39/39 grün; Kern byte-identisch (Hash gleich); Skripte `node --check` ok;
+Wurzel/Spiegel nur P-Diff. **Shamir-UI im Browser ungeprüft — wartet auf Klaus' Browser-Lauf
+(Hard-Reload Ctrl+Shift+R).**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf** der Shamir-UI: 🧪 Test-Buch → „Shamir üben: aufteilen" → 3 Codes kopieren →
+   „Shamir üben: wiederherstellen" → einfügen → Passwort kommt zurück? Selbsttest grün?
+2. **Honigtopf/Köder (eigene Sitzung):** falsches Passwort → glaubhafte Schein-Bibliothek; ehrlich
+   etikettiert. Inhalt der Schein-Bibliothek von Klaus zu wählen.
+3. **Später optional:** QR-Codes je Teil (offline obendrauf), `.txt`-Download je Teil.
+
+---
+
 ## 2026-06-04 — Bücher bild-relativ verankert (Resize/Split-Screen-Fix) (Sitzung 18)
 
 **Klaus (Browser):** Bei geteiltem/verzogenem/minimiertem Fenster verrutschen die Bücher — bei
