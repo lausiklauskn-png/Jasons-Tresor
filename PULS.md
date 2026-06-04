@@ -5,16 +5,16 @@
 
 ## 2026-06-04 — Not-Aus scharf: Panik Stufe 2 „Verbergen" + 3 „Retten & Löschen" (Auftrag B) (Sitzung 18)
 
-**Freibrief von Klaus für diese Scheibe** (Not-Aus bauen). Vorab offen angesagt (keine stillen
-Workarounds): Stufe 2 als **einfache, umkehrbare** Abdeckung; der echte **Honigtopf/Köder** bewusst
-in die **Shamir-Sitzung** verschoben (braucht eigenes „Gesicht"). Stufe 3 = **Retten & Löschen**
-(empfohlen, von Klaus gewählt).
+**Freibrief von Klaus für diese Scheibe** (Not-Aus bauen). **Klaus' Entscheidung:** Stufe 2
+„Verbergen" **bewusst weglassen** (nur Stufe 1 + Stufe 3) — der echte **Honigtopf/Köder** kommt als
+eigene **Shamir-Sitzung** (braucht eigenes „Gesicht"). Stufe 3 = **Retten & Löschen** (empfohlen,
+von Klaus gewählt). *(Hinweis: eine einfache Verbergen-Abdeckung war kurz gebaut, auf Klaus' Wunsch
+wieder entfernt — Stufe 2 steht jetzt ehrlich auf „folgt als Honigtopf".)*
 
-**Getan (`npm test` 28/28 grün, Kern byte-identisch [9673 B, sha `5f7f7b5b…` Wurzel & Spiegel],
+**Getan (`npm test` 28/28 grün, Kern byte-identisch [9673 B, Wurzel & Spiegel],
 Panik-Skript `new Function`-geprüft in beiden Dateien, Rettungs-Rundlauf simuliert ✔):**
-- **Panik Stufe 2 „Verbergen" scharf:** opake, unauffällige Vollbild-Abdeckung (`#panik-cover`,
-  schlichte Uhr) legt sich sofort über alles; **Esc** oder **Doppelklick** holt zurück. **Ehrliche
-  Grenze im Dialog:** verbirgt nur die Anzeige, Daten bleiben unangetastet (kein abstreitbarer Köder).
+- **Stufe 2 „Verbergen" bewusst NICHT aktiv:** Knopf bleibt sichtbar, ehrlich beschriftet
+  („folgt als Honigtopf/Köder in eigener Sitzung").
 - **Panik Stufe 3 „Retten & Löschen" scharf (Drei-Schritt):** ① lädt eine **Rettungs-Datei**
   herunter (`jason-tresor-rettung` v1: die **verschlüsselten** `jt-vaults` + offene Liste + Schilder)
   → ② Zwei-Schritt-Bestätigung → ③ löscht **nur die lokale Kopie** (`jt-vaults`, `jasons-bibliothek-v1`,
@@ -27,9 +27,9 @@ Panik-Skript `new Function`-geprüft in beiden Dateien, Rettungs-Rundlauf simuli
   byte-identisch. Krypto kommt weiter nur aus dem Kern; die Rettung verschiebt nur fertige Umschläge.
 
 **Offen / ehrlich:**
-- **Browser-Lauf nötig:** der ganze Not-Aus (Verbergen+Esc/Doppelklick, Retten→Download,
-  Zwei-Schritt-Löschen, Rettung-Einlesen) ist im Browser **ungeprüft — wartet auf Klaus**.
-- **Honigtopf/Köder + Shamir 3-von-5** weiter offen → **eigene nächste Sitzung** (echte Krypto,
+- **Browser-Lauf nötig:** der Not-Aus (Retten→Download, Zwei-Schritt-Löschen, Rettung-Einlesen)
+  ist im Browser **ungeprüft — wartet auf Klaus**.
+- **Stufe 2 „Verbergen" = Honigtopf/Köder + Shamir 3-von-5** offen → **eigene nächste Sitzung** (echte Krypto,
   mit Tests). Siegel-16-Bezeugung ebenfalls offen.
 - Die Rettungs-Datei ist **nicht zusätzlich passwortgeschützt**: die Bücher bleiben verschlüsselt,
   aber offene Liste + Schilder liegen darin im Klartext (Klaus' eigene lokale Sicherung).
@@ -39,7 +39,7 @@ Rettungs-Rundlauf (Bündeln→Löschen→Einlesen) simuliert ✔. **Not-Aus im B
 auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
 
 **Nächste Schritte (priorisiert):**
-1. **Klaus' Browser-Lauf** des Not-Aus: 🛑 Notfall → Stufe 2 (Esc/Doppelklick zurück?) → Stufe 3
+1. **Klaus' Browser-Lauf** des Not-Aus: 🛑 Notfall → Stufe 3
    (lädt Rettung? Zwei-Schritt? Bücher weg, Tür wieder zu?) → „↻ Rettung einlesen" (Bücher zurück?).
 2. **Shamir-Sitzung (#optional):** echte 3-von-5-Aufteilung des Buch-Passworts + **Honigtopf/Köder**
    als Stufe-2-Alternative — eigener Plan-vor-Code-Schritt, echte Krypto mit Tests.
