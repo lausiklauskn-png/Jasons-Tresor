@@ -3,6 +3,50 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-04 — Not-Aus scharf: Panik Stufe 2 „Verbergen" + 3 „Retten & Löschen" (Auftrag B) (Sitzung 18)
+
+**Freibrief von Klaus für diese Scheibe** (Not-Aus bauen). Vorab offen angesagt (keine stillen
+Workarounds): Stufe 2 als **einfache, umkehrbare** Abdeckung; der echte **Honigtopf/Köder** bewusst
+in die **Shamir-Sitzung** verschoben (braucht eigenes „Gesicht"). Stufe 3 = **Retten & Löschen**
+(empfohlen, von Klaus gewählt).
+
+**Getan (`npm test` 28/28 grün, Kern byte-identisch [9673 B, sha `5f7f7b5b…` Wurzel & Spiegel],
+Panik-Skript `new Function`-geprüft in beiden Dateien, Rettungs-Rundlauf simuliert ✔):**
+- **Panik Stufe 2 „Verbergen" scharf:** opake, unauffällige Vollbild-Abdeckung (`#panik-cover`,
+  schlichte Uhr) legt sich sofort über alles; **Esc** oder **Doppelklick** holt zurück. **Ehrliche
+  Grenze im Dialog:** verbirgt nur die Anzeige, Daten bleiben unangetastet (kein abstreitbarer Köder).
+- **Panik Stufe 3 „Retten & Löschen" scharf (Drei-Schritt):** ① lädt eine **Rettungs-Datei**
+  herunter (`jason-tresor-rettung` v1: die **verschlüsselten** `jt-vaults` + offene Liste + Schilder)
+  → ② Zwei-Schritt-Bestätigung → ③ löscht **nur die lokale Kopie** (`jt-vaults`, `jasons-bibliothek-v1`,
+  `jt-booknames`), entfernt 🔒-Marken, zurück zur Tür. Ehrlicher Hinweis: **Exporte überleben**.
+- **„↻ Rettung einlesen"** (im Notfall-Dialog): spielt die Rettungs-Datei **additiv** zurück
+  (gleiche Buch-IDs überschreiben, sonst hinzufügen; fragt vor Überschreiben). Macht „Retten" echt
+  umkehrbar — nicht zerstörend.
+- **Membran-15-Hinweis** als ehrliche Lese-/Warn-Zeile im Dialog („warnt nur, zerstört nichts").
+- **Alles Schale** (Panik-Block, CSS, Dialog) — Kern (`JasonLib`) unberührt, in Wurzel & Spiegel
+  byte-identisch. Krypto kommt weiter nur aus dem Kern; die Rettung verschiebt nur fertige Umschläge.
+
+**Offen / ehrlich:**
+- **Browser-Lauf nötig:** der ganze Not-Aus (Verbergen+Esc/Doppelklick, Retten→Download,
+  Zwei-Schritt-Löschen, Rettung-Einlesen) ist im Browser **ungeprüft — wartet auf Klaus**.
+- **Honigtopf/Köder + Shamir 3-von-5** weiter offen → **eigene nächste Sitzung** (echte Krypto,
+  mit Tests). Siegel-16-Bezeugung ebenfalls offen.
+- Die Rettungs-Datei ist **nicht zusätzlich passwortgeschützt**: die Bücher bleiben verschlüsselt,
+  aber offene Liste + Schilder liegen darin im Klartext (Klaus' eigene lokale Sicherung).
+
+**Manual-Check:** Headless 28/28 grün; Kern byte-identisch (Hash gleich); Panik-Skript syntaxgeprüft;
+Rettungs-Rundlauf (Bündeln→Löschen→Einlesen) simuliert ✔. **Not-Aus im Browser ungeprüft — wartet
+auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf** des Not-Aus: 🛑 Notfall → Stufe 2 (Esc/Doppelklick zurück?) → Stufe 3
+   (lädt Rettung? Zwei-Schritt? Bücher weg, Tür wieder zu?) → „↻ Rettung einlesen" (Bücher zurück?).
+2. **Shamir-Sitzung (#optional):** echte 3-von-5-Aufteilung des Buch-Passworts + **Honigtopf/Köder**
+   als Stufe-2-Alternative — eigener Plan-vor-Code-Schritt, echte Krypto mit Tests.
+3. **SBKIM-Bezeugung (#3):** voller Modul-Chain 1:1 (Siegel echt bronze/gold).
+
+---
+
 ## 2026-06-04 — Tresor scharf: jedes Buch ein echter AES-Tresor (Auftrag A) (Sitzung 17)
 
 **Plan-vor-Code befolgt** (kein Freibrief, berührt echte Krypto + echte Daten): Pflichtlektüre
