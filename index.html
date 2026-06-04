@@ -563,6 +563,7 @@
       </div>
       <p class="bd-code-hint" id="bd-code-hint">Dein Passwort ist das echte Schloss (AES-256-GCM). Nach 2 Fehlversuchen kurze Sperre.</p>
       <p class="bd-code-lock" id="bd-code-lock" hidden></p>
+      <button type="button" id="bd-recover-link" class="bd-link">Passwort vergessen? Aus 3 Teilen wiederherstellen</button>
     </form>
     <div class="bd-content" id="bd-content">
       <h3 id="bd-content-title">Mein erstes Jason</h3>
@@ -575,6 +576,7 @@
         <button type="button" id="bd-load">＋ Jason laden (.json)</button>
         <button type="button" id="bd-lock" class="bd-lock">🔒 Verschließen</button>
         <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
+        <button type="button" id="bd-split">🗝️ Passwort aufteilen (3 von 5)</button>
       </div>
       <input id="bd-file" type="file" accept=".json,application/json" hidden />
       <!-- TESTBUCH — nur zum Üben; vor dem Echtbetrieb diesen Block (+ Skript/CSS „TESTBUCH") entfernen -->
@@ -583,6 +585,8 @@
            mit einem Klick zurück. Vor dem Echtbetrieb wird dieses Testbuch wieder entfernt.</p>
         <div class="bd-actions">
           <button type="button" id="bd-reset">🧹 Probelauf zurücksetzen (alle Test-Bücher entriegeln)</button>
+          <button type="button" id="bd-sh-practice-split">🗝️ Shamir üben: aufteilen (3/5)</button>
+          <button type="button" id="bd-sh-practice-rec">🧩 Shamir üben: wiederherstellen</button>
         </div>
         <p class="bd-test-expl"><b>Angreifer spielen:</b> Öffne ein <i>anderes</i> verschlossenes Buch und
            gib <b>2× ein falsches Passwort</b> ein — das Buch sperrt dann <b>1 Minute</b>. Das ist der heute
@@ -590,9 +594,59 @@
            nächsten Sicherheits-Sitzung und werden dann hier sichtbar.</p>
       </div>
     </div>
+
+    <!-- Shamir 3-von-5: Passwort aufteilen / wiederherstellen. Echte Krypto liegt im
+         getesteten Kern (JasonLib.splitSecret / combineShares). Diese UI ist nur die Schale. -->
+    <div class="bd-shamir" id="bd-split-panel" hidden>
+      <h3>🗝️ Passwort in 5 Teile aufteilen — 3 von 5</h3>
+      <p class="bd-sh-intro">Jeder Teil unten ist ein Code. <b>Beliebige 3</b> davon stellen das Passwort
+        wieder her — 1 oder 2 Teile sind wertlos. Bewahre die 5 Teile an <b>verschiedenen Orten</b> auf
+        (Zettel, USB-Stick, Vertrauensperson …).</p>
+      <ol class="bd-sh-list" id="bd-sh-parts"></ol>
+      <p class="bd-sh-test" id="bd-sh-test"></p>
+      <p class="bd-sh-warn">Ehrliche Grenze: mehr zu verwahren — aber <b>weniger als 3 Teile = endgültig weg</b>.
+        Die Teile ersetzen dein Passwort nicht, sie sind ein zweiter Weg dorthin. Diese Codes erscheinen
+        nur jetzt auf dem Bildschirm; nichts davon wird gespeichert.</p>
+      <div class="bd-actions"><button type="button" id="bd-sh-done">Fertig</button></div>
+    </div>
+
+    <div class="bd-shamir" id="bd-recover-panel" hidden>
+      <h3>🧩 Passwort aus 3 Teilen wiederherstellen</h3>
+      <p class="bd-sh-intro">Füge <b>mindestens 3</b> der 5 Teil-Codes ein (je ein Feld). Leere Felder sind ok.
+        Ein verschriebenes Teil wird genau benannt.</p>
+      <div class="bd-sh-inputs" id="bd-sh-inputs"></div>
+      <p class="bd-sh-result" id="bd-sh-result" hidden></p>
+      <div class="bd-actions">
+        <button type="button" id="bd-rec-go" class="bd-lock">Wiederherstellen</button>
+        <button type="button" id="bd-rec-cancel">Zurück</button>
+      </div>
+    </div>
+
     <button class="bd-close" id="bd-close" type="button">Schließen</button>
   </div>
 </div>
+<style id="shamir-css">
+  #bookdemo .bd-link{ background:none; border:0; color:#6EE7D3; text-decoration:underline;
+    cursor:pointer; font-size:.9em; padding:.3em 0 0; }
+  #bookdemo .bd-shamir{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(560px,92vw); max-height:86vh; overflow:auto; z-index:60; text-align:left;
+    background:rgba(8,8,26,.98); border:1px solid rgba(110,231,211,.35); border-radius:14px;
+    padding:1.3em 1.5em; box-shadow:0 20px 60px rgba(0,0,0,.6); color:#f3eede; }
+  #bookdemo .bd-shamir h3{ margin:.1em 0 .55em; }
+  #bookdemo .bd-sh-intro,#bookdemo .bd-sh-warn,#bookdemo .bd-sh-test,#bookdemo .bd-sh-result{
+    font-size:.92em; line-height:1.45; margin:.4em 0; }
+  #bookdemo .bd-sh-warn{ opacity:.82; }
+  #bookdemo .bd-sh-test.ok,#bookdemo .bd-sh-result.ok{ color:#6EE7D3; }
+  #bookdemo .bd-sh-test.bad,#bookdemo .bd-sh-result.bad{ color:#ff9a9a; }
+  #bookdemo .bd-sh-list{ margin:.4em 0 .6em 1.25em; padding:0; }
+  #bookdemo .bd-sh-list li{ margin:.4em 0; }
+  #bookdemo .bd-sh-row{ display:flex; gap:.4em; align-items:center; margin:.25em 0; }
+  #bookdemo .bd-sh-code{ flex:1 1 auto; font-family:monospace; font-size:.82em; padding:.35em .4em;
+    background:rgba(0,0,0,.35); color:#f3eede; border:1px solid rgba(110,231,211,.25); border-radius:7px; }
+  #bookdemo .bd-sh-inputs textarea{ width:100%; box-sizing:border-box; font-family:monospace;
+    font-size:.82em; min-height:2.4em; margin:.22em 0; padding:.35em .4em; background:rgba(0,0,0,.35);
+    color:#f3eede; border:1px solid rgba(110,231,211,.25); border-radius:7px; resize:vertical; }
+</style>
 
 <!-- „Intro neu starten" — Schlüssel-Knopf (Funfakt). SVG-Platzhalter für den
      freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
@@ -867,6 +921,139 @@
     return { kind: kind, entries: entries };
   }
 
+  // ---- Shamir 3-von-5 (Geheimnis aufteilen): echte Mathematik ueber GF(256),
+  //      dasselbe Galois-Feld wie AES (irreduzibles Polynom 0x11b). Ein Geheimnis
+  //      (z. B. ein Buch-Passwort) wird in N=5 Teile zerlegt; BELIEBIGE K=3 stellen
+  //      es exakt wieder her (Lagrange-Interpolation bei x=0), 1-2 Teile sind
+  //      mathematisch wertlos. Jeder Teil traegt eine CRC32-Pruefziffer (erkennt
+  //      Tippfehler genau am Teil) und alle Teile gemeinsam einen SHA-256-Finger-
+  //      abdruck des Originals + eine zufaellige Split-ID (erkennt ein fremdes/
+  //      manipuliertes Teil beim Zusammensetzen). Offline, ohne Abhaengigkeit;
+  //      Zufall aus WebCrypto getRandomValues.
+  var SHAMIR_K = 3, SHAMIR_N = 5, SHAMIR_VER = 1, SHAMIR_TAG = "JT3v5", SHAMIR_MAXLEN = 1024;
+
+  // GF(256)-Tabellen (Generator 3, Polynom 0x11b). EXP doppelt lang -> kein Modulo.
+  var GF_EXP = new Uint8Array(512), GF_LOG = new Uint8Array(256);
+  (function buildGF() {
+    var x = 1, i;
+    for (i = 0; i < 255; i++) {
+      GF_EXP[i] = x; GF_LOG[x] = i;
+      var x2 = ((x << 1) & 0xff) ^ ((x & 0x80) ? 0x1b : 0); // x*2 (xtime)
+      x = (x2 ^ x) & 0xff;                                   // x*3 = x*2 XOR x
+    }
+    for (i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+  })();
+  function gfMul(a, b) { if (a === 0 || b === 0) return 0; return GF_EXP[GF_LOG[a] + GF_LOG[b]]; }
+  function gfDiv(a, b) { if (a === 0) return 0; return GF_EXP[GF_LOG[a] + 255 - GF_LOG[b]]; }
+
+  // CRC32 (IEEE) als Pruefziffer je Teil (erkennt Verschreiber, nicht kryptografisch).
+  var CRC_TABLE = (function () {
+    var t = new Uint32Array(256), c, n, k;
+    for (n = 0; n < 256; n++) {
+      c = n;
+      for (k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+  function crc32(bytes, len) {
+    var c = 0xFFFFFFFF, i, L = (len == null ? bytes.length : len);
+    for (i = 0; i < L; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  // Binaerformat je Teil: [ver,k,n,x, splitId(4), fp(4), shareY(L), crc32(4)] -> base64url.
+  function shamirEncodeShare(ver, k, n, x, splitId, fp, shareY) {
+    var L = shareY.length, head = 12, buf = new Uint8Array(head + L + 4);
+    buf[0] = ver; buf[1] = k; buf[2] = n; buf[3] = x;
+    buf.set(splitId, 4); buf.set(fp, 8); buf.set(shareY, head);
+    var crc = crc32(buf, head + L);
+    buf[head + L] = (crc >>> 24) & 0xff; buf[head + L + 1] = (crc >>> 16) & 0xff;
+    buf[head + L + 2] = (crc >>> 8) & 0xff; buf[head + L + 3] = crc & 0xff;
+    return SHAMIR_TAG + "-" + x + "-" + b64uFromBytes(buf);
+  }
+  function shamirParseShare(text) {
+    var m = /^JT3v5-(\d+)-([A-Za-z0-9_\-]+)$/.exec(String(text == null ? "" : text).trim());
+    if (!m) return { ok: false, error: "Kein gueltiger Teil-Code (erwartet JT3v5-…)." };
+    var idx = parseInt(m[1], 10), buf;
+    try { buf = bytesFromB64u(m[2]); } catch (e) { return { ok: false, error: "Teil " + idx + " ist unleserlich." }; }
+    if (buf.length < 12 + 1 + 4) return { ok: false, error: "Teil " + idx + " ist zu kurz/beschaedigt." };
+    var L = buf.length - 12 - 4;
+    var crcGiven = ((buf[12 + L] << 24) | (buf[12 + L + 1] << 16) | (buf[12 + L + 2] << 8) | buf[12 + L + 3]) >>> 0;
+    if (crcGiven !== crc32(buf, 12 + L)) return { ok: false, error: "Teil " + idx + " ist verschrieben/beschaedigt (Pruefziffer passt nicht)." };
+    if (buf[3] !== idx) return { ok: false, error: "Teil " + idx + " ist beschaedigt (Teil-Nummer passt nicht)." };
+    return { ok: true, ver: buf[0], k: buf[1], n: buf[2], x: buf[3],
+      splitId: buf.subarray(4, 8), fp: buf.subarray(8, 12), y: buf.subarray(12, 12 + L) };
+  }
+
+  // Geheimnis (String) -> { k, n, fingerprint, shares:[Text-Codes] }. Async wegen SHA-256.
+  async function splitSecret(secret) {
+    if (typeof secret !== "string" || secret.length === 0) throw new Error("Geheimnis (Passwort) fehlt.");
+    var bytes = new TextEncoder().encode(secret);
+    if (bytes.length > SHAMIR_MAXLEN) throw new Error("Geheimnis zu lang (max " + SHAMIR_MAXLEN + " Bytes).");
+    var c = cryptoObj(), k = SHAMIR_K, n = SHAMIR_N, L = bytes.length;
+    var fp = new Uint8Array(await c.subtle.digest("SHA-256", bytes)).subarray(0, 4);
+    var splitId = c.getRandomValues(new Uint8Array(4));
+    var xs = [], shares = [], s, pos, ci, si, d;
+    for (s = 0; s < n; s++) { xs.push(s + 1); shares.push(new Uint8Array(L)); }
+    for (pos = 0; pos < L; pos++) {
+      var coeffs = new Uint8Array(k);
+      coeffs[0] = bytes[pos];
+      var rnd = c.getRandomValues(new Uint8Array(k - 1));
+      for (ci = 1; ci < k; ci++) coeffs[ci] = rnd[ci - 1];
+      while (coeffs[k - 1] === 0) coeffs[k - 1] = c.getRandomValues(new Uint8Array(1))[0]; // Grad genau k-1
+      for (si = 0; si < n; si++) {
+        var xv = xs[si], y = 0, p = 1;
+        for (d = 0; d < k; d++) { y ^= gfMul(coeffs[d], p); p = gfMul(p, xv); }
+        shares[si][pos] = y;
+      }
+    }
+    var out = [];
+    for (s = 0; s < n; s++) out.push(shamirEncodeShare(SHAMIR_VER, k, n, xs[s], splitId, fp, shares[s]));
+    return { tag: SHAMIR_TAG, k: k, n: n, fingerprint: b64uFromBytes(fp), shares: out };
+  }
+
+  // Beliebige >=K Teil-Codes -> das urspruengliche Geheimnis (String). Async wegen SHA-256.
+  async function combineShares(texts) {
+    if (!Array.isArray(texts)) throw new Error("Liste von Teil-Codes erwartet.");
+    var parsed = [], i, p;
+    for (i = 0; i < texts.length; i++) {
+      if (texts[i] == null || String(texts[i]).trim() === "") continue;
+      p = shamirParseShare(texts[i]);
+      if (!p.ok) throw new Error(p.error);
+      parsed.push(p);
+    }
+    if (parsed.length === 0) throw new Error("Keine Teile angegeben.");
+    var k = parsed[0].k, n = parsed[0].n, L0 = parsed[0].y.length;
+    var id0 = b64uFromBytes(parsed[0].splitId), fp0 = b64uFromBytes(parsed[0].fp), seen = {};
+    for (i = 0; i < parsed.length; i++) {
+      if (parsed[i].k !== k || parsed[i].n !== n || parsed[i].y.length !== L0 ||
+          b64uFromBytes(parsed[i].splitId) !== id0 || b64uFromBytes(parsed[i].fp) !== fp0)
+        throw new Error("Diese Teile gehoeren nicht zum selben Geheimnis.");
+      if (seen[parsed[i].x]) throw new Error("Teil " + parsed[i].x + " ist doppelt vorhanden.");
+      seen[parsed[i].x] = true;
+    }
+    if (parsed.length < k) throw new Error("Zu wenige Teile: " + parsed.length + " von " + k + " noetig (1-2 Teile sind wertlos).");
+    var use = parsed.slice(0, k), secret = new Uint8Array(L0), pos, a, b;
+    for (pos = 0; pos < L0; pos++) {
+      var val = 0;
+      for (a = 0; a < k; a++) {
+        var num = 1, den = 1;
+        for (b = 0; b < k; b++) {
+          if (b === a) continue;
+          num = gfMul(num, use[b].x);             // prod_{b!=a} x_b
+          den = gfMul(den, use[a].x ^ use[b].x);  // prod_{b!=a} (x_a - x_b)   (in GF: - == XOR)
+        }
+        val ^= gfMul(use[a].y[pos], gfDiv(num, den));
+      }
+      secret[pos] = val;
+    }
+    var c = cryptoObj();
+    var fp = b64uFromBytes(new Uint8Array(await c.subtle.digest("SHA-256", secret)).subarray(0, 4));
+    if (fp !== fp0) throw new Error("Wiederherstellung fehlgeschlagen: Teile passen rechnerisch nicht zum Original (manipuliert?).");
+    return new TextDecoder().decode(secret);
+  }
+
   var api = {
     SCHEMA: SCHEMA, genId: genId, nowIso: nowIso, validateAndParse: validateAndParse,
     byteSize: byteSize, normalizeTags: normalizeTags, makeEntry: makeEntry,
@@ -874,7 +1061,10 @@
     mergeEntries: mergeEntries, filterSort: filterSort,
     allCategories: allCategories, allTags: allTags,
     encryptTresor: encryptTresor, decryptTresor: decryptTresor, isTresor: isTresor,
-    tresorPayloadKind: tresorPayloadKind, payloadToEntries: payloadToEntries
+    tresorPayloadKind: tresorPayloadKind, payloadToEntries: payloadToEntries,
+    splitSecret: splitSecret, combineShares: combineShares,
+    shamirInfo: { k: SHAMIR_K, n: SHAMIR_N, tag: SHAMIR_TAG, maxLen: SHAMIR_MAXLEN },
+    parseShare: shamirParseShare, _gfMul: gfMul, _gfDiv: gfDiv
   };
   root.JasonLib = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;
@@ -1296,6 +1486,20 @@
   var giftBtn  = document.getElementById('bd-gift');
   var fileIn   = document.getElementById('bd-file');
   var resetBtn = document.getElementById('bd-reset');   // TESTBUCH — vor Echtbetrieb entfernen
+  // Shamir 3-von-5 (Schale; echte Krypto im Kern)
+  var splitBtn    = document.getElementById('bd-split');
+  var splitPanel  = document.getElementById('bd-split-panel');
+  var shParts     = document.getElementById('bd-sh-parts');
+  var shTest      = document.getElementById('bd-sh-test');
+  var shDone      = document.getElementById('bd-sh-done');
+  var recoverLink = document.getElementById('bd-recover-link');
+  var recoverPanel= document.getElementById('bd-recover-panel');
+  var shInputs    = document.getElementById('bd-sh-inputs');
+  var shResult    = document.getElementById('bd-sh-result');
+  var recGo       = document.getElementById('bd-rec-go');
+  var recCancel   = document.getElementById('bd-rec-cancel');
+  var practiceSplit = document.getElementById('bd-sh-practice-split');   // TESTBUCH
+  var practiceRec   = document.getElementById('bd-sh-practice-rec');     // TESTBUCH
 
   var curId = null, curEl = null;
   var openEntries = null;     // entschlüsselte Einträge — NUR im Speicher, nie in localStorage
@@ -1523,9 +1727,102 @@
     });
   }
 
+  // ===== Shamir 3-von-5: Schale um JasonLib.splitSecret / combineShares =====
+  function copyText(str, btn){
+    function done(){ if(!btn) return; var t = btn.textContent; btn.textContent = 'kopiert ✓'; setTimeout(function(){ btn.textContent = t; }, 1200); }
+    function fallback(){
+      try{ var ta = document.createElement('textarea'); ta.value = str; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); ta.remove(); done(); }
+      catch(e2){ alert('Konnte nicht kopieren — bitte den Code von Hand markieren und kopieren.'); }
+    }
+    try{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(str).then(done, fallback); return; } }catch(e){}
+    fallback();
+  }
+  function codeRow(code){
+    var row = document.createElement('div'); row.className = 'bd-sh-row';
+    var inp = document.createElement('input'); inp.type = 'text'; inp.readOnly = true; inp.className = 'bd-sh-code'; inp.value = code;
+    inp.addEventListener('focus', function(){ inp.select(); });
+    var cp = document.createElement('button'); cp.type = 'button'; cp.textContent = 'Kopieren';
+    cp.addEventListener('click', function(){ copyText(code, cp); });
+    row.appendChild(inp); row.appendChild(cp); return row;
+  }
+  // Aufteilen + sofortiger Selbsttest (3 zufaellige Teile -> muss das Original ergeben)
+  function doSplit(secret){
+    if(!shParts || !splitPanel) return;
+    L.splitSecret(secret).then(function(res){
+      shParts.innerHTML = '';
+      res.shares.forEach(function(code){
+        var li = document.createElement('li'); li.appendChild(codeRow(code)); shParts.appendChild(li);
+      });
+      if(shTest){ shTest.className = 'bd-sh-test'; shTest.textContent = 'Selbsttest läuft …'; }
+      var order = [0,1,2,3,4].sort(function(){ return Math.random() - 0.5; }).slice(0, res.k);
+      L.combineShares(order.map(function(i){ return res.shares[i]; })).then(function(back){
+        if(!shTest) return;
+        if(back === secret){ shTest.className = 'bd-sh-test ok';
+          shTest.textContent = '✓ Geprüft: die Teile ' + order.map(function(i){ return i+1; }).sort().join(', ') + ' ergeben wieder das Passwort.'; }
+        else { shTest.className = 'bd-sh-test bad'; shTest.textContent = '⚠ Selbsttest unerwartet fehlgeschlagen — bitte diese Teile nicht verwenden.'; }
+      }).catch(function(){ if(shTest){ shTest.className = 'bd-sh-test bad'; shTest.textContent = '⚠ Selbsttest fehlgeschlagen.'; } });
+      if(recoverPanel) recoverPanel.hidden = true;
+      splitPanel.hidden = false;
+    }).catch(function(err){ alert(String((err && err.message) || err)); });
+  }
+  if(splitBtn){
+    splitBtn.addEventListener('click', function(){
+      if(!openPw){ alert('Erst das Buch mit einem Passwort verschließen — dann lässt sich dieses Passwort in 5 Teile aufteilen.'); return; }
+      doSplit(openPw);
+    });
+  }
+  if(shDone){ shDone.addEventListener('click', function(){ if(splitPanel) splitPanel.hidden = true; if(shParts) shParts.innerHTML = ''; if(shTest) shTest.textContent = ''; }); }
+
+  function openRecover(){
+    if(!shInputs || !recoverPanel) return;
+    shInputs.innerHTML = '';
+    for(var i = 0; i < 5; i++){
+      var ta = document.createElement('textarea'); ta.rows = 1;
+      ta.placeholder = 'Teil-Code ' + (i+1) + ' (z. B. JT3v5-…) — oder leer lassen';
+      shInputs.appendChild(ta);
+    }
+    if(shResult){ shResult.hidden = true; shResult.textContent = ''; shResult.className = 'bd-sh-result'; }
+    if(splitPanel) splitPanel.hidden = true;
+    recoverPanel.hidden = false;
+  }
+  if(recoverLink){ recoverLink.addEventListener('click', openRecover); }
+  if(recCancel){ recCancel.addEventListener('click', function(){ if(recoverPanel) recoverPanel.hidden = true; if(shInputs) shInputs.innerHTML = ''; }); }
+  if(recGo){
+    recGo.addEventListener('click', function(){
+      var tas = shInputs ? shInputs.querySelectorAll('textarea') : [];
+      var codes = [], i; for(i = 0; i < tas.length; i++){ if(tas[i].value.trim()) codes.push(tas[i].value.trim()); }
+      L.combineShares(codes).then(function(pw){
+        if(!shResult) return;
+        shResult.hidden = false; shResult.className = 'bd-sh-result ok'; shResult.innerHTML = '';
+        var msg = document.createElement('div'); msg.textContent = '✓ Passwort wiederhergestellt:'; shResult.appendChild(msg);
+        shResult.appendChild(codeRow(pw));
+        if(curId && isLocked(curId) && codeForm){
+          var op = document.createElement('button'); op.type = 'button'; op.className = 'bd-lock'; op.textContent = '🔓 Buch mit diesem Passwort öffnen';
+          op.addEventListener('click', function(){
+            if(recoverPanel) recoverPanel.hidden = true; if(shInputs) shInputs.innerHTML = '';
+            if(codeIn) codeIn.value = pw;
+            if(codeForm.requestSubmit) codeForm.requestSubmit();
+            else codeForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          });
+          shResult.appendChild(op);
+        }
+      }).catch(function(err){
+        if(!shResult) return;
+        shResult.hidden = false; shResult.className = 'bd-sh-result bad'; shResult.textContent = '✖ ' + String((err && err.message) || err);
+      });
+    });
+  }
+  // TESTBUCH — gefahrloser Probelauf mit einem Demo-Passwort (keine echten Daten).
+  if(practiceSplit){ practiceSplit.addEventListener('click', function(){ doSplit('ÜBUNG-Beispiel-Passwort-3von5'); }); }
+  if(practiceRec){ practiceRec.addEventListener('click', openRecover); }
+
   function hide(){
     clearTimeout(seqTimer); clearLockTimer();
     demo.classList.remove('is-open', 'test-mode'); demo.hidden = true;
+    if(splitPanel) splitPanel.hidden = true; if(recoverPanel) recoverPanel.hidden = true;
+    if(shParts) shParts.innerHTML = ''; if(shInputs) shInputs.innerHTML = '';   // Codes/Passwort nicht im DOM liegen lassen
+    if(shTest) shTest.textContent = ''; if(shResult){ shResult.hidden = true; shResult.textContent = ''; }
     openEntries = null; openPw = null; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
   }
   function tryClose(){
