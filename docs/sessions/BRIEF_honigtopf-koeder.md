@@ -59,8 +59,13 @@ Den **Köder/Honigtopf ehrlich** bauen — als **optionale** Stufe-2-Alternative
    zwei Passwörter / zwei Umschläge, und **wie die Grenze sichtbar** gemacht wird) → **Klaus' OK**.
 2. Köder-Kern/Datenmodell + Test. 3. Köder-UI. Je „braucht Klaus' Browser-Lauf".
 
+## Entschieden (Klaus, 2026-06-04)
+- **Honigtopf-Inhalt = „harmloser Alltag"**: ein paar belanglose Rezepte/Reisenotizen/Ideen —
+  glaubhaft, langweilig, nichts Wertvolles. (Schein-Einträge erst zur Bau-Zeit erzeugen, kein
+  Klartext-Vorrat im Repo.)
+- **Teil-Format Shamir = Text-Code** (bestätigt; bereits so gebaut). Datei/QR optional später.
+
 ## Offene Fragen an Klaus
-- **Honigtopf-Inhalt:** welche harmlose Schein-Bibliothek soll der Köder zeigen (Beispiel-Thema)?
 - **Reichweite:** Köder nur für einzelne Bücher (opt-in), oder ein globaler Schalter?
 - **Erst Klaus' Browser-Lauf von Shamir** abwarten (Sicht-Freigabe), bevor der Köder startet?
 
