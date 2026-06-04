@@ -25,6 +25,11 @@ alle 8 Skriptblöcke `node --check` ok, Schale nur P-Diff [32 Bildpfad-Zeilen]):
   (neues Passwort 2× bestätigen; bei offenem Buch das bekannte wiederverwenden).
 - **Verschenken/Sichern:** lädt den **verschlüsselten** Umschlag als `*.tresor.json` herunter.
 - **Echte Tresor-Bücher tragen ein kleines 🔒** im Regal (`has-vault`), Deko-Bücher nicht.
+- **🧪 Testbuch (für Klaus' Probelauf):** ein einziges Buch (oben links Ebene 1, ID `1-0-0`,
+  `TESTBOOK_IDS`) öffnet ohne Passwort die **Test-Werkzeuge** — **Reset-Knopf** „Probelauf
+  zurücksetzen" (Zwei-Schritt, entriegelt nur die lokalen Test-Schlösser `jt-vaults`; Exporte
+  bleiben) + ehrlicher **Angreifer-Prüfstand**-Hinweis (heute aktiv: Fehlversuch-Sperre; der Rest
+  = Auftrag B). Bewusst **an einer Stelle** entfernbar (alle Stellen mit „TESTBUCH" markiert).
 - **Lösch-Schutz gewahrt:** alle Aktionen additiv/umkehrbar; Schließen mit ungespeichertem Inhalt
   fragt nach (kein versehentlicher Verlust); nichts zerstörend angefasst.
 - **Krypto nur über den Kern** (`L.encryptTresor`/`decryptTresor`), kein `subtle.*` in der Schale.

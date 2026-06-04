@@ -223,6 +223,16 @@
     border:1px solid var(--line); border-radius:9px; padding:8px 12px}
   .bd-actions button:hover{border-color:var(--accent)}
   .bd-actions .bd-lock{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
+  /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): Test-Werkzeuge statt normalem Inhalt */
+  #bd-testtools{display:none}
+  #bookdemo.test-mode #bd-testtools{display:block}
+  #bookdemo.test-mode #bd-status, #bookdemo.test-mode #bd-empty,
+  #bookdemo.test-mode #bd-entries, #bookdemo.test-mode #bd-normal-actions{display:none}
+  .bd-test-note{margin:.1em 0 .8em; color:#f6e6b6; font-size:.9rem; line-height:1.5}
+  .bd-test-expl{margin:.9em 0 0; color:var(--muted); font-size:.84rem; line-height:1.55}
+  #bd-reset{color:#fff; background:#7a2230; border:1px solid #b1455a; border-radius:9px;
+    padding:9px 13px; font:inherit; font-weight:600; cursor:pointer}
+  #bd-reset:hover{border-color:#ff8aa0}
   /* Code-Abfrage (nur im Regal-Buch-Modus sichtbar) */
   .bd-code{display:none; flex-direction:column; align-items:center; gap:8px; width:min(88vw,420px);
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
@@ -315,6 +325,9 @@
   .book-dragging{cursor:grabbing !important; z-index:6; filter:drop-shadow(0 16px 26px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(110,231,211,.8)) !important}
   /* echtes Tresor-Buch (verschlossen, AES) trägt ein kleines Schloss — Deko-Bücher nicht */
   .shelf-book.has-vault::after{content:"🔒"; position:absolute; top:1px; right:1px; font-size:13px;
+    line-height:1; filter:drop-shadow(0 0 3px #000); pointer-events:none}
+  /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): trägt ein 🧪 und öffnet die Test-Werkzeuge */
+  .shelf-book.is-testbook::before{content:"🧪"; position:absolute; top:1px; left:1px; font-size:13px;
     line-height:1; filter:drop-shadow(0 0 3px #000); pointer-events:none}
   /* Regal-Schild unter dem Buch: cyan/blaues Leuchten wie Ebene 2/3, Breite per JS eingepasst */
   .sb-label{position:absolute; top:92%; left:50%; transform:translateX(-50%); margin-top:0;
@@ -551,12 +564,24 @@
       <p id="bd-status">Dieses Buch ist dein Tresor — der Inhalt wird mit deinem Passwort AES-256-verschlüsselt. „Offen" heißt: nur jetzt im Speicher entschlüsselt, nie im Klartext gespeichert.</p>
       <p class="bd-empty" id="bd-empty" hidden>Noch leer. Lade eine <b>.json</b> und verschließe dann mit einem Passwort.</p>
       <ul id="bd-entries"></ul>
-      <div class="bd-actions">
+      <div class="bd-actions" id="bd-normal-actions">
         <button type="button" id="bd-load">＋ Jason laden (.json)</button>
         <button type="button" id="bd-lock" class="bd-lock">🔒 Verschließen</button>
         <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
       </div>
       <input id="bd-file" type="file" accept=".json,application/json" hidden />
+      <!-- TESTBUCH — nur zum Üben; vor dem Echtbetrieb diesen Block (+ Skript/CSS „TESTBUCH") entfernen -->
+      <div id="bd-testtools">
+        <p class="bd-test-note">🧪 <b>Testbuch — nur zum Üben.</b> Hier setzt du den ganzen Probelauf
+           mit einem Klick zurück. Vor dem Echtbetrieb wird dieses Testbuch wieder entfernt.</p>
+        <div class="bd-actions">
+          <button type="button" id="bd-reset">🧹 Probelauf zurücksetzen (alle Test-Bücher entriegeln)</button>
+        </div>
+        <p class="bd-test-expl"><b>Angreifer spielen:</b> Öffne ein <i>anderes</i> verschlossenes Buch und
+           gib <b>2× ein falsches Passwort</b> ein — das Buch sperrt dann <b>1 Minute</b>. Das ist der heute
+           aktive Schutz. Die weiteren Schutzmechanismen (Verbergen · Löschen · Wächter) kommen in der
+           nächsten Sicherheits-Sitzung und werden dann hier sichtbar.</p>
+      </div>
     </div>
     <button class="bd-close" id="bd-close" type="button">Schließen</button>
   </div>
@@ -1258,6 +1283,7 @@
   var lockBtn  = document.getElementById('bd-lock');
   var giftBtn  = document.getElementById('bd-gift');
   var fileIn   = document.getElementById('bd-file');
+  var resetBtn = document.getElementById('bd-reset');   // TESTBUCH — vor Echtbetrieb entfernen
 
   var curId = null, curEl = null;
   var openEntries = null;     // entschlüsselte Einträge — NUR im Speicher, nie in localStorage
@@ -1319,22 +1345,33 @@
     });
   }
 
-  function showContentMode(){ demo.classList.remove('code-mode'); demo.classList.add('is-open'); renderEntries(); }
+  function showContentMode(){ demo.classList.remove('code-mode', 'test-mode'); demo.classList.add('is-open'); renderEntries(); }
+  function showTestMode(){ demo.classList.remove('code-mode'); demo.classList.add('is-open', 'test-mode'); }   // TESTBUCH
 
-  // --- Öffnen: verschlossenes Buch → Passwort; leeres Buch → direkt füllen ---
+  // --- Öffnen: Testbuch → Werkzeuge; verschlossenes Buch → Passwort; leeres Buch → direkt füllen ---
   function openBook(opts){
     opts = opts || {};
     clearTimeout(seqTimer);
     curId = opts.id || null; curEl = opts.el || null;
     openEntries = null; openPw = null; dirty = false;
     var label = (opts.label != null) ? opts.label : (opts.title || '');
-    setTitles(label || 'Buch');
-    demo.classList.remove('is-open');
-    demo.classList.toggle('has-rename', !!curId);             // jedes Regal-Buch ist beschriftbar
-    if(renameIn) renameIn.value = label;
+    demo.classList.remove('is-open', 'test-mode', 'code-mode');
     if(codeIn) codeIn.value = '';
     // attempts NICHT zurücksetzen → 2 Fehlversuche gelten GLOBAL (Knacker muss alle probieren)
     updateLockUI();
+
+    if(opts.test){           // TESTBUCH — nur zum Üben; öffnet die Test-Werkzeuge (kein Passwort, kein Tresor)
+      setTitles('🧪 Testbuch');
+      demo.classList.toggle('has-rename', false);
+      if(hintEl) hintEl.textContent = 'Test-Werkzeuge';
+      demo.hidden = false;
+      seqTimer = setTimeout(showTestMode, 120);
+      return;
+    }
+
+    setTitles(label || 'Buch');
+    demo.classList.toggle('has-rename', !!curId);             // jedes Regal-Buch ist beschriftbar
+    if(renameIn) renameIn.value = label;
 
     if(curId && isLocked(curId)){
       // verschlossenes Buch → echtes Passwort verlangen (kein Demo-Code mehr)
@@ -1452,6 +1489,19 @@
     });
   }
 
+  // TESTBUCH — vor Echtbetrieb entfernen: Probelauf zurücksetzen (Zwei-Schritt, nur lokale Kopie).
+  // Entfernt NUR die lokalen Test-Schlösser (jt-vaults) in diesem Browser; exportierte Dateien bleiben.
+  if(resetBtn){
+    resetBtn.addEventListener('click', function(){
+      if(!confirm('Probelauf zurücksetzen?\n\nAlle Test-Bücher in DIESEM Browser werden wieder entriegelt (die lokalen Schlösser werden entfernt).\nBereits exportierte .tresor.json-Dateien bleiben erhalten.')) return;
+      if(!confirm('Sicher? Zweiter Schritt zur Sicherheit:\n\nJa = alle lokalen Test-Schlösser jetzt entfernen.')) return;
+      try{ localStorage.removeItem('jt-vaults'); }catch(e){}
+      if(window.jtClearVaultMarks) window.jtClearVaultMarks();
+      alert('Probelauf zurückgesetzt — alle Test-Bücher sind wieder offen. (Exportierte Dateien bleiben.)');
+      hide();
+    });
+  }
+
   // Beschriftung (Buchrücken-Schild) live mitführen
   if(renameIn){
     renameIn.addEventListener('input', function(){
@@ -1463,7 +1513,7 @@
 
   function hide(){
     clearTimeout(seqTimer); clearLockTimer();
-    demo.classList.remove('is-open'); demo.hidden = true;
+    demo.classList.remove('is-open', 'test-mode'); demo.hidden = true;
     openEntries = null; openPw = null; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
   }
   function tryClose(){
@@ -1527,6 +1577,10 @@
   // Regal füllen: volle Reihen aus Füll-Büchern + echte anklickbare Bücher dazwischen,
   // auf allen FRONTALEN Ebenen (Mitte=1, Ebene2=3, Ebene3=4), gemischt — nie leer.
   var SPINES = [P+'buchruecken-1.png', P+'buchruecken-2.png', P+'buchruecken-3.png', P+'buchruecken-4.png', P+'buchruecken-5.png'];
+  // TESTBUCH — vor Echtbetrieb entfernen: ein einziges Buch (oben links auf Ebene 1, ID „1-0-0")
+  // trägt die Test-Werkzeuge (🧪 Reset/Probelauf zurücksetzen). Für je ein Testbuch pro Ebene
+  // einfach weitere IDs ergänzen (z. B. '3-0-0', '4-0-0'). Eine Stelle = leicht wieder entfernbar.
+  var TESTBOOK_IDS = ['1-0-0'];
   // Alle Bücher sind gleich & anonym; jedes ist anklickbar und unten frei beschriftbar.
   // Frei wählbare Beschriftungen (nur lokal im Browser gespeichert)
   function loadNames(){ try{ return JSON.parse(localStorage.getItem('jt-booknames') || '{}') || {}; }catch(e){ return {}; } }
@@ -1549,6 +1603,11 @@
   window.jtMarkVault = function(id, on){
     var el = document.querySelector('#regal-books .shelf-book[data-id="' + id + '"]');
     if(el) el.classList.toggle('has-vault', !!on);
+  };
+  // TESTBUCH — vor Echtbetrieb entfernen: nach dem Reset alle 🔒-Markierungen wegnehmen.
+  window.jtClearVaultMarks = function(){
+    var els = document.querySelectorAll('#regal-books .shelf-book.has-vault');
+    for(var k=0;k<els.length;k++) els[k].classList.remove('has-vault');
   };
 
   // --- Bücher bewegen (Drag) & kippen (oben/unten = Drehpunkt); Layout lokal gespeichert ---
@@ -1726,15 +1785,17 @@
         var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = '';
         var lb = document.createElement('span'); lb.className = 'sb-label'; lb.textContent = names[id] || '';
         btn.appendChild(im); btn.appendChild(lb);
-        if(window.jtBookLocked && window.jtBookLocked(id)) btn.classList.add('has-vault');   // echtes Tresor-Buch → 🔒
+        var isTest = TESTBOOK_IDS.indexOf(id) !== -1;    // TESTBUCH — vor Echtbetrieb entfernen
+        if(isTest) btn.classList.add('is-testbook');     // 🧪 Testbuch (öffnet die Test-Werkzeuge)
+        else if(window.jtBookLocked && window.jtBookLocked(id)) btn.classList.add('has-vault');   // echtes Tresor-Buch → 🔒
         // Bücher automatisch mittig je Boden; einzeln frei nachjustierbar (verschieben/kippen/drehen).
         if(lay[id]) applyTransform(btn, lay[id]);
         btn.addEventListener('pointerdown', bookDown);
-        (function(bid, el){ el.addEventListener('click', function(){
+        (function(bid, el, test){ el.addEventListener('click', function(){
           if(el._suppressClick) return;                  // nach echtem Ziehen nicht öffnen
           var s = el.querySelector('.sb-label'); var lblTxt = (s && s.textContent) ? s.textContent : '';
-          if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, id: bid, el: el });
-        }); })(id, btn);
+          if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, id: bid, el: el, test: test });
+        }); })(id, btn, isTest);
         row.appendChild(btn);
       }
       // 4 Endpunkte (Linien-Ecken) — nur im Einricht-Modus sichtbar/ziehbar
