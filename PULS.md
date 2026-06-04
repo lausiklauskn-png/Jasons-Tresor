@@ -3,7 +3,7 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
-## 2026-06-04 — Not-Aus scharf: Panik Stufe 2 „Verbergen" + 3 „Retten & Löschen" (Auftrag B) (Sitzung 18)
+## 2026-06-04 — Not-Aus scharf: Panik Stufe 3 „Retten & Löschen" (Auftrag B) (Sitzung 19)
 
 **Freibrief von Klaus für diese Scheibe** (Not-Aus bauen). **Klaus' Entscheidung:** Stufe 2
 „Verbergen" **bewusst weglassen** (nur Stufe 1 + Stufe 3) — der echte **Honigtopf/Köder** kommt als
@@ -44,6 +44,29 @@ auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
 2. **Shamir-Sitzung (#optional):** echte 3-von-5-Aufteilung des Buch-Passworts + **Honigtopf/Köder**
    als Stufe-2-Alternative — eigener Plan-vor-Code-Schritt, echte Krypto mit Tests.
 3. **SBKIM-Bezeugung (#3):** voller Modul-Chain 1:1 (Siegel echt bronze/gold).
+
+---
+
+## 2026-06-04 — Bücher bild-relativ verankert (Resize/Split-Screen-Fix) (Sitzung 18)
+
+**Klaus (Browser):** Bei geteiltem/verzogenem/minimiertem Fenster verrutschen die Bücher — bei
+Vollbild sitzt alles. Ursache gefunden: Hintergrund `object-fit:cover`; bei anderem Seiten-
+verhältnis wird das Bild anders beschnitten, die Bücher waren aber **fenster-relativ** (% des
+Viewports) verankert, nicht **bild-relativ**.
+
+**Getan (`npm test` 28/28 grün, Kern byte-identisch, beide Regal-Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **`fitBooksToImage()`** legt `#regal-books` exakt auf das **angezeigte Bild-Rechteck** (cover-
+  Berechnung aus `bg.naturalWidth/Height`), inkl. Überlauf (von `#regal` geclippt). Alle Reihen/
+  Bücher-Prozente sind jetzt relativ zum **Bild**, nicht zum Fenster.
+- `applyRowStyle` + `rowDown` rechnen die Eck-Offsets/Drags relativ zu **`#regal-books`**
+  (Bild-Rechteck) statt zum Viewport → konsistent beim Einrichten und Anzeigen.
+- Neuberechnung bei **resize** und nach **Bild-`load`** (`reapplyRows` ruft zuerst `fitBooksToImage`).
+- `#regal-books`-CSS: `inset:0` entfernt (Größe/Lage setzt JS). Eingebackene Werte bleiben gültig
+  (bei Vollbild ist Bild-Rechteck = Fenster). Reiner Layout-Fix, keine Krypto/Daten berührt.
+
+**Manual-Check:** Headless 28/28 grün; Kern byte-identisch; beide Regal-Skripte `node --check` ok.
+**Resize/Split-Verhalten im Browser ungeprüft — wartet auf Klaus** (Fenster teilen/ziehen → Bücher
+sollen jetzt auf den Brettern bleiben).
 
 ---
 
