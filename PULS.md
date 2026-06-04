@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-04 — Bücher bild-relativ verankert (Resize/Split-Screen-Fix) (Sitzung 18)
+
+**Klaus (Browser):** Bei geteiltem/verzogenem/minimiertem Fenster verrutschen die Bücher — bei
+Vollbild sitzt alles. Ursache gefunden: Hintergrund `object-fit:cover`; bei anderem Seiten-
+verhältnis wird das Bild anders beschnitten, die Bücher waren aber **fenster-relativ** (% des
+Viewports) verankert, nicht **bild-relativ**.
+
+**Getan (`npm test` 28/28 grün, Kern byte-identisch, beide Regal-Skripte syntaxgeprüft, Schale nur P-Diff):**
+- **`fitBooksToImage()`** legt `#regal-books` exakt auf das **angezeigte Bild-Rechteck** (cover-
+  Berechnung aus `bg.naturalWidth/Height`), inkl. Überlauf (von `#regal` geclippt). Alle Reihen/
+  Bücher-Prozente sind jetzt relativ zum **Bild**, nicht zum Fenster.
+- `applyRowStyle` + `rowDown` rechnen die Eck-Offsets/Drags relativ zu **`#regal-books`**
+  (Bild-Rechteck) statt zum Viewport → konsistent beim Einrichten und Anzeigen.
+- Neuberechnung bei **resize** und nach **Bild-`load`** (`reapplyRows` ruft zuerst `fitBooksToImage`).
+- `#regal-books`-CSS: `inset:0` entfernt (Größe/Lage setzt JS). Eingebackene Werte bleiben gültig
+  (bei Vollbild ist Bild-Rechteck = Fenster). Reiner Layout-Fix, keine Krypto/Daten berührt.
+
+**Manual-Check:** Headless 28/28 grün; Kern byte-identisch; beide Regal-Skripte `node --check` ok.
+**Resize/Split-Verhalten im Browser ungeprüft — wartet auf Klaus** (Fenster teilen/ziehen → Bücher
+sollen jetzt auf den Brettern bleiben).
+
+---
+
 ## 2026-06-04 — Tresor scharf: jedes Buch ein echter AES-Tresor (Auftrag A) (Sitzung 17)
 
 **Plan-vor-Code befolgt** (kein Freibrief, berührt echte Krypto + echte Daten): Pflichtlektüre

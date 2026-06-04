@@ -298,7 +298,7 @@
   /* Bücher liegen in einrichtbaren Regalreihen: jede Reihe ein eigener Container,
      den Klaus per „Regal einrichten" aufs Brett im Bild zieht (Position/Breite/Höhe),
      lokal je Ebene gespeichert. Normal transparent — sichtbar nur im Einricht-Modus. */
-  #regal-books{position:absolute; inset:0; z-index:2; pointer-events:none}
+  #regal-books{position:absolute; z-index:2; pointer-events:none}   /* Größe/Lage per JS = exakt das angezeigte Bild-Rechteck (cover) → Bücher bild-relativ verankert */
   #regal:not(.has-books) #regal-books{display:none}
   .shelf-row{position:absolute; display:flex; justify-content:center; align-items:flex-end;
     gap:1.4%; pointer-events:none}   /* Boden-Band: Position/Höhe/Verzerrung automatisch per JS;
@@ -1568,9 +1568,21 @@
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
   }
-  function reapplyRows(){ var rs = document.querySelectorAll('#regal-books .shelf-row');
+  // #regal-books exakt auf das angezeigte Bild-Rechteck (object-fit:cover) legen — so sind die
+  // Bücher BILD-relativ verankert und bleiben sitzen, egal wie das Fenster geteilt/verzogen wird.
+  function fitBooksToImage(){
+    var wrap = document.getElementById('regal-books'); if(!wrap) return;
+    var vw = regal.clientWidth, vh = regal.clientHeight; if(!vw || !vh) return;
+    var iw = bg.naturalWidth || 1672, ih = bg.naturalHeight || 941;
+    var scale = Math.max(vw/iw, vh/ih), w = iw*scale, h = ih*scale;
+    wrap.style.width = w + 'px'; wrap.style.height = h + 'px';
+    wrap.style.left = ((vw - w)/2) + 'px'; wrap.style.top = ((vh - h)/2) + 'px';
+    wrap.style.right = 'auto'; wrap.style.bottom = 'auto';
+  }
+  function reapplyRows(){ fitBooksToImage(); var rs = document.querySelectorAll('#regal-books .shelf-row');
     for(var k=0;k<rs.length;k++){ if(currentRows[k]) applyRowStyle(rs[k], currentRows[k]); } }
   window.addEventListener('resize', function(){ if(!regal.classList.contains('has-books')) return; reapplyRows(); fitAllSpines(); });
+  bg.addEventListener('load', function(){ if(regal.classList.contains('has-books')){ reapplyRows(); fitAllSpines(); } });
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
@@ -1709,7 +1721,7 @@
   function applyRowStyle(el, d){
     el.style.left = d.l + '%'; el.style.right = d.r + '%'; el.style.top = d.t + '%'; el.style.height = d.h + '%';
     if(hasCorners(d.c)){
-      var R = regal.getBoundingClientRect(), W = el.offsetWidth, H = el.offsetHeight;
+      var R = el.parentNode.getBoundingClientRect(), W = el.offsetWidth, H = el.offsetHeight;   // R = #regal-books (Bild-Rechteck)
       if(W>0 && H>0){
         var fx = R.width/100, fy = R.height/100, c = d.c;
         el.style.transformOrigin = '0 0';
@@ -1734,7 +1746,7 @@
     if(!editing || !e.target.closest) return;
     var hd = e.target.closest('[data-h]'); if(!hd) return;            // nur an den 4 Endpunkten ziehen
     var rowEl = e.target.closest('.shelf-row'); if(!rowEl) return;
-    var rect = regal.getBoundingClientRect(), ri = +rowEl.getAttribute('data-row'), cur = currentRows[ri] || {};
+    var rect = (rowEl.parentNode||regal).getBoundingClientRect(), ri = +rowEl.getAttribute('data-row'), cur = currentRows[ri] || {};
     RDRAG = { ri:ri, el:rowEl, corner:hd.getAttribute('data-h'), sx:e.clientX, sy:e.clientY,
               W:rect.width||1, H:rect.height||1,
               s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h,
@@ -1774,6 +1786,7 @@
   function renderBooks(level){
     var wrap = document.getElementById('regal-books'); if(!wrap) return;
     wrap.innerHTML = '';
+    fitBooksToImage();   // Container = Bild-Rechteck, BEVOR die Reihen vermessen werden
     var names = loadNames(), lay = getLayout();
     currentRows = shelfRows(level); var PER = 6;
     for(var r=0; r<currentRows.length; r++){
