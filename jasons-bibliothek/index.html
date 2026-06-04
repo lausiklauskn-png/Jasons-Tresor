@@ -416,6 +416,10 @@
   .panik-stufe.s1{border-color:#5a4a17}
   .panik-stufe:hover:not(:disabled){border-color:var(--accent)}
   .panik-stufe:disabled{opacity:.55; cursor:default}
+  .panik-stufe.s3{border-color:#5a2a17}
+  .panik-stufe.s3:hover:not(:disabled){border-color:#e2663b}
+  .panik-foot{display:flex; justify-content:space-between; gap:8px; margin-top:12px; flex-wrap:wrap}
+  .panik-membran{margin:.9em 0 0; color:var(--muted); font-size:.78rem; line-height:1.45}
   @media (prefers-reduced-motion:reduce){ .hud-lamp,.hud-panik::before{animation:none} }
 </style>
 </head>
@@ -626,12 +630,17 @@
     <b>Stufe 1 · Verriegeln</b><span>Sofort zurück zur verschlossenen Tür — umkehrbar (mit dem Schlüssel wieder hinein).</span>
   </button>
   <button class="panik-stufe s2" id="panik-2" type="button" disabled>
-    <b>Stufe 2 · Verbergen</b><span>Abstreitbar verbergen — wird in der Sicherheits-Sitzung scharfgeschaltet.</span>
+    <b>Stufe 2 · Verbergen</b><span>Folgt als <b>Honigtopf/Köder</b> in einer eigenen Sitzung (glaubhafte Schein-Bibliothek). Bewusst noch nicht aktiv.</span>
   </button>
-  <button class="panik-stufe s3" id="panik-3" type="button" disabled>
-    <b>Stufe 3 · Löschen</b><span>Unwiderruflich, Zwei-Schritt — wird in der Sicherheits-Sitzung scharfgeschaltet.</span>
+  <button class="panik-stufe s3" id="panik-3" type="button">
+    <b>Stufe 3 · Retten &amp; Löschen</b><span>Erst eine <b>Rettungs-Datei</b> sichern, dann die lokalen Bücher in <b>diesem Browser</b> löschen (Zwei-Schritt). Bereits exportierte Dateien bleiben.</span>
   </button>
-  <div class="row-end" style="margin-top:12px"><button id="panik-cancel" class="btn-ghost" type="button">Abbrechen</button></div>
+  <div class="panik-foot">
+    <button id="panik-restore" class="btn-ghost" type="button" title="Eine zuvor gesicherte Rettungs-Datei wieder einlesen">↻ Rettung einlesen</button>
+    <button id="panik-cancel" class="btn-ghost" type="button">Abbrechen</button>
+  </div>
+  <input id="panik-restore-file" type="file" accept="application/json,.json" hidden />
+  <p class="panik-membran">🛡️ <b>Wächter (Membran 15):</b> ruhig — keine Fremdzugriffe erkannt. Diese Schicht <b>warnt nur</b> und zerstört nichts.</p>
 </dialog>
 
 <!-- ============================================================
@@ -1884,7 +1893,10 @@
   var panik = document.getElementById('panik');
   var open  = document.getElementById('hud-panik');
   var s1     = document.getElementById('panik-1');
+  var s3     = document.getElementById('panik-3');
   var cancel = document.getElementById('panik-cancel');
+  var restoreBtn  = document.getElementById('panik-restore');
+  var restoreFile = document.getElementById('panik-restore-file');
   if(open && panik){
     open.addEventListener('click', function(){ open.classList.add('armed'); if(panik.showModal) panik.showModal(); });
     panik.addEventListener('close', function(){ open.classList.remove('armed'); });
@@ -1895,6 +1907,82 @@
     try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
     location.reload();
   }); }
+
+  // (Stufe 2 „Verbergen" bewusst noch nicht aktiv — folgt als Honigtopf/Köder in eigener Sitzung.)
+
+  // ---- Stufe 3 · Retten & Löschen: erst Rettungs-Datei sichern, dann lokale Bücher (DIESER Browser)
+  //      löschen — Zwei-Schritt. EHRLICHE GRENZE: bereits exportierte/gesicherte Dateien überleben;
+  //      gelöscht wird nur die lokale Kopie (jt-vaults + offene Liste + Schilder). Über die Rettungs-
+  //      Datei (verschlüsselte Bücher bleiben verschlüsselt) holt „↻ Rettung einlesen" alles zurück.
+  function countBooks(){ try{ return Object.keys(JSON.parse(localStorage.getItem('jt-vaults') || '{}') || {}).length; }catch(e){ return 0; } }
+  function buildRescue(){
+    var bundle = { type: 'jason-tresor-rettung', v: 1, savedAt: new Date().toISOString() };
+    try{ var v = localStorage.getItem('jt-vaults');           if(v) bundle.vaults = JSON.parse(v); }catch(e){}
+    try{ var l = localStorage.getItem('jasons-bibliothek-v1'); if(l) bundle.liste  = JSON.parse(l); }catch(e){}
+    try{ var n = localStorage.getItem('jt-booknames');         if(n) bundle.names  = JSON.parse(n); }catch(e){}
+    return bundle;
+  }
+  function downloadRescue(){
+    var b = new Blob([JSON.stringify(buildRescue(), null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(b), a = document.createElement('a');
+    var ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    a.href = url; a.download = 'jasons-tresor-rettung-' + ts + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+  if(s3){ s3.addEventListener('click', function(){
+    var n = countBooks();
+    if(!confirm('RETTEN & LÖSCHEN — Schritt 1 von 3 (Rettung sichern)\n\n'
+      + 'Es wird jetzt eine Rettungs-Datei heruntergeladen' + (n ? ' (' + n + ' lokale Bücher, verschlüsselt)' : '') + '.\n'
+      + 'Bewahre sie sicher auf — nur mit ihr (und den Buch-Passwörtern) kommst du wieder an die Inhalte.\n\nFortfahren?')) return;
+    downloadRescue();
+    if(!confirm('Schritt 2 von 3 (Löschen vorbereiten)\n\n'
+      + 'Nur die Bücher in DIESEM Browser werden gelöscht.\n'
+      + 'Exportierte/gesicherte Dateien — auch die eben geladene Rettung — BLEIBEN erhalten.\n\nWeiter zum letzten Schritt?')) return;
+    if(!confirm('Schritt 3 von 3 — endgültig löschen?\n\n'
+      + 'Ja = die lokalen Bücher jetzt entfernen. Unwiderruflich (nur über die Rettungs-Datei wiederherstellbar).')) return;
+    try{ localStorage.removeItem('jt-vaults'); }catch(e){}
+    try{ localStorage.removeItem('jasons-bibliothek-v1'); }catch(e){}
+    try{ localStorage.removeItem('jt-booknames'); }catch(e){}
+    if(window.jtClearVaultMarks) window.jtClearVaultMarks();
+    try{ sessionStorage.removeItem('jt-threshold-seen'); }catch(e){}
+    alert('Lokale Bücher gelöscht. Mit „↻ Rettung einlesen" (im Notfall-Dialog) holst du sie aus der Rettungs-Datei zurück.');
+    location.reload();
+  }); }
+
+  // ---- Rettung einlesen: gesicherte Rettungs-Datei zurückspielen (additiv: gleiche Buch-IDs werden
+  //      überschrieben, sonst hinzugefügt). Nicht zerstörend — fragt vor dem Überschreiben nach.
+  if(restoreBtn && restoreFile){
+    restoreBtn.addEventListener('click', function(){ restoreFile.click(); });
+    restoreFile.addEventListener('change', function(ev){
+      var f = ev.target.files && ev.target.files[0]; ev.target.value = '';
+      if(!f) return;
+      var rd = new FileReader();
+      rd.onload = function(){
+        var data; try{ data = JSON.parse(String(rd.result)); }catch(e){ alert('Keine gültige Rettungs-Datei (kein JSON).'); return; }
+        if(!data || data.type !== 'jason-tresor-rettung'){ alert('Das ist keine Jasons-Tresor-Rettungs-Datei.'); return; }
+        var cur = countBooks();
+        if(cur && !confirm('Es sind bereits ' + cur + ' lokale Bücher vorhanden.\nDie Rettung wird hinzugefügt; Bücher mit gleicher ID werden überschrieben.\n\nFortfahren?')) return;
+        try{
+          if(data.vaults){
+            var m = {}; try{ m = JSON.parse(localStorage.getItem('jt-vaults') || '{}') || {}; }catch(e){}
+            for(var k in data.vaults){ if(Object.prototype.hasOwnProperty.call(data.vaults, k)) m[k] = data.vaults[k]; }
+            localStorage.setItem('jt-vaults', JSON.stringify(m));
+          }
+          if(data.names){
+            var nm = {}; try{ nm = JSON.parse(localStorage.getItem('jt-booknames') || '{}') || {}; }catch(e){}
+            for(var k2 in data.names){ if(Object.prototype.hasOwnProperty.call(data.names, k2)) nm[k2] = data.names[k2]; }
+            localStorage.setItem('jt-booknames', JSON.stringify(nm));
+          }
+          if(data.liste && !localStorage.getItem('jasons-bibliothek-v1')){ localStorage.setItem('jasons-bibliothek-v1', JSON.stringify(data.liste)); }
+        }catch(e){ alert('Konnte die Rettung nicht einlesen: ' + ((e && e.message) || e)); return; }
+        alert('Rettung eingelesen — die Seite wird neu geladen.');
+        location.reload();
+      };
+      rd.onerror = function(){ alert('Datei konnte nicht gelesen werden.'); };
+      rd.readAsText(f);
+    });
+  }
 
   // SBKIM-Siegel → Andock-Dialog (Verbindung zum Werkzeug)
   var siegel = document.getElementById('sbkim-siegel-badge');
