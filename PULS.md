@@ -3,6 +3,11 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+> **⏸️ PAUSE (2026-06-04):** Sitzung auf Klaus' Wunsch verschoben (zu müde zum Testen — ok).
+> Nichts halbfertig: Shamir-Kern ist gemergt (`main`, `npm test` 39/39). **Offen = nur Klaus'
+> ruhiger Browser-Check** der Shamir-UI. Wiederaufnahme Schritt für Schritt:
+> `docs/sessions/BRIEF_wiederaufnahme-shamir-browserlauf.md`.
+
 ## 2026-06-04 — Shamir 3-von-5 scharf: echter Kern + Tests + UI (Sitzung 19)
 
 **Plan-vor-Code befolgt** (kein Freibrief, echte Krypto + berührt Daten): Pflichtlektüre durch →
