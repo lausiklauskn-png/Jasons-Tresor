@@ -197,7 +197,7 @@
   .bd-content{width:min(88vw,500px); background:var(--card); border:1px solid var(--line);
     border-radius:var(--radius); padding:0 16px; max-height:0; opacity:0; overflow:hidden;
     transition:max-height .5s ease, opacity .5s ease, padding .5s ease}
-  #bookdemo.is-open .bd-content{max-height:340px; opacity:1; padding:16px}
+  #bookdemo.is-open .bd-content{max-height:min(72vh,560px); opacity:1; padding:16px; overflow:auto}
   .bd-content h3{margin:.2em 0 .4em; color:var(--accent)}
   .bd-rename-row{display:none; margin:0 0 10px}
   #bookdemo.has-rename .bd-rename-row{display:block}
@@ -206,6 +206,23 @@
     border:1px solid var(--line); border-radius:10px; padding:9px 12px}
   .bd-rename-row input:focus{outline:none; border-color:var(--accent)}
   .bd-content p{margin:.3em 0; color:var(--muted); font-size:.92rem; line-height:1.5}
+  /* Buch-Tresor: echte Einträge + Aktionen im geöffneten Buch (nur im Speicher entschlüsselt) */
+  #bd-status{margin:.1em 0 .6em; color:var(--muted); font-size:.82rem}
+  .bd-empty{color:var(--muted); font-size:.86rem; font-style:italic; margin:.2em 0 .8em}
+  #bd-entries{list-style:none; margin:0 0 10px; padding:0; max-height:30vh; overflow:auto}
+  #bd-entries li{border:1px solid var(--line); border-radius:10px; padding:8px 10px; margin:0 0 8px; background:#06100f}
+  #bd-entries .bd-en-name{font-weight:600; color:var(--ink)}
+  #bd-entries .bd-en-meta{color:var(--muted); font-size:.78rem; margin-top:2px}
+  #bd-entries .bd-view{margin-top:6px; font:inherit; cursor:pointer; color:var(--ink);
+    background:rgba(17,37,42,.8); border:1px solid var(--line); border-radius:8px; padding:4px 10px}
+  #bd-entries .bd-view:hover{border-color:var(--accent)}
+  #bd-entries pre{white-space:pre-wrap; word-break:break-word; background:#040b0a; border:1px solid var(--line);
+    border-radius:8px; padding:8px; margin:8px 0 0; max-height:30vh; overflow:auto; font-size:.78rem; color:#bfe}
+  .bd-actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+  .bd-actions button{font:inherit; cursor:pointer; color:var(--ink); background:rgba(17,37,42,.8);
+    border:1px solid var(--line); border-radius:9px; padding:8px 12px}
+  .bd-actions button:hover{border-color:var(--accent)}
+  .bd-actions .bd-lock{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
   /* Code-Abfrage (nur im Regal-Buch-Modus sichtbar) */
   .bd-code{display:none; flex-direction:column; align-items:center; gap:8px; width:min(88vw,420px);
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
@@ -296,6 +313,9 @@
   .shelf-book:hover, .shelf-book:focus-visible{outline:none;
     filter:drop-shadow(0 10px 18px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(110,231,211,.65))}
   .book-dragging{cursor:grabbing !important; z-index:6; filter:drop-shadow(0 16px 26px rgba(0,0,0,.7)) drop-shadow(0 0 18px rgba(110,231,211,.8)) !important}
+  /* echtes Tresor-Buch (verschlossen, AES) trägt ein kleines Schloss — Deko-Bücher nicht */
+  .shelf-book.has-vault::after{content:"🔒"; position:absolute; top:1px; right:1px; font-size:13px;
+    line-height:1; filter:drop-shadow(0 0 3px #000); pointer-events:none}
   /* Regal-Schild unter dem Buch: cyan/blaues Leuchten wie Ebene 2/3, Breite per JS eingepasst */
   .sb-label{position:absolute; top:92%; left:50%; transform:translateX(-50%); margin-top:0;
     width:210%; max-width:none; height:1.4em; display:flex; align-items:center; justify-content:center;
@@ -516,22 +536,27 @@
       <span class="bd-hint" id="bd-hint">mit dem Schlüssel öffnen</span>
     </div>
     <form class="bd-code" id="bd-code" autocomplete="off">
-      <label for="bd-code-input">Code eingeben, um das Buch zu öffnen</label>
+      <label for="bd-code-input">Passwort eingeben, um das Buch zu öffnen</label>
       <div class="bd-code-row">
-        <input id="bd-code-input" type="password" inputmode="numeric" autocomplete="off" maxlength="12" aria-describedby="bd-code-hint" />
+        <input id="bd-code-input" type="password" autocomplete="off" maxlength="128" aria-describedby="bd-code-hint" />
         <button type="submit" class="bd-code-go">Öffnen</button>
       </div>
-      <p class="bd-code-hint" id="bd-code-hint">Vorschau-Code: <b>1234</b> — das echte Passwort (AES-256) folgt.</p>
+      <p class="bd-code-hint" id="bd-code-hint">Dein Passwort ist das echte Schloss (AES-256-GCM). Nach 2 Fehlversuchen kurze Sperre.</p>
       <p class="bd-code-lock" id="bd-code-lock" hidden></p>
     </form>
     <div class="bd-content" id="bd-content">
       <h3 id="bd-content-title">Mein erstes Jason</h3>
       <label class="bd-rename-row"><span>Beschriftung (leuchtet auf dem Buchrücken)</span>
         <input id="bd-rename" type="text" maxlength="24" autocomplete="off" placeholder="Name auf dem Buch" /></label>
-      <p>Hier erscheint später der echte Inhalt dieser Sammlung — genau die Detail- und
-         Bearbeiten-Ansicht, die du heute schon kennst. Nur das Aussehen wird ein Buch.</p>
-      <p><b>Ehrlich:</b> Vorschau ohne echte Daten. Das eigentliche Schloss bleibt dein
-         Passwort (AES-256) — wird als Nächstes verdrahtet.</p>
+      <p id="bd-status">Dieses Buch ist dein Tresor — der Inhalt wird mit deinem Passwort AES-256-verschlüsselt. „Offen" heißt: nur jetzt im Speicher entschlüsselt, nie im Klartext gespeichert.</p>
+      <p class="bd-empty" id="bd-empty" hidden>Noch leer. Lade eine <b>.json</b> und verschließe dann mit einem Passwort.</p>
+      <ul id="bd-entries"></ul>
+      <div class="bd-actions">
+        <button type="button" id="bd-load">＋ Jason laden (.json)</button>
+        <button type="button" id="bd-lock" class="bd-lock">🔒 Verschließen</button>
+        <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
+      </div>
+      <input id="bd-file" type="file" accept=".json,application/json" hidden />
     </div>
     <button class="bd-close" id="bd-close" type="button">Schließen</button>
   </div>
@@ -1214,9 +1239,9 @@
 (function(){
   var demo = document.getElementById('bookdemo');
   if(!demo) return;
+  var L = window.JasonLib;
   var btn    = document.getElementById('btn-bookdemo');
   var btnSeq = document.getElementById('btn-bookseq');
-  var book   = document.getElementById('bd-book');
   var close  = document.getElementById('bd-close');
   var back   = document.getElementById('bd-backdrop');
   var titleEl= document.getElementById('bd-title');
@@ -1227,18 +1252,30 @@
   var codeGo   = codeForm ? codeForm.querySelector('.bd-code-go') : null;
   var codeLock = document.getElementById('bd-code-lock');
   var renameIn = document.getElementById('bd-rename');
+  var emptyEl  = document.getElementById('bd-empty');
+  var listEl   = document.getElementById('bd-entries');
+  var loadBtn  = document.getElementById('bd-load');
+  var lockBtn  = document.getElementById('bd-lock');
+  var giftBtn  = document.getElementById('bd-gift');
+  var fileIn   = document.getElementById('bd-file');
+
   var curId = null, curEl = null;
+  var openEntries = null;     // entschlüsselte Einträge — NUR im Speicher, nie in localStorage
+  var openPw = null;          // Passwort des offenen Buchs — nur im Speicher, nie gespeichert/geloggt
+  var dirty = false;          // ungespeicherte Änderungen → Schutz vor versehentlichem Verlust
   var seqTimer = null, lockTimer = null;
-  var DEMO_CODE = '1234';                 // Vorschau-Code (ehrlich angezeigt); echtes AES-Passwort folgt
-  var attempts = 0, lockedUntil = 0;
+  var attempts = 0, lockedUntil = 0;   // 2 Fehlversuche gelten GLOBAL → 1 Min Sperre
+
+  // --- Buch-Tresore (lokal): Buch-ID → { tresor: jason-tresor v2, name }. Gespeichert wird
+  //     NUR der verschlüsselte Umschlag (kdf/cipher/ciphertext) — nie Klartext, nie Passwort. ---
+  function loadVaults(){ try{ return JSON.parse(localStorage.getItem('jt-vaults')||'{}')||{}; }catch(e){ return {}; } }
+  function saveVaults(m){ try{ localStorage.setItem('jt-vaults', JSON.stringify(m)); }catch(e){} }
+  function getVault(id){ var m=loadVaults(); return id ? m[id] : null; }
+  function isLocked(id){ var v=getVault(id); return !!(v && v.tresor && L.isTresor(v.tresor)); }
+  window.jtBookLocked = isLocked;     // Regal markiert echte Tresor-Bücher mit 🔒
 
   function setTitles(t){ if(titleEl) titleEl.textContent = t; if(ctTitle) ctTitle.textContent = t; }
   function clearLockTimer(){ if(lockTimer){ clearInterval(lockTimer); lockTimer = null; } }
-  function show(){ clearTimeout(seqTimer); demo.hidden = false; demo.classList.remove('is-open'); }
-  function hide(){ clearTimeout(seqTimer); clearLockTimer(); demo.classList.remove('is-open'); demo.hidden = true; }
-  function openSequence(){ demo.classList.add('is-open'); }      // Schlüssel versinkt + Energie + Buch auf
-  function toggleBook(){ if(demo.classList.contains('code-mode')) return; demo.classList.toggle('is-open'); }
-  function playSeq(){ openBook({requireCode:false}); seqTimer = setTimeout(openSequence, 950); }
 
   function updateLockUI(){
     var now = Date.now();
@@ -1254,58 +1291,192 @@
   }
   function startLock(){ lockedUntil = Date.now() + 60000; updateLockUI(); clearLockTimer(); lockTimer = setInterval(updateLockUI, 500); }
 
+  // --- Inhalt des offenen Buchs rendern (Einträge read-only + „Ansehen") ---
+  function renderEntries(){
+    if(!listEl) return;
+    listEl.innerHTML = '';
+    var n = openEntries ? openEntries.length : 0;
+    if(emptyEl) emptyEl.hidden = (n !== 0);
+    if(!openEntries) return;
+    openEntries.forEach(function(e){
+      var li = document.createElement('li');
+      var nm = document.createElement('div'); nm.className = 'bd-en-name'; nm.textContent = e.name || 'Unbenannt';
+      li.appendChild(nm);
+      var parts = [];
+      if(e.category) parts.push(e.category);
+      if(e.size != null) parts.push(e.size + ' B');
+      if(parts.length){ var mt = document.createElement('div'); mt.className = 'bd-en-meta'; mt.textContent = parts.join(' · '); li.appendChild(mt); }
+      var view = document.createElement('button'); view.type = 'button'; view.className = 'bd-view'; view.textContent = 'Ansehen';
+      view.addEventListener('click', function(){
+        var pre = li.querySelector('pre');
+        if(pre){ pre.remove(); return; }
+        pre = document.createElement('pre');
+        try{ pre.textContent = JSON.stringify(e.payload, null, 2); }catch(_){ pre.textContent = String(e.payload); }
+        li.appendChild(pre);
+      });
+      li.appendChild(view);
+      listEl.appendChild(li);
+    });
+  }
+
+  function showContentMode(){ demo.classList.remove('code-mode'); demo.classList.add('is-open'); renderEntries(); }
+
+  // --- Öffnen: verschlossenes Buch → Passwort; leeres Buch → direkt füllen ---
   function openBook(opts){
     opts = opts || {};
     clearTimeout(seqTimer);
-    setTitles(opts.title || 'Mein erstes Jason');
-    demo.classList.remove('is-open');
-    demo.classList.toggle('code-mode', !!opts.requireCode);
-    if(hintEl) hintEl.textContent = opts.requireCode ? 'Code eingeben, um zu öffnen' : 'mit dem Schlüssel öffnen';
     curId = opts.id || null; curEl = opts.el || null;
+    openEntries = null; openPw = null; dirty = false;
+    var label = (opts.label != null) ? opts.label : (opts.title || '');
+    setTitles(label || 'Buch');
+    demo.classList.remove('is-open');
     demo.classList.toggle('has-rename', !!curId);             // jedes Regal-Buch ist beschriftbar
-    if(renameIn) renameIn.value = (opts.label != null) ? opts.label : (opts.title || '');
-    // attempts NICHT zurücksetzen → 2 Fehlversuche gelten GLOBAL (Knacker muss alle probieren)
+    if(renameIn) renameIn.value = label;
     if(codeIn) codeIn.value = '';
+    // attempts NICHT zurücksetzen → 2 Fehlversuche gelten GLOBAL (Knacker muss alle probieren)
     updateLockUI();
-    demo.hidden = false;
-    if(opts.requireCode && codeIn && Date.now() >= lockedUntil){ setTimeout(function(){ codeIn.focus(); }, 60); }
+
+    if(curId && isLocked(curId)){
+      // verschlossenes Buch → echtes Passwort verlangen (kein Demo-Code mehr)
+      demo.classList.add('code-mode');
+      if(hintEl) hintEl.textContent = 'mit dem Passwort öffnen';
+      demo.hidden = false;
+      if(codeIn && Date.now() >= lockedUntil){ setTimeout(function(){ codeIn.focus(); }, 60); }
+    } else {
+      // leeres/neues Buch → direkt öffnen: Jason laden + Passwort setzen
+      demo.classList.remove('code-mode');
+      if(hintEl) hintEl.textContent = 'leeres Buch — Jason laden und verschließen';
+      openEntries = [];
+      demo.hidden = false;
+      seqTimer = setTimeout(showContentMode, 120);
+    }
   }
   window.jtOpenBook = openBook;          // von der Regal-Ansicht aufgerufen
 
+  // korrektes Passwort → decryptTresor → Öffnen-Sequenz + Inhalt
   if(codeForm){
     codeForm.addEventListener('submit', function(e){
       e.preventDefault();
       if(Date.now() < lockedUntil) return;
-      var val = ((codeIn && codeIn.value) || '').trim();
-      if(val === DEMO_CODE){
+      var pw = (codeIn && codeIn.value) || '';
+      var v = getVault(curId);
+      if(!v || !v.tresor) return;
+      L.decryptTresor(v.tresor, pw).then(function(plain){
         attempts = 0; if(codeLock) codeLock.hidden = true;
-        openSequence();                  // richtiger Code → Energie-Effekt + Buch öffnet + Inhalt
-      } else {
+        openEntries = L.payloadToEntries(plain, (renameIn && renameIn.value) || 'Buch').entries;
+        openPw = pw; dirty = false;
+        if(codeIn) codeIn.value = '';
+        showContentMode();               // Schlüssel versinkt + Energie + Buch auf + Inhalt
+      }).catch(function(){               // falsches Passwort/Manipulation → AES-GCM wirft
         attempts++;
+        if(codeIn) codeIn.value = '';
         codeForm.classList.remove('shake'); void codeForm.offsetWidth; codeForm.classList.add('shake');
-        if(codeIn){ codeIn.value = ''; codeIn.focus(); }
+        if(codeIn) codeIn.focus();
         if(attempts >= 2){ attempts = 0; startLock(); }   // 2× falsch → 1 Minute Sperre
-      }
+      });
     });
   }
 
+  // Jason (.json) ins offene Buch laden — bestehende Bibliothek-Logik (additiv)
+  if(loadBtn && fileIn){
+    loadBtn.addEventListener('click', function(){ fileIn.click(); });
+    fileIn.addEventListener('change', function(ev){
+      var f = ev.target.files && ev.target.files[0]; ev.target.value = '';
+      if(!f) return;
+      var rd = new FileReader();
+      rd.onload = function(){
+        var text = String(rd.result), base = f.name.replace(/\.json$/i, '');
+        var p = L.validateAndParse(text);
+        if(!p.ok){ alert('Keine gültige JSON-Datei: ' + p.error); return; }
+        if(L.isTresor(p.value)){
+          var pw2 = window.prompt('Diese Datei ist selbst ein Tresor. Passwort:');
+          if(pw2 == null) return;
+          L.decryptTresor(p.value, pw2).then(function(plain){
+            openEntries = L.mergeEntries(openEntries || [], L.payloadToEntries(plain, base).entries);
+            dirty = true; renderEntries();
+          }).catch(function(){ alert('Falsches Passwort oder Tresor beschädigt.'); });
+          return;
+        }
+        openEntries = L.mergeEntries(openEntries || [], L.parseLibraryImport(text, base).entries);
+        dirty = true; renderEntries();
+      };
+      rd.onerror = function(){ alert('Datei konnte nicht gelesen werden.'); };
+      rd.readAsText(f);
+    });
+  }
+
+  // Verschließen: Sammlung → encryptTresor → jason-tresor v2 ans Buch (zu = verschlüsselt)
+  if(lockBtn){
+    lockBtn.addEventListener('click', function(){
+      if(!curId){ alert('Vorschau-Buch — zum echten Verschließen ein Buch im Regal öffnen.'); return; }
+      var list = openEntries || [];
+      if(!list.length){ alert('Dieses Buch ist leer — erst eine .json laden.'); return; }
+      var pw = openPw;
+      if(!pw){
+        pw = window.prompt('Neues Passwort für dieses Buch (mind. 8 Zeichen):');
+        if(pw == null) return;
+        if(pw.length < 8){ alert('Passwort zu kurz (mind. 8 Zeichen).'); return; }
+        var pwc = window.prompt('Passwort zur Sicherheit wiederholen:');
+        if(pwc == null) return;
+        if(pwc !== pw){ alert('Die Passwörter stimmen nicht überein.'); return; }
+      }
+      L.encryptTresor(L.buildLibraryExport(list), pw).then(function(blob){
+        var m = loadVaults();
+        m[curId] = { tresor: blob, name: (renameIn && renameIn.value) || '', updatedAt: L.nowIso() };
+        saveVaults(m);
+        openPw = pw; dirty = false;
+        if(window.jtMarkVault) window.jtMarkVault(curId, true);
+        hide();
+      }).catch(function(err){ alert(String((err && err.message) || err)); });
+    });
+  }
+
+  // Verschenken/Sichern: den verschlüsselten Umschlag herunterladen (Passwort getrennt mitteilen)
+  if(giftBtn){
+    giftBtn.addEventListener('click', function(){
+      var list = openEntries || [];
+      if(!list.length){ alert('Nichts zu sichern — Buch ist leer.'); return; }
+      var pw = openPw;
+      if(!pw){
+        pw = window.prompt('Passwort zum Verschlüsseln (mind. 8 Zeichen):');
+        if(pw == null) return;
+        if(pw.length < 8){ alert('Passwort zu kurz (mind. 8 Zeichen).'); return; }
+      }
+      L.encryptTresor(L.buildLibraryExport(list), pw).then(function(blob){
+        var name = ((renameIn && renameIn.value) || 'buch').replace(/[^a-z0-9-_]+/gi, '_').replace(/^_+|_+$/g, '') || 'buch';
+        var b = new Blob([JSON.stringify(blob, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(b), a = document.createElement('a');
+        a.href = url; a.download = name + '.tresor.json'; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      }).catch(function(err){ alert(String((err && err.message) || err)); });
+    });
+  }
+
+  // Beschriftung (Buchrücken-Schild) live mitführen
   if(renameIn){
     renameIn.addEventListener('input', function(){
       var v = renameIn.value;
-      setTitles(v || 'Mein erstes Jason');
+      setTitles(v || 'Buch');
       if(curId && window.jtRenameBook) window.jtRenameBook(curId, v);
     });
   }
 
-  if(btn)    btn.addEventListener('click', function(){ openBook({requireCode:false}); });
-  if(btnSeq) btnSeq.addEventListener('click', playSeq);
-  if(book){
-    book.addEventListener('click', toggleBook);
-    book.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleBook(); } });
+  function hide(){
+    clearTimeout(seqTimer); clearLockTimer();
+    demo.classList.remove('is-open'); demo.hidden = true;
+    openEntries = null; openPw = null; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
   }
-  if(close) close.addEventListener('click', hide);
-  if(back)  back.addEventListener('click', hide);
-  document.addEventListener('keydown', function(e){ if(!demo.hidden && e.key === 'Escape'){ hide(); } });
+  function tryClose(){
+    if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')) return;
+    hide();
+  }
+
+  // Vorschau-Knöpfe (Muster-Buch / Buchsequenz) — harmlos, ohne echten Tresor (kein curId → nichts gespeichert)
+  if(btn)    btn.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
+  if(btnSeq) btnSeq.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
+  if(close)  close.addEventListener('click', tryClose);
+  if(back)   back.addEventListener('click', tryClose);
+  document.addEventListener('keydown', function(e){ if(!demo.hidden && e.key === 'Escape'){ tryClose(); } });
 })();
 </script>
 
@@ -1373,6 +1544,11 @@
     var m = loadNames(); m[id] = name; saveNames(m);
     var sp = document.querySelector('#regal-books .shelf-book[data-id="' + id + '"] .sb-label');
     if(sp){ sp.textContent = name; fitSpineText(sp); }
+  };
+  // Nach dem Verschließen: Buch live als echtes Tresor-Buch markieren (🔒), ohne Neu-Rendern.
+  window.jtMarkVault = function(id, on){
+    var el = document.querySelector('#regal-books .shelf-book[data-id="' + id + '"]');
+    if(el) el.classList.toggle('has-vault', !!on);
   };
 
   // --- Bücher bewegen (Drag) & kippen (oben/unten = Drehpunkt); Layout lokal gespeichert ---
@@ -1550,13 +1726,14 @@
         var im = document.createElement('img'); im.src = SPINES[(r + c + level) % SPINES.length]; im.alt = '';
         var lb = document.createElement('span'); lb.className = 'sb-label'; lb.textContent = names[id] || '';
         btn.appendChild(im); btn.appendChild(lb);
+        if(window.jtBookLocked && window.jtBookLocked(id)) btn.classList.add('has-vault');   // echtes Tresor-Buch → 🔒
         // Bücher automatisch mittig je Boden; einzeln frei nachjustierbar (verschieben/kippen/drehen).
         if(lay[id]) applyTransform(btn, lay[id]);
         btn.addEventListener('pointerdown', bookDown);
         (function(bid, el){ el.addEventListener('click', function(){
           if(el._suppressClick) return;                  // nach echtem Ziehen nicht öffnen
           var s = el.querySelector('.sb-label'); var lblTxt = (s && s.textContent) ? s.textContent : '';
-          if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, requireCode: true, id: bid, el: el });
+          if(window.jtOpenBook) window.jtOpenBook({ title: lblTxt || 'Buch', label: lblTxt, id: bid, el: el });
         }); })(id, btn);
         row.appendChild(btn);
       }
