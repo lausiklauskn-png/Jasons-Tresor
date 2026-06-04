@@ -348,6 +348,8 @@
   #regal-edit{position:absolute; top:14px; right:120px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
     background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
   #regal-edit:hover{border-color:var(--accent)}
+  #tools-grip{cursor:move; user-select:none; font-weight:700; color:#08131a; background:#6ee7d3;
+    border-radius:8px; padding:6px 10px}
   #regal-edit-tools{position:absolute; top:56px; right:14px; z-index:5; display:none; gap:8px; align-items:center;
     flex-wrap:wrap; max-width:64%; background:rgba(8,8,26,.85); border:1px solid var(--line);
     border-radius:10px; padding:8px 10px}
@@ -457,6 +459,7 @@
   <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
   <button id="regal-edit" type="button" title="Regale einrichten (Linien)">📐 Regale einrichten</button>
   <div id="regal-edit-tools" aria-label="Regale einrichten">
+    <span id="tools-grip" title="Leiste verschieben">⠿ ziehen</span>
     <button id="shelf-add" type="button">+ Boden</button>
     <button id="shelf-del" type="button">− Boden</button>
     <button id="shelf-reset" type="button">↺ Diese Ebene zurücksetzen</button>
@@ -1744,10 +1747,10 @@
   var RDRAG = null;
   function rowDown(e){
     if(!editing || !e.target.closest) return;
-    var hd = e.target.closest('[data-h]'); if(!hd) return;            // nur an den 4 Endpunkten ziehen
     var rowEl = e.target.closest('.shelf-row'); if(!rowEl) return;
+    var hd = e.target.closest('[data-h]');                            // Endpunkt? sonst ganzen Rahmen schieben
     var rect = (rowEl.parentNode||regal).getBoundingClientRect(), ri = +rowEl.getAttribute('data-row'), cur = currentRows[ri] || {};
-    RDRAG = { ri:ri, el:rowEl, corner:hd.getAttribute('data-h'), sx:e.clientX, sy:e.clientY,
+    RDRAG = { ri:ri, el:rowEl, corner: hd ? hd.getAttribute('data-h') : 'move', sx:e.clientX, sy:e.clientY,
               W:rect.width||1, H:rect.height||1,
               s:{ l:cur.l, r:cur.r, t:cur.t, h:cur.h,
                   c:{ tl:cur.c.tl.slice(), tr:cur.c.tr.slice(), bl:cur.c.bl.slice(), br:cur.c.br.slice() } } };
@@ -1757,7 +1760,8 @@
     if(!RDRAG) return;
     var dxp=(e.clientX-RDRAG.sx)/RDRAG.W*100, dyp=(e.clientY-RDRAG.sy)/RDRAG.H*100, s=RDRAG.s, m=RDRAG.corner;
     var d = { l:s.l, r:s.r, t:s.t, h:s.h, c:{ tl:s.c.tl.slice(), tr:s.c.tr.slice(), bl:s.c.bl.slice(), br:s.c.br.slice() } };
-    d.c[m] = [ s.c[m][0]+dxp, s.c[m][1]+dyp ];   // diesen Endpunkt frei verschieben, die anderen bleiben
+    if(m === 'move'){ d.l = s.l + dxp; d.r = s.r - dxp; d.t = s.t + dyp; }   // ganzen Rahmen verschieben (alle Ecken mit)
+    else d.c[m] = [ s.c[m][0]+dxp, s.c[m][1]+dyp ];                          // einen Endpunkt frei verschieben
     currentRows[RDRAG.ri] = d; if(RDRAG.el) applyRowStyle(RDRAG.el, d);
     e.preventDefault();
   }
@@ -1766,6 +1770,21 @@
   document.addEventListener('pointerup', rowUp);
   document.addEventListener('pointercancel', rowUp);
   if(editBtn) editBtn.addEventListener('click', function(){ setEditing(!editing); });
+  // Werkzeugleiste frei verschiebbar (Griff „⠿ ziehen") — damit sie keine Eckpunkte verdeckt
+  (function(){
+    var grip = document.getElementById('tools-grip'); if(!grip || !editTools) return;
+    var TD = null;
+    grip.addEventListener('pointerdown', function(e){
+      var r = editTools.getBoundingClientRect();
+      TD = { sx:e.clientX, sy:e.clientY, ox:r.left, oy:r.top };
+      editTools.style.right = 'auto'; e.preventDefault();
+      try{ grip.setPointerCapture(e.pointerId); }catch(_){}
+    });
+    document.addEventListener('pointermove', function(e){ if(!TD) return;
+      editTools.style.left = (TD.ox + e.clientX - TD.sx) + 'px';
+      editTools.style.top  = (TD.oy + e.clientY - TD.sy) + 'px'; });
+    document.addEventListener('pointerup', function(){ TD = null; });
+  })();
   (function(){
     var add=document.getElementById('shelf-add'), del=document.getElementById('shelf-del'), rst=document.getElementById('shelf-reset');
     if(add) add.addEventListener('click', function(){ var rows=shelfRows(i).slice();
