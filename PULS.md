@@ -3,6 +3,58 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-04 — Tresor scharf: jedes Buch ein echter AES-Tresor (Auftrag A) (Sitzung 17)
+
+**Plan-vor-Code befolgt** (kein Freibrief, berührt echte Krypto + echte Daten): Pflichtlektüre
+durch → Plan + 3 Entscheidungen an Klaus → **Klaus' OK**:
+- **Jedes Buch = eigener Tresor**, **eigenes Passwort je Buch**, **diese Sitzung nur A**
+  (Panik 2/3 = eigene Folge-Sitzung).
+
+**Getan (`npm test` 28/28 grün [+1], Kern byte-identisch [9673 B, gleicher Hash Wurzel & Spiegel],
+alle 8 Skriptblöcke `node --check` ok, Schale nur P-Diff [32 Bildpfad-Zeilen]):**
+- **Demo-Code „1234" ENTFERNT.** Buch-Klick im Regal → **echtes Passwort** → `JasonLib.decryptTresor`
+  → Öffnen-Sequenz (Schlüssel versinkt + Energie) → Inhalt via `payloadToEntries`. Falsches
+  Passwort wirft (AES-GCM-Auth-Tag) → Shake; **Fehlversuch-Sperre 2× → 1 Min global bleibt 1:1**.
+- **Pro Buch ein echter Tresor:** neue lokale Ablage **`jt-vaults`** (Buch-ID → `jason-tresor` v2-
+  Umschlag + Klartext-Name). **Zu = verschlüsselt gespeichert; auf = nur im Speicher entschlüsselt**
+  (Klartext/Passwort **nie** in localStorage, nie geloggt). Beim Schließen wird der Klartext
+  aus dem Speicher geworfen.
+- **Inhalt rein:** „＋ Jason laden (.json)" ins offene Buch über die **bestehende** Bibliothek-Logik
+  (`validateAndParse`/`parseLibraryImport`/`mergeEntries`, auch verschachtelte Tresore) — **additiv**.
+- **Verschließen:** „🔒 Verschließen" → `encryptTresor(buildLibraryExport(…))` → an das Buch
+  (neues Passwort 2× bestätigen; bei offenem Buch das bekannte wiederverwenden).
+- **Verschenken/Sichern:** lädt den **verschlüsselten** Umschlag als `*.tresor.json` herunter.
+- **Echte Tresor-Bücher tragen ein kleines 🔒** im Regal (`has-vault`), Deko-Bücher nicht.
+- **🧪 Testbuch (für Klaus' Probelauf):** ein einziges Buch (oben links Ebene 1, ID `1-0-0`,
+  `TESTBOOK_IDS`) öffnet ohne Passwort die **Test-Werkzeuge** — **Reset-Knopf** „Probelauf
+  zurücksetzen" (Zwei-Schritt, entriegelt nur die lokalen Test-Schlösser `jt-vaults`; Exporte
+  bleiben) + ehrlicher **Angreifer-Prüfstand**-Hinweis (heute aktiv: Fehlversuch-Sperre; der Rest
+  = Auftrag B). Bewusst **an einer Stelle** entfernbar (alle Stellen mit „TESTBUCH" markiert).
+- **Lösch-Schutz gewahrt:** alle Aktionen additiv/umkehrbar; Schließen mit ungespeichertem Inhalt
+  fragt nach (kein versehentlicher Verlust); nichts zerstörend angefasst.
+- **Krypto nur über den Kern** (`L.encryptTresor`/`decryptTresor`), kein `subtle.*` in der Schale.
+- **Neuer headless-Test:** „Buch-Tresor: verschließen → öffnen gibt dieselbe Sammlung zurück"
+  (genau die Aufrufkette des Buchs; falsches Buch-Passwort scheitert).
+
+**Offen / ehrlich:**
+- **Browser-Lauf nötig:** der ganze Buch-Tresor-Fluss (öffnen/füllen/verschließen/verschenken,
+  Sperre, 🔒-Markierung, Schließen-Warnung) ist im Browser **ungeprüft — wartet auf Klaus**.
+- **Auftrag B** (Panik Stufe 2 „Verbergen" + 3 „Löschen" scharf, Zwei-Schritt, nur lokale Kopie;
+  Membran-15-Hinweis) bewusst **nicht** gebaut → eigene Sitzung (Klaus' Entscheidung „erst nur A").
+- Siegel-16-Bezeugung, Shamir/Fächer/Köder weiter offen (nur auf Freigabe).
+
+**Manual-Check:** Headless 28/28 grün; Kern byte-identisch (Hash gleich); Skripte `node --check` ok.
+**Buch-Tresor im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf** des Buch-Tresors: ein Regal-Buch öffnen → „＋ Jason laden" → „🔒 Verschließen"
+   (Passwort) → schließen → erneut öffnen (Passwort) → Inhalt da? Sperre nach 2× falsch? 🔒 sichtbar?
+2. **Auftrag B (Sicherheits-Sitzung #2):** Panik 2/3 scharf (Zwei-Schritt, nur lokale Kopie),
+   Membran-15-Hinweis — eigener Plan-vor-Code-Schritt.
+3. **SBKIM-Bezeugung (#3):** voller Modul-Chain 1:1 (Siegel echt bronze/gold).
+
+---
+
 ## 2026-06-03 — Linien-Editor + Export/Import; alle 5 Regalböden kalibriert & eingebacken (Sitzung 16)
 
 **Klaus hat live im Browser kalibriert** — und das Ergebnis ist jetzt fest im Repo.
