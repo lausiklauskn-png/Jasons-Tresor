@@ -578,6 +578,7 @@
         <button type="button" id="bd-lock" class="bd-lock">🔒 Verschließen</button>
         <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
         <button type="button" id="bd-split">🗝️ Passwort aufteilen (3 von 5)</button>
+        <button type="button" id="bd-decoy" title="Köder-Passwort: ein zweites Passwort zeigt eine harmlose Bibliothek statt deiner echten Daten">🪤 Tarnfach</button>
       </div>
       <input id="bd-file" type="file" accept=".json,application/json" hidden />
       <!-- TESTBUCH — nur zum Üben; vor dem Echtbetrieb diesen Block (+ Skript/CSS „TESTBUCH") entfernen -->
@@ -902,6 +903,19 @@
     return !!(v && v.kdf && v.cipher && typeof v.ciphertext === "string" &&
       v.kdf.algorithm === "PBKDF2" && /AES-GCM/.test(String(v.cipher.algorithm)));
   }
+  // Buch-Tresor mit optionalem Tarnfach (Honigtopf): probiert zuerst den echten Umschlag,
+  // dann — falls vorhanden — das Tarnfach (decoy). Liefert {mode:'real'|'decoy', plain}.
+  // Echtes Passwort -> echte Daten; Koeder-Passwort -> harmlose Schein-Bibliothek.
+  // Wirft bei falschem Passwort/Manipulation (AES-GCM-Auth-Tag).
+  async function openVault(rec, password) {
+    if (!rec || !rec.tresor) throw new Error("Kein Tresor.");
+    try { return { mode: "real", plain: await decryptTresor(rec.tresor, password) }; }
+    catch (e) { /* echtes Passwort passt nicht -> evtl. Koeder-Passwort */ }
+    if (rec.decoy && isTresor(rec.decoy)) {
+      return { mode: "decoy", plain: await decryptTresor(rec.decoy, password) };
+    }
+    throw new Error("Falsches Passwort oder Tresor beschädigt.");
+  }
   function tresorPayloadKind(plainObj) {
     if (plainObj && plainObj.kind === "jason-bibliothek" && Array.isArray(plainObj.eintraege)) return "bibliothek";
     if (plainObj && Array.isArray(plainObj.identities)) return "identitaeten";
@@ -1062,6 +1076,7 @@
     mergeEntries: mergeEntries, filterSort: filterSort,
     allCategories: allCategories, allTags: allTags,
     encryptTresor: encryptTresor, decryptTresor: decryptTresor, isTresor: isTresor,
+    openVault: openVault,
     tresorPayloadKind: tresorPayloadKind, payloadToEntries: payloadToEntries,
     splitSecret: splitSecret, combineShares: combineShares,
     shamirInfo: { k: SHAMIR_K, n: SHAMIR_N, tag: SHAMIR_TAG, maxLen: SHAMIR_MAXLEN },
@@ -1489,6 +1504,7 @@
   var resetBtn = document.getElementById('bd-reset');   // TESTBUCH — vor Echtbetrieb entfernen
   // Shamir 3-von-5 (Schale; echte Krypto im Kern)
   var splitBtn    = document.getElementById('bd-split');
+  var decoyBtn    = document.getElementById('bd-decoy');     // Honigtopf/Tarnfach (Köder-Passwort)
   var splitPanel  = document.getElementById('bd-split-panel');
   var shParts     = document.getElementById('bd-sh-parts');
   var shTest      = document.getElementById('bd-sh-test');
@@ -1505,6 +1521,7 @@
   var curId = null, curEl = null;
   var openEntries = null;     // entschlüsselte Einträge — NUR im Speicher, nie in localStorage
   var openPw = null;          // Passwort des offenen Buchs — nur im Speicher, nie gespeichert/geloggt
+  var openIsDecoy = false;    // true, wenn mit dem Köder-Passwort geöffnet (Honigtopf/Tarnfach)
   var dirty = false;          // ungespeicherte Änderungen → Schutz vor versehentlichem Verlust
   var seqTimer = null, lockTimer = null;
   var attempts = 0, lockedUntil = 0;   // 2 Fehlversuche gelten GLOBAL → 1 Min Sperre
@@ -1570,7 +1587,7 @@
     opts = opts || {};
     clearTimeout(seqTimer);
     curId = opts.id || null; curEl = opts.el || null;
-    openEntries = null; openPw = null; dirty = false;
+    openEntries = null; openPw = null; openIsDecoy = false; dirty = false;
     var label = (opts.label != null) ? opts.label : (opts.title || '');
     demo.classList.remove('is-open', 'test-mode', 'code-mode');
     if(codeIn) codeIn.value = '';
@@ -1615,9 +1632,10 @@
       var pw = (codeIn && codeIn.value) || '';
       var v = getVault(curId);
       if(!v || !v.tresor) return;
-      L.decryptTresor(v.tresor, pw).then(function(plain){
+      L.openVault(v, pw).then(function(res){
         attempts = 0; if(codeLock) codeLock.hidden = true;
-        openEntries = L.payloadToEntries(plain, (renameIn && renameIn.value) || 'Buch').entries;
+        openIsDecoy = (res.mode === 'decoy');     // Köder-Passwort -> harmlose Schein-Bibliothek
+        openEntries = L.payloadToEntries(res.plain, (renameIn && renameIn.value) || 'Buch').entries;
         openPw = pw; dirty = false;
         if(codeIn) codeIn.value = '';
         showContentMode();               // Schlüssel versinkt + Energie + Buch auf + Inhalt
@@ -1676,10 +1694,15 @@
       }
       L.encryptTresor(L.buildLibraryExport(list), pw).then(function(blob){
         var m = loadVaults();
-        m[curId] = { tresor: blob, name: (renameIn && renameIn.value) || '', updatedAt: L.nowIso() };
+        var rec = m[curId] || {};
+        if(openIsDecoy){ rec.decoy = blob; }          // im Tarnfach: nur den Köder neu sichern
+        else { rec.tresor = blob; }                   // echtes Buch: echten Umschlag sichern (Tarnfach bleibt erhalten)
+        rec.name = (renameIn && renameIn.value) || rec.name || '';
+        rec.updatedAt = L.nowIso();
+        m[curId] = rec;
         saveVaults(m);
         openPw = pw; dirty = false;
-        if(window.jtMarkVault) window.jtMarkVault(curId, true);
+        if(window.jtMarkVault && !openIsDecoy) window.jtMarkVault(curId, true);
         hide();
       }).catch(function(err){ alert(String((err && err.message) || err)); });
     });
@@ -1702,6 +1725,45 @@
         var url = URL.createObjectURL(b), a = document.createElement('a');
         a.href = url; a.download = name + '.tresor.json'; document.body.appendChild(a); a.click(); a.remove();
         setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      }).catch(function(err){ alert(String((err && err.message) || err)); });
+    });
+  }
+
+  // Honigtopf/Tarnfach (pro Buch, opt-in): zweites Passwort -> harmlose Schein-Bibliothek.
+  // Echtes Passwort zeigt echte Daten; Köder-Passwort zeigt den Köder. Echte Krypto über den Kern
+  // (eigener AES-256-GCM-Umschlag rec.decoy). Ehrliche Grenze: stark gegen Gelegenheits-Gucker,
+  // schwach gegen Kenner.
+  function buildDecoyEntries(){
+    var s = [
+      { name:'Einkaufsliste', category:'Alltag',  payload:{ artikel:['Milch','Brot','Äpfel','Kaffee','Butter'], notiz:'vor dem Wochenende' } },
+      { name:'Apfelkuchen',   category:'Rezepte',  payload:{ zutaten:['Äpfel','Mehl','Zucker','Butter','Zimt'], schritte:['Teig kneten','Äpfel schneiden','45 Min bei 180°C'] } },
+      { name:'Urlaubsideen',  category:'Notizen',  payload:{ orte:['Nordsee','Schwarzwald','Gardasee'], wann:'Sommer' } },
+      { name:'Lesetipps',     category:'Notizen',  payload:{ buecher:['Reiseführer Italien','Gartenkalender'] } }
+    ];
+    return s.map(function(x){ return L.makeEntry(x); });
+  }
+  if(decoyBtn){
+    decoyBtn.addEventListener('click', function(){
+      if(!curId || !isLocked(curId)){ alert('Ein Tarnfach gibt es nur für ein verschlossenes Buch.\nErst eine .json laden und „🔒 Verschließen", dann hier ein Köder-Passwort vergeben.'); return; }
+      if(openIsDecoy){ alert('Du bist gerade IM Tarnfach (mit dem Köder-Passwort geöffnet).\nDas echte Buch öffnest du mit deinem echten Passwort — dort verwaltest du das Tarnfach.'); return; }
+      var rec = getVault(curId) || {};
+      if(rec.decoy && L.isTresor(rec.decoy)){
+        if(confirm('Dieses Buch hat schon ein Tarnfach (Köder-Passwort).\n\nOK = Tarnfach ENTFERNEN.\nAbbrechen = behalten.')){
+          var m0 = loadVaults(); if(m0[curId]){ delete m0[curId].decoy; saveVaults(m0); }
+          alert('Tarnfach entfernt. Nur noch dein echtes Passwort öffnet dieses Buch.');
+        }
+        return;
+      }
+      var dpw = window.prompt('Köder-Passwort (mind. 8 Zeichen).\nWer DIESES eingibt, sieht eine harmlose Bibliothek statt deiner echten Daten:');
+      if(dpw == null) return;
+      if(dpw.length < 8){ alert('Köder-Passwort zu kurz (mind. 8 Zeichen).'); return; }
+      if(openPw && dpw === openPw){ alert('Das Köder-Passwort muss sich von deinem echten Passwort unterscheiden.'); return; }
+      var dpc = window.prompt('Köder-Passwort zur Sicherheit wiederholen:');
+      if(dpc == null) return;
+      if(dpc !== dpw){ alert('Die Köder-Passwörter stimmen nicht überein.'); return; }
+      L.encryptTresor(L.buildLibraryExport(buildDecoyEntries()), dpw).then(function(blob){
+        var m = loadVaults(); var r = m[curId] || {}; r.decoy = blob; r.updatedAt = L.nowIso(); m[curId] = r; saveVaults(m);
+        alert('Tarnfach aktiv. 🪤\n\n• Echtes Passwort  → deine echten Daten\n• Köder-Passwort  → eine harmlose Schein-Bibliothek (Einkaufsliste, Rezepte …)\n\nTipp: Mit dem Köder-Passwort öffnen, dann „＋ Jason laden" + „🔒 Verschließen" — so machst du den Köder persönlicher.\n\nEhrlich: stark gegen neugierige Blicke, schwächer gegen echte Technik-Kenner.');
       }).catch(function(err){ alert(String((err && err.message) || err)); });
     });
   }
@@ -1824,7 +1886,7 @@
     if(splitPanel) splitPanel.hidden = true; if(recoverPanel) recoverPanel.hidden = true;
     if(shParts) shParts.innerHTML = ''; if(shInputs) shInputs.innerHTML = '';   // Codes/Passwort nicht im DOM liegen lassen
     if(shTest) shTest.textContent = ''; if(shResult){ shResult.hidden = true; shResult.textContent = ''; }
-    openEntries = null; openPw = null; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
+    openEntries = null; openPw = null; openIsDecoy = false; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
   }
   function tryClose(){
     if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')) return;
