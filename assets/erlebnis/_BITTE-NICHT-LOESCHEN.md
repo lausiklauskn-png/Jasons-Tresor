@@ -12,6 +12,12 @@ Tresorräume; später der Service-Worker für die Offline-Installation als PWA).
   `tuer-rahmen`, `tuer-fluegel`, `licht-blitz`; später Bibliothek & Räume).
 - `sw.js` — Service-Worker (kommt im Bau): cached die Dateien → echte Offline-Installation.
 
+## Format (2026-06-05): WebP statt PNG
+Die Bilder liegen seit Sitzung 22 als **`.webp`** (verlustarm, ~q82) statt PNG vor —
+**~87 % kleiner** (74 MB → ~9,9 MB) für schnelleres Laden und eine schlanke PWA. Die
+**Motive sind unverändert**, nur das Speicherformat. Die alten PNG bleiben in der
+Git-Historie erhalten. Optik wartet auf Klaus' Browser-Abnahme (Hard-Reload Ctrl+Shift+R).
+
 ## Stil (Kurzfassung — Details im Plan)
 Flüssiges **Spiegel-Metall in fester Form** („Glas und doch nicht Glas"), warmes Gold +
 türkises Glühen, **Indiana-Jones-Abenteuer** (Jason → Jones) auf zartem Steampunk-Grund.
