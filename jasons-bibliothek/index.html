@@ -469,38 +469,6 @@
 </head>
 <body>
 
-<!-- ░░░ TEMP DEBUG: Schließen-Diagnose — nach der Diagnose wieder entfernen ░░░ -->
-<div id="jt-debug" style="position:fixed;top:0;left:0;right:0;max-height:45vh;overflow:auto;z-index:100000;background:rgba(0,0,0,.93);color:#8f8;font:12px/1.45 monospace;padding:8px;white-space:pre-wrap;border-bottom:2px solid #6ee7d3">
-  <div style="color:#fc6;margin-bottom:4px">🔎 KLICK-DIAGNOSE — öffne ein Buch, klicke auf „Schließen", dann „Alles markieren", kopieren (Ctrl+C) und hier zurückschicken.
-    <button type="button" id="jt-debug-copy" style="font:inherit;margin-left:8px;cursor:pointer">Alles markieren</button>
-    <button type="button" id="jt-debug-clear" style="font:inherit;cursor:pointer">leeren</button>
-  </div>
-  <div id="jt-debug-log"></div>
-</div>
-<script>
-(function(){
-  var box=document.getElementById('jt-debug'), log=document.getElementById('jt-debug-log');
-  if(!box||!log) return;
-  function line(s){ log.textContent += s+'\n'; box.scrollTop=box.scrollHeight; }
-  window.__jtdbg=line;
-  function desc(el){ if(!el) return 'null'; var id=el.id?('#'+el.id):''; var c=(el.className&&typeof el.className==='string')?('.'+el.className.trim().split(/\s+/).filter(Boolean).join('.')):''; return (el.tagName||'?').toLowerCase()+id+c; }
-  window.addEventListener('error', function(e){ line('FEHLER: '+e.message+'  ('+e.filename+':'+e.lineno+')'); });
-  document.addEventListener('click', function(e){
-    var top=document.elementFromPoint(e.clientX,e.clientY);
-    var demo=document.getElementById('bookdemo');
-    line('—— KLICK ('+Math.round(e.clientX)+','+Math.round(e.clientY)+') ——');
-    line('  target    = '+desc(e.target));
-    line('  obenauf   = '+desc(top));
-    if(demo) line('  #bookdemo : hidden='+demo.hidden+'  display='+getComputedStyle(demo).display);
-    if((e.target&&e.target.id==='bd-close')||(top&&top.id==='bd-close')) line('  >>> SCHLIESSEN-Knopf getroffen');
-    setTimeout(function(){ if(demo) line('  nach 300ms: #bookdemo hidden='+demo.hidden+' display='+getComputedStyle(demo).display); }, 300);
-  }, true);
-  var cp=document.getElementById('jt-debug-copy'); if(cp) cp.addEventListener('click', function(){ var r=document.createRange(); r.selectNodeContents(log); var s=getSelection(); s.removeAllRanges(); s.addRange(r); });
-  var cl=document.getElementById('jt-debug-clear'); if(cl) cl.addEventListener('click', function(){ log.textContent=''; });
-  line('Debug aktiv ('+new Date().toLocaleTimeString()+'). Öffne ein Buch und klicke auf „Schließen".');
-})();
-</script>
-
 <!-- ===== Schwelle: Erlebnis-Schale obendrauf (kein Teil des JasonLib-Kerns) =====
      Tür (tuer-zu) → Klick → Zoom aufs Schlüsselloch + Schloss-Nahaufnahme mit
      pulsendem Türkis → warmer Lichtblitz → Bibliothek. Bilder lokal/offline. -->
@@ -2024,10 +1992,8 @@
   if(practiceRec){ practiceRec.addEventListener('click', openRecover); }
 
   function hide(){
-    if(window.__jtdbg) window.__jtdbg('hide() aufgerufen — demo.hidden vorher=' + demo.hidden);
     clearTimeout(seqTimer); clearLockTimer();
     demo.classList.remove('is-open', 'test-mode'); demo.hidden = true;
-    if(window.__jtdbg) window.__jtdbg('  hide(): demo.hidden jetzt=' + demo.hidden + ' display=' + getComputedStyle(demo).display);
     if(splitPanel) splitPanel.hidden = true; if(recoverPanel) recoverPanel.hidden = true;
     if(shParts) shParts.innerHTML = ''; if(shInputs) shInputs.innerHTML = '';   // Codes/Passwort nicht im DOM liegen lassen
     if(shTest) shTest.textContent = ''; if(shResult){ shResult.hidden = true; shResult.textContent = ''; }
@@ -2035,8 +2001,7 @@
     renderVaultOverview();   // Liste-Übersicht aktuell halten (neues/geändertes Buch)
   }
   function tryClose(){
-    if(window.__jtdbg) window.__jtdbg('tryClose() aufgerufen — dirty=' + dirty);
-    if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')){ if(window.__jtdbg) window.__jtdbg('  tryClose: abgebrochen (Rückfrage „Nein")'); return; }
+    if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')) return;
     hide();
   }
 
@@ -2046,7 +2011,8 @@
     var ul = document.getElementById('vault-list'); if(!ul) return;
     var ovEmpty = document.getElementById('ov-empty');
     var delAll  = document.getElementById('ov-delete-all');
-    var vaults = loadVaults(), names = loadNames();
+    var vaults = loadVaults(), names = {};
+    try{ names = JSON.parse(localStorage.getItem('jt-booknames') || '{}') || {}; }catch(e){ names = {}; }   // lokal lesen (loadNames lebt im Regal-Skript)
     var ids = Object.keys(vaults).filter(function(id){ var v = vaults[id]; return !!(v && ((v.tresor && L.isTresor(v.tresor)) || (v.name && v.name.length) || (v.category && v.category.length))); });
     ids.sort(function(a,b){ var na = String(vaults[a].name || names[a] || a).toLowerCase(), nb = String(vaults[b].name || names[b] || b).toLowerCase(); return na < nb ? -1 : na > nb ? 1 : 0; });
     ul.innerHTML = '';
