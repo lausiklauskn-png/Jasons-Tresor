@@ -3,6 +3,44 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Honigtopf/Tarnfach scharf: zweites Passwort → Schein-Bibliothek (Sitzung 24)
+
+**Wichtige Ehrlichkeits-Korrektur vorab:** Die Brief-Einleitung behauptete „Honigtopf ist gebaut" —
+das stimmte **nicht**. Prüfung ergab: kein `decoy`/Tarnfach im Code, nie committet, `status.json`
+führte ihn als „geplant". Klaus offen gesagt → **Klaus' Freigabe, ihn jetzt zu bauen, pro Buch (opt-in).**
+
+**Getan (`npm test` 45/45 grün [+6], Kern byte-identisch [17997 B, Wurzel & Spiegel], beide Dateien
+je 8 Skriptblöcke fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen):**
+- **Kern (JasonLib):** neue, exportierte, **getestete** Funktion `openVault(rec, pw)` — probiert zuerst
+  den echten Umschlag (`rec.tresor`), dann — falls vorhanden — das Tarnfach (`rec.decoy`). Liefert
+  `{mode:'real'|'decoy', plain}`; wirft bei falschem Passwort (AES-GCM-Auth-Tag). Echte Krypto, kein PII.
+- **Datenvertrag erweitert (additiv):** Buch-Datensatz in `jt-vaults` kann jetzt **`rec.decoy`** tragen
+  (eigener `jason-tresor` v2-Umschlag, eigenes Köder-Passwort). Alt-Bücher ohne decoy verhalten sich
+  unverändert. **Wichtiger Bugfix nebenbei:** Verschließen überschrieb bisher den ganzen Datensatz
+  (hätte ein Tarnfach gelöscht) — jetzt wird nur das jeweilige Fach aktualisiert.
+- **Schale (Buch-Overlay):** neuer Knopf **„🪤 Tarnfach"**. Im echten Buch: Köder-Passwort 2× (mind. 8,
+  ≠ echtes Passwort) → harmlose Schein-Bibliothek (Einkaufsliste/Apfelkuchen/Urlaubsideen/Lesetipps)
+  als `rec.decoy`. Existiert schon ein Tarnfach → Knopf bietet **Entfernen**. Öffnen mit dem
+  Köder-Passwort zeigt die Fassade (mode decoy); „Verschließen" sichert dann **nur den Köder** (echtes
+  Buch bleibt) → Köder ist personalisierbar. Im Tarnfach selbst ist der Knopf gesperrt (kein Köder im Köder).
+- **Headless-Test `test/decoy.test.js` (6 Fälle):** echtes PW → echte Daten; Köder-PW → Schein-Bibliothek
+  (enthält **kein** echtes Datum); falsches PW scheitert; ohne Tarnfach öffnet ein zweites PW **nicht**;
+  decoy = eigener AES-256-GCM-Umschlag (andere salt/iv/ciphertext).
+
+**Manual-Check:** Headless 45/45 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Tarnfach-UI im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+**So aktivierst du es (Klaus):** Buch im Regal mit deinem **echten** Passwort öffnen → unten
+**„🪤 Tarnfach"** → Köder-Passwort 2× eingeben. Danach: echtes Passwort zeigt deine Daten, Köder-Passwort
+zeigt die harmlose Bibliothek. Ehrliche Grenze: stark gegen neugierige Blicke, schwächer gegen Kenner.
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf** des Tarnfachs (am besten im 🧪 Test-Buch gefahrlos üben).
+2. **PWA installierbar** (Manifest + Service-Worker) — der noch offene Brief-Punkt.
+3. Optional: Liste↔Regal-Umschalt-Hänger (Layout beim Zurückkehren neu berechnen).
+
+---
+
 ## 2026-06-05 — Buchname & Regal-Schilder lesbar (Klaus' Browser-Feedback) (Sitzung 23)
 
 **Klaus im Browser (Screenshot):** WebP-Optik **top**. Zwei Text-Wünsche:
