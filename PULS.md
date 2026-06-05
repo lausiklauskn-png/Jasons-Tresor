@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Ebenen-Balken unten + in der Ebene bleiben (Sitzung 30)
+
+**Neue Arbeitsregel (Klaus):** erst überlegen + Rücksprache, dann bauen. Hier befolgt: Plan +
+2 Entscheidungen (Beschriftung = Namen; zusätzlich „in der Ebene bleiben"; obere Knöpfe weglassen).
+Die kurz gebaute obere „Ebene 1/2/3"-Variante (PR #74) wurde auf Klaus' Wunsch **verworfen**
+(Branch sauber auf `main` zurückgesetzt) und durch den unteren Balken ersetzt.
+
+**Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Schmaler, dezent halb-durchsichtiger Balken unten** im Regal mit **5 benannten Knöpfen**
+  (Eingang links · Ankunft · rechts · Übergang · Kern) — **jede Ansicht direkt** anwählbar; aktiver
+  Knopf hervorgehoben. Reiner Ansichtswechsel über die vorhandene `render()`-Logik (`jumpTo` setzt
+  nur den Index `i`). Im Einricht-Modus ausgeblendet, während Übergang gesperrt. Fackeln/Pfeiltasten
+  bleiben. Beschriftungs-Zeile etwas nach oben gerückt (Platz für den Balken).
+- **In der Ebene bleiben:** der gewählte Ansichts-Index wird in `jt-regal-view` gemerkt und beim
+  nächsten Öffnen wiederhergestellt (nur Anzeige, keine Daten/Bücher berührt).
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Balken/Persistenz im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).
+Position/Optik des Balkens nach Sicht ggf. nachjustieren.**
+
+---
+
 ## 2026-06-05 — Schritt 2b-2: Auto-Sync in festen Ordner (Chrome) (Sitzung 29)
 
 **Getan (`npm test` 51/51 grün [unverändert — Folder-Sync ist browser-only, genutzte Krypto schon
