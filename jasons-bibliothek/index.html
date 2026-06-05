@@ -224,6 +224,18 @@
     border:1px solid var(--line); border-radius:9px; padding:8px 12px}
   .bd-actions button:hover{border-color:var(--accent)}
   .bd-actions .bd-lock{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
+  /* Bücher-Übersicht in der Liste (= alle Regal-Bücher als anklickbarer Text) */
+  #vault-overview{margin:6px 0 10px}
+  .ov-h{font-size:1.02rem; color:var(--accent); margin:.6em 0 .4em; font-weight:700}
+  .ov-h2{margin-top:1.4em; border-top:1px solid var(--line); padding-top:1em}
+  .ov-sub{color:var(--muted); font-weight:400; font-size:.85rem}
+  .ov-empty{color:var(--muted); font-size:.9rem; font-style:italic; margin:.2em 0 .6em}
+  .ov-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px}
+  .ov-open{display:flex; align-items:center; gap:8px; width:100%; text-align:left; font:inherit; cursor:pointer;
+    color:var(--ink); background:rgba(17,37,42,.55); border:1px solid var(--line); border-radius:10px; padding:9px 12px}
+  .ov-open:hover{border-color:var(--accent); background:rgba(17,37,42,.85)}
+  .ov-lock{opacity:.85}
+  .ov-name{font-weight:600}
   /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): Test-Werkzeuge statt normalem Inhalt */
   #bd-testtools{display:none}
   #bookdemo.test-mode #bd-testtools{display:block}
@@ -500,6 +512,14 @@
     <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
+
+  <section id="vault-overview">
+    <h2 class="ov-h">📚 Deine Bücher im Tresor <span class="ov-sub">— anklicken zum Öffnen</span></h2>
+    <p class="ov-empty" id="ov-empty" hidden>Noch keine Bücher im Tresor. Lege im <b>Regal</b> ein Buch an: ein Buch öffnen → „＋ Jason laden" → „🔒 Verschließen".</p>
+    <ul class="ov-list" id="vault-list"></ul>
+  </section>
+
+  <h2 class="ov-h ov-h2">🗂️ Freie Liste <span class="ov-sub">— einzelne Jasons, unabhängig vom Tresor</span></h2>
 
   <div class="tools">
     <input id="q" type="text" placeholder="Suchen (Name, Kategorie, Schlagwort) …" />
@@ -1887,11 +1907,35 @@
     if(shParts) shParts.innerHTML = ''; if(shInputs) shInputs.innerHTML = '';   // Codes/Passwort nicht im DOM liegen lassen
     if(shTest) shTest.textContent = ''; if(shResult){ shResult.hidden = true; shResult.textContent = ''; }
     openEntries = null; openPw = null; openIsDecoy = false; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
+    renderVaultOverview();   // Liste-Übersicht aktuell halten (neues/geändertes Buch)
   }
   function tryClose(){
     if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')) return;
     hide();
   }
+
+  // --- Liste-Ansicht: Übersicht aller Regal-Bücher (Tresore) als anklickbare Textliste ---
+  function renderVaultOverview(){
+    var ul = document.getElementById('vault-list'); if(!ul) return;
+    var ovEmpty = document.getElementById('ov-empty');
+    var vaults = loadVaults(), names = loadNames();
+    var ids = Object.keys(vaults).filter(function(id){ var v = vaults[id]; return !!(v && v.tresor && L.isTresor(v.tresor)); });
+    ids.sort(function(a,b){ var na = String(vaults[a].name || names[a] || a).toLowerCase(), nb = String(vaults[b].name || names[b] || b).toLowerCase(); return na < nb ? -1 : na > nb ? 1 : 0; });
+    ul.innerHTML = '';
+    if(ovEmpty) ovEmpty.hidden = (ids.length !== 0);
+    ids.forEach(function(id){
+      var rec = vaults[id], nm = rec.name || names[id] || 'Unbenanntes Buch';
+      var li = document.createElement('li');
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'ov-open';
+      var lk = document.createElement('span'); lk.className = 'ov-lock'; lk.textContent = '🔒'; lk.setAttribute('aria-hidden','true');
+      var t = document.createElement('span'); t.className = 'ov-name'; t.textContent = nm;
+      b.appendChild(lk); b.appendChild(t);          // bewusst KEIN Tarnfach-Hinweis (Deniability)
+      b.addEventListener('click', function(){ openBook({ id: id, label: nm, title: nm }); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  }
+  window.jtRenderOverview = renderVaultOverview;
+  renderVaultOverview();
 
   // Vorschau-Knöpfe (Muster-Buch / Buchsequenz) — harmlos, ohne echten Tresor (kein curId → nichts gespeichert)
   if(btn)    btn.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
@@ -2226,7 +2270,7 @@
     prev.addEventListener('click', dismissHint);
     next.addEventListener('click', dismissHint);
   }
-  if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
+  if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); if(window.jtRenderOverview) window.jtRenderOverview(); });
   if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
   document.addEventListener('keydown', function(e){
     if(regal.classList.contains('is-hidden')) return;

@@ -3,6 +3,36 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Liste = Übersicht aller Regal-Bücher (Klaus' Browser-Frage) (Sitzung 25)
+
+**Klaus' Frage:** Die „☰ Liste"-Ansicht war leer, obwohl im Regal Bücher stehen — „Soll das die
+Bibliothek sein?" Geklärt: Regal-Bücher (`jt-vaults`, verschlüsselt) und die alte flache Liste
+(`jasons-bibliothek-v1`) waren **zwei getrennte Bereiche**. Klaus' Entscheidung: **Die Liste soll
+die Übersicht aller Regal-Bücher zeigen.**
+
+**Getan (`npm test` 45/45 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Neue Sektion „📚 Deine Bücher im Tresor"** oben in der Listen-Ansicht: listet **alle echten
+  Tresor-Bücher** (aus `jt-vaults`, gefiltert auf `isTresor`) als anklickbare Textzeilen (🔒 + Name,
+  alphabetisch). Klick öffnet das Buch wie im Regal (`openBook({id})` → Passwort) — funktioniert auch
+  ohne Regal-Element (`curEl` wird nirgends ausgelesen).
+- **Bewusst KEIN Tarnfach-Hinweis** in der Übersicht (Deniability — niemand soll an der Liste sehen,
+  welches Buch ein Tarnfach hat).
+- **Alte flache Liste bleibt** darunter, jetzt klar getrennt benannt: „🗂️ Freie Liste — einzelne Jasons,
+  unabhängig vom Tresor". Keine Funktion entfernt.
+- **Aktualisierung:** Übersicht rendert beim Laden, beim Wechsel auf „☰ Liste" und nach dem Schließen
+  eines Buchs (`hide()` ruft `renderVaultOverview`).
+
+**Manual-Check:** Headless 45/45 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Übersicht im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf:** zeigt „☰ Liste" jetzt deine Bücher? Öffnet ein Klick das richtige Buch?
+2. **PWA installierbar** (Manifest + Service-Worker) — der noch offene große Brief-Punkt.
+3. Optional: Liste↔Regal-Umschalt-Hänger; freie Liste evtl. ganz ausblenden, wenn ungenutzt.
+
+---
+
 ## 2026-06-05 — Honigtopf/Tarnfach scharf: zweites Passwort → Schein-Bibliothek (Sitzung 24)
 
 **Wichtige Ehrlichkeits-Korrektur vorab:** Die Brief-Einleitung behauptete „Honigtopf ist gebaut" —
