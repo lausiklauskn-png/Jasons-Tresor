@@ -3,6 +3,47 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Bilder zu WebP: App ~87 % kleiner (Ladezeit/PWA-Größe) (Sitzung 22)
+
+**Klaus' Vision aus dem Brief umgesetzt — erst gemessen, dann gemeinsam entschieden, dann
+sparsam gebaut (Plan-vor-Code).** Reine Größen-/Ladezeit-Optimierung; **keine Funktion,
+keine Krypto, kein Datenvertrag verändert.**
+
+**Ehrliche Messung (vorher):** `assets/` = **~74 MB**, davon ~99 % in **26 PNGs** (je 1,8–3,8 MB,
+1536×1024 / 1672×941). Der App-Code (`index.html`) ist nur ~136 KB. → Die **Bilder** waren der
+ganze Brocken, nicht der Code (Brief-Hypothese bestätigt).
+
+**Klaus' Entscheidungen (per Frage-Knöpfe):** (1) **WebP verlustarm** (q82) erlaubt; (2) **erst nur
+Größe senken**, PWA/Service-Worker als Folgeschritt; (3) **alle** Bilder umwandeln, auch die 3
+ungenutzten Reserve-Bilder.
+
+**Getan (`npm test` 39/39 grün, Kern unangetastet, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen):**
+- **Alle 26 PNG → WebP** (verlustarm, q82, libvips/sharp **nur als Bau-Werkzeug**, wieder entfernt;
+  die App bleibt **abhängigkeitsfrei**). Ergebnis: **74 MB → 9,9 MB (−87 %)**, je Bild 83–94 % kleiner.
+- **Referenzen** in `index.html` **und** Spiegel `jasons-bibliothek/index.html` von `.png` auf `.webp`
+  umgestellt (21 je Datei); **alle referenzierten WebP existieren**, alle 26 dekodieren sauber (geprüft).
+- **PNG-Originale entfernt** (durch WebP ersetzt; bleiben in der Git-Historie erhalten).
+- **Schale, kein Kerneingriff:** der `JasonLib`-Kern erscheint nicht im Diff; die einzige Differenz
+  Wurzel↔Spiegel bleiben die 32 Bildpfad-Zeilen (`assets/` ↔ `../assets/`).
+- `_BITTE-NICHT-LOESCHEN.md` um den WebP-Hinweis ergänzt (Motive unverändert, nur Format).
+
+**Offen / ehrlich:**
+- **Optik browser-ungeprüft** — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R): sehen Tür,
+  Schloss-Sequenz, Regale, Bücher, Schlüssel **unverändert** aus? Bei sichtbarem Verlust an einer
+  Stelle kann ich dieses Bild gezielt höher (q90+) oder verlustfrei neu rechnen.
+- **PWA/Service-Worker** bewusst noch nicht gebaut (Klaus: erst Größe). Logischer nächster Schritt.
+- Tarnfach-Browser-Test weiter offen (Klaus wollte selbst testen).
+
+**Manual-Check:** Headless 39/39 grün; Kern unangetastet; alle WebP-Referenzen aufgelöst + dekodiert.
+**Bild-Optik im Browser ungeprüft — wartet auf Klaus' Browser-Lauf.**
+
+**Nächste Schritte (priorisiert):**
+1. **Klaus' Browser-Lauf**: sieht alles unverändert aus? (sonst nenne mir das Bild → ich rechne es schärfer neu).
+2. **PWA/Service-Worker** sauber aufsetzen (offline + schneller 2. Start) — jetzt lohnt sich's (App ist klein).
+3. **Lazy-Load** tieferer Regal-Ebenen (erst laden beim Hinblättern) als Feinschliff.
+
+---
+
 ## 2026-06-05 — Shamir-UI von Klaus im Browser gesehen ✓ (Sitzung 20)
 
 **Klaus' Browser-Lauf erfolgt — Schritt A aus dem Brief erfüllt.** Kein Code geändert (nur

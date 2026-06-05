@@ -122,7 +122,7 @@
     background:radial-gradient(circle at 50% 46%, #fff 0%, #ffe6a8 16%, #f4b435 38%, transparent 72%)}
   .th-flash.is-flash{animation:th-flash 2s ease-out forwards}
   @keyframes th-flash{0%{opacity:0} 40%{opacity:1} 100%{opacity:0}}
-  /* transparenter Funken-Blitz (licht-blitz.png), additiv über dem Gold-Frame */
+  /* transparenter Funken-Blitz (licht-blitz.webp), additiv über dem Gold-Frame */
   .th-burst{position:absolute; left:50%; top:46%; width:74%; max-width:960px; height:auto;
     transform:translate(-50%,-50%) scale(.3); opacity:0; pointer-events:none;
     mix-blend-mode:screen; filter:drop-shadow(0 0 40px rgba(244,180,53,.55))}
@@ -430,21 +430,21 @@
      pulsendem Türkis → warmer Lichtblitz → Bibliothek. Bilder lokal/offline. -->
 <div id="threshold" role="dialog" aria-label="Eingang zum Tresor">
   <div class="th-stage" id="th-stage">
-    <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.png"
+    <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.webp"
          alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
     <!-- Schlüssel-Pulsen, 1:1 aus der Sage-Einladung (.vp-key-pulse) — lebendiger Klick-Hinweis -->
     <div class="th-keyglow" aria-hidden="true"></div>
     <div class="th-lock-seq" id="th-lock-seq" aria-hidden="true">
-      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-1.png" alt="Das Schloss lädt sich auf" />
-      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-2.png" alt="" />
-      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-3.png" alt="" />
-      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-4.png" alt="" />
-      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-5.png" alt="Das Schloss öffnet sich, Gold flutet aus" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-1.webp" alt="Das Schloss lädt sich auf" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-2.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-3.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-4.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-5.webp" alt="Das Schloss öffnet sich, Gold flutet aus" />
     </div>
     <div class="th-flash" id="th-flash"></div>
     <img class="th-burst" id="th-burst" decoding="async" aria-hidden="true" alt=""
-         src="assets/erlebnis/bilder/licht-blitz.png" />
-    <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.png"
+         src="assets/erlebnis/bilder/licht-blitz.webp" />
+    <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.webp"
          alt="Die Tür steht offen — Blick in die Bibliothek" />
   </div>
   <button class="th-skip" id="th-skip" type="button">überspringen</button>
@@ -453,7 +453,7 @@
 <!-- ===== Regal-Ansicht (Szene 1): der Tresor als navigierbares Bücherregal-Safe.
      Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
 <div id="regal" aria-label="Tresor — Bücherregal">
-  <img id="regal-bg" alt="" decoding="async" src="assets/erlebnis/bilder/regal-ebene1.png" />
+  <img id="regal-bg" alt="" decoding="async" src="assets/erlebnis/bilder/regal-ebene1.webp" />
   <!-- Bücher auf den frontalen Ebenen (Reihen per JS gefüllt; sichtbar via .has-books) -->
   <div id="regal-books" aria-label="Bücher im Regal"></div>
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links"></button>
@@ -548,10 +548,10 @@
   <div class="bd-backdrop" id="bd-backdrop"></div>
   <div class="bd-stage" role="dialog" aria-label="Muster-Buch" aria-modal="true">
     <div class="bd-book" id="bd-book" role="button" tabindex="0" aria-label="Buch öffnen oder schließen">
-      <img class="bd-zu" decoding="async" src="assets/erlebnis/bilder/buch-zu.png" alt="Verschlossenes Buch mit Schlüsselloch" />
-      <img class="bd-auf" decoding="async" src="assets/erlebnis/bilder/buch-auf.png" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
-      <img class="bd-energy" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-energie.png" />
-      <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-schluessel.png" />
+      <img class="bd-zu" decoding="async" src="assets/erlebnis/bilder/buch-zu.webp" alt="Verschlossenes Buch mit Schlüsselloch" />
+      <img class="bd-auf" decoding="async" src="assets/erlebnis/bilder/buch-auf.webp" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
+      <img class="bd-energy" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-energie.webp" />
+      <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-schluessel.webp" />
       <span class="bd-title" id="bd-title">Mein erstes Jason</span>
       <span class="bd-hint" id="bd-hint">mit dem Schlüssel öffnen</span>
     </div>
@@ -652,7 +652,7 @@
      freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
 <button id="btn-replay-intro" class="key-fab" type="button"
         title="Intro & Tür nochmal ansehen" aria-label="Intro und Tür nochmal ansehen">
-  <img decoding="async" src="assets/erlebnis/bilder/schluessel.png" alt="Schlüssel — Intro nochmal ansehen" />
+  <img decoding="async" src="assets/erlebnis/bilder/schluessel.webp" alt="Schlüssel — Intro nochmal ansehen" />
 </button>
 
 <!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
@@ -1859,11 +1859,11 @@
   // VIEWS = Hintergrundbild + Beschriftung je Ansicht. Die Regalböden (Position/Perspektive)
   // stehen in SHELVES; daraus werden die Buchrücken automatisch je Boden mittig verteilt.
   var VIEWS = [
-    { src: P+'regal-links.png',  cap: 'Ebene 1 · Eingang (links)' },
-    { src: P+'regal-ebene1.png', cap: 'Ebene 1 · Ankunft' },
-    { src: P+'regal-rechts.png', cap: 'Ebene 1 · rechts' },
-    { src: P+'regal-ebene2.png', cap: 'Ebene 2 · Übergang' },
-    { src: P+'regal-ebene3.png', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
+    { src: P+'regal-links.webp',  cap: 'Ebene 1 · Eingang (links)' },
+    { src: P+'regal-ebene1.webp', cap: 'Ebene 1 · Ankunft' },
+    { src: P+'regal-rechts.webp', cap: 'Ebene 1 · rechts' },
+    { src: P+'regal-ebene2.webp', cap: 'Ebene 2 · Übergang' },
+    { src: P+'regal-ebene3.webp', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
   ];
   var i = 1, busy = false;
   function render(){
@@ -1897,7 +1897,7 @@
   next.addEventListener('click', function(){ go(1); });
   // Regal füllen: volle Reihen aus Füll-Büchern + echte anklickbare Bücher dazwischen,
   // auf allen FRONTALEN Ebenen (Mitte=1, Ebene2=3, Ebene3=4), gemischt — nie leer.
-  var SPINES = [P+'buchruecken-1.png', P+'buchruecken-2.png', P+'buchruecken-3.png', P+'buchruecken-4.png', P+'buchruecken-5.png'];
+  var SPINES = [P+'buchruecken-1.webp', P+'buchruecken-2.webp', P+'buchruecken-3.webp', P+'buchruecken-4.webp', P+'buchruecken-5.webp'];
   // TESTBUCH — vor Echtbetrieb entfernen: ein einziges Buch (oben links auf Ebene 1, ID „1-0-0")
   // trägt die Test-Werkzeuge (🧪 Reset/Probelauf zurücksetzen). Für je ein Testbuch pro Ebene
   // einfach weitere IDs ergänzen (z. B. '3-0-0', '4-0-0'). Eine Stelle = leicht wieder entfernbar.
