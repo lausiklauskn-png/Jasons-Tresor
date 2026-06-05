@@ -3,7 +3,30 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
-## 2026-06-05 — TEMP: Klick-Diagnose für „Schließen" (Sitzung 31, wieder entfernen)
+## 2026-06-05 — Bugfix „Schließen" (loadNames out of scope) + Diagnose entfernt (Sitzung 32)
+
+**Diagnose-Fenster (Sitzung 31) lieferte die Ursache** — Klaus' Klick-Log zeigte:
+`Uncaught ReferenceError: loadNames is not defined` beim Laden. `renderVaultOverview()` (im
+**Buch-Skript-IIFE**) rief `loadNames()` auf, das aber erst im **Regal-Skript-IIFE** definiert ist
+→ ReferenceError beim Init-Aufruf brach das Buch-Skript ab, **bevor** die `bd-close`/Backdrop-
+Verdrahtung lief. Folge: „Schließen" (und Hintergrund-Klick, sowie Gesamt-Sicherung/Auto-Sync,
+die dahinter verdrahtet werden) ohne Handler → Klick bewegt den Knopf, schließt aber nicht.
+
+**Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Fix (1 Zeile):** `renderVaultOverview` liest die Buchnamen jetzt **lokal** aus `jt-booknames`
+  (statt das fremde `loadNames` aufzurufen). Damit läuft das Buch-Skript wieder vollständig durch →
+  `bd-close`/Backdrop wieder verdrahtet → **Schließen schließt** und führt zurück ins Regal.
+  Nebenbei wieder aktiv: Gesamt-Sicherung-Knöpfe + Auto-Sync (hingen an derselben Stelle).
+- **Temporäres Diagnose-Fenster (#jt-debug) wieder vollständig entfernt** (HTML + Skript + Haken in
+  `hide`/`tryClose`).
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei; keine Debug-Reste.
+**„Schließen" im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
+## 2026-06-05 — TEMP: Klick-Diagnose für „Schließen" (Sitzung 31, wieder entfernt)
 
 **Klaus meldet:** „Schließen" im Buch-Overlay funktioniert nicht mehr (Knopf bewegt sich beim Klick,
 schließt aber nicht). Aus dem Code allein nicht reproduzierbar (z-index 900 > Balken 40; Handler
