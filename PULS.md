@@ -3,6 +3,18 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — TEMP: Klick-Diagnose für „Schließen" (Sitzung 31, wieder entfernen)
+
+**Klaus meldet:** „Schließen" im Buch-Overlay funktioniert nicht mehr (Knopf bewegt sich beim Klick,
+schließt aber nicht). Aus dem Code allein nicht reproduzierbar (z-index 900 > Balken 40; Handler
+sauber). Auf Klaus' Wunsch ein **temporäres Diagnose-Fenster** eingebaut (oben, `#jt-debug`): loggt je
+Klick `target`, das **wirklich obenauf liegende** Element (`elementFromPoint`), `#bookdemo` hidden/
+display vor + 300 ms nach Klick, globale Fehler, sowie `tryClose()`/`hide()`-Eintritt + `dirty`.
+Klaus klickt „Schließen", kopiert den Text zurück → dann sehen wir die Ursache und bauen den echten
+Fix. **`npm test` 51/51 grün; Kern byte-identisch; reine Schale.** **MUSS nach der Diagnose wieder raus.**
+
+---
+
 ## 2026-06-05 — Ebenen-Balken unten + in der Ebene bleiben (Sitzung 30)
 
 **Neue Arbeitsregel (Klaus):** erst überlegen + Rücksprache, dann bauen. Hier befolgt: Plan +
