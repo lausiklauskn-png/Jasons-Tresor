@@ -224,6 +224,26 @@
     border:1px solid var(--line); border-radius:9px; padding:8px 12px}
   .bd-actions button:hover{border-color:var(--accent)}
   .bd-actions .bd-lock{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
+  /* Bücher-Übersicht in der Liste (= alle Regal-Bücher als anklickbarer Text) */
+  #vault-overview{margin:6px 0 10px}
+  .ov-h{font-size:1.02rem; color:var(--accent); margin:.6em 0 .4em; font-weight:700}
+  .ov-h2{margin-top:1.4em; border-top:1px solid var(--line); padding-top:1em}
+  .ov-sub{color:var(--muted); font-weight:400; font-size:.85rem}
+  .ov-empty{color:var(--muted); font-size:.9rem; font-style:italic; margin:.2em 0 .6em}
+  .ov-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px}
+  .ov-item{display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    background:rgba(17,37,42,.45); border:1px solid var(--line); border-radius:10px; padding:7px 10px}
+  .ov-lock{opacity:.85}
+  .ov-lock-empty{opacity:.6; font-size:.74rem; font-weight:600; color:var(--muted)}
+  .ov-name-in{flex:2 1 140px; min-width:110px}
+  .ov-cat-in{flex:1 1 100px; min-width:80px}
+  .ov-name-in,.ov-cat-in{font:inherit; color:var(--ink); background:#06100f; border:1px solid var(--line); border-radius:8px; padding:6px 9px}
+  .ov-name-in:focus,.ov-cat-in:focus{outline:none; border-color:var(--accent)}
+  .ov-open2{font:inherit; cursor:pointer; color:var(--accent-ink); background:var(--accent); border:1px solid var(--accent); border-radius:8px; padding:6px 12px; font-weight:600}
+  .ov-del{font:inherit; cursor:pointer; color:#fff; background:#7a2230; border:1px solid #b1455a; border-radius:8px; padding:6px 9px}
+  .ov-del:hover{border-color:#ff8aa0}
+  .ov-del-all{margin-top:10px; font:inherit; cursor:pointer; color:#fff; background:#7a2230; border:1px solid #b1455a; border-radius:9px; padding:8px 12px; font-weight:600}
+  .ov-del-all:hover{border-color:#ff8aa0}
   /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): Test-Werkzeuge statt normalem Inhalt */
   #bd-testtools{display:none}
   #bookdemo.test-mode #bd-testtools{display:block}
@@ -461,7 +481,7 @@
   <button id="regal-next" class="regal-torch right" type="button" aria-label="eine Ansicht nach rechts"></button>
   <div id="regal-caption" aria-live="polite"></div>
   <div id="regal-hint">Mit den Fackeln ◀ ▶ (oder ←/→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
-  <button id="regal-tolist" type="button" title="Zur Listen-Ansicht">☰ Liste</button>
+  <button id="regal-tolist" type="button" title="Zur Bibliothek (Übersicht aller Bücher)">☰ Bibliothek</button>
   <button id="regal-edit" type="button" title="Regale einrichten (Linien)">📐 Regale einrichten</button>
   <div id="regal-edit-tools" aria-label="Regale einrichten">
     <span id="tools-grip" title="Leiste verschieben">⠿ ziehen</span>
@@ -500,6 +520,15 @@
     <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
+
+  <section id="vault-overview">
+    <h2 class="ov-h">📚 Deine Bücher im Tresor <span class="ov-sub">— Name &amp; Kategorie eintragen, öffnen, Inhalt leeren</span></h2>
+    <p class="ov-empty" id="ov-empty" hidden>Noch keine Bücher im Tresor. Lege im <b>Regal</b> ein Buch an: ein Buch öffnen → „＋ Jason laden" → „🔒 Verschließen".</p>
+    <ul class="ov-list" id="vault-list"></ul>
+    <button type="button" id="ov-delete-all" class="ov-del-all" hidden>🗑 Gesamten Tresor-Inhalt löschen</button>
+  </section>
+
+  <h2 class="ov-h ov-h2">🗂️ Freie Liste <span class="ov-sub">— einzelne Jasons, unabhängig vom Tresor</span></h2>
 
   <div class="tools">
     <input id="q" type="text" placeholder="Suchen (Name, Kategorie, Schlagwort) …" />
@@ -1887,11 +1916,71 @@
     if(shParts) shParts.innerHTML = ''; if(shInputs) shInputs.innerHTML = '';   // Codes/Passwort nicht im DOM liegen lassen
     if(shTest) shTest.textContent = ''; if(shResult){ shResult.hidden = true; shResult.textContent = ''; }
     openEntries = null; openPw = null; openIsDecoy = false; dirty = false;   // Klartext + Passwort aus dem Speicher werfen
+    renderVaultOverview();   // Liste-Übersicht aktuell halten (neues/geändertes Buch)
   }
   function tryClose(){
     if(dirty && !confirm('Dieses Buch ist noch nicht verschlossen — neu geladene Inhalte gehen verloren. Trotzdem schließen?')) return;
     hide();
   }
+
+  // --- Bibliothek-Ansicht: alle Regal-Bücher (Tresore) zentral verwalten:
+  //     Name + Kategorie eintragen, öffnen, löschen (je 1 Rückfrage). KEIN Tarnfach-Hinweis (Deniability). ---
+  function renderVaultOverview(){
+    var ul = document.getElementById('vault-list'); if(!ul) return;
+    var ovEmpty = document.getElementById('ov-empty');
+    var delAll  = document.getElementById('ov-delete-all');
+    var vaults = loadVaults(), names = loadNames();
+    var ids = Object.keys(vaults).filter(function(id){ var v = vaults[id]; return !!(v && ((v.tresor && L.isTresor(v.tresor)) || (v.name && v.name.length) || (v.category && v.category.length))); });
+    ids.sort(function(a,b){ var na = String(vaults[a].name || names[a] || a).toLowerCase(), nb = String(vaults[b].name || names[b] || b).toLowerCase(); return na < nb ? -1 : na > nb ? 1 : 0; });
+    ul.innerHTML = '';
+    if(ovEmpty) ovEmpty.hidden = (ids.length !== 0);
+    if(delAll)  delAll.hidden  = (ids.length === 0);
+    ids.forEach(function(id){
+      var rec = vaults[id], nm = rec.name || names[id] || '';
+      var locked = !!(rec.tresor && L.isTresor(rec.tresor));
+      var li = document.createElement('li'); li.className = 'ov-item';
+      var lk = document.createElement('span'); lk.className = locked ? 'ov-lock' : 'ov-lock ov-lock-empty';
+      lk.textContent = locked ? '🔒' : 'leer'; lk.title = locked ? 'verschlossen' : 'leeres Buch'; lk.setAttribute('aria-hidden','true');
+      var nin = document.createElement('input'); nin.className = 'ov-name-in'; nin.type = 'text'; nin.maxLength = 24; nin.value = nm; nin.placeholder = 'Name …';
+      nin.setAttribute('aria-label', 'Buchname');
+      nin.addEventListener('change', function(){
+        var nv = nin.value.trim();
+        var mm = loadVaults(); if(mm[id]){ mm[id].name = nv; saveVaults(mm); }
+        if(window.jtRenameBook) window.jtRenameBook(id, nv);   // Schild im Regal + jt-booknames mitführen
+      });
+      var cin = document.createElement('input'); cin.className = 'ov-cat-in'; cin.type = 'text'; cin.maxLength = 24; cin.value = rec.category || ''; cin.placeholder = 'Kategorie …';
+      cin.setAttribute('aria-label', 'Kategorie');
+      cin.addEventListener('change', function(){
+        var mm = loadVaults(); if(mm[id]){ mm[id].category = cin.value.trim(); saveVaults(mm); }
+      });
+      var op = document.createElement('button'); op.type = 'button'; op.className = 'ov-open2'; op.textContent = 'Öffnen';
+      op.addEventListener('click', function(){ var lab = nin.value.trim() || nm || 'Buch'; openBook({ id: id, label: lab, title: lab }); });
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'ov-del'; del.title = 'Inhalt löschen (das Buch bleibt leer erhalten)'; del.textContent = '🗑 Inhalt';
+      del.addEventListener('click', function(){
+        var lab = nin.value.trim() || nm || 'dieses Buch';
+        if(!confirm('Inhalt von „' + lab + '" löschen?\n\nNur der Inhalt wird entfernt — das Buch bleibt (leer) erhalten und kann neu gefüllt werden. Bereits exportierte Dateien bleiben erhalten.')) return;
+        var mm = loadVaults(), r2 = mm[id];
+        if(r2){ delete r2.tresor; delete r2.decoy; r2.updatedAt = L.nowIso();   // nur der Inhalt (echt + Tarnfach) weg
+          if(!r2.name && !r2.category){ delete mm[id]; } }                      // gar nichts mehr übrig -> Buch ganz weg
+        saveVaults(mm);
+        if(window.jtMarkVault) window.jtMarkVault(id, false);                   // Regal-🔒 weg (jetzt leer)
+        renderVaultOverview();
+      });
+      li.appendChild(lk); li.appendChild(nin); li.appendChild(cin); li.appendChild(op); li.appendChild(del);
+      ul.appendChild(li);
+    });
+  }
+  window.jtRenderOverview = renderVaultOverview;
+  var ovDelAll = document.getElementById('ov-delete-all');
+  if(ovDelAll){
+    ovDelAll.addEventListener('click', function(){
+      if(!confirm('Den GESAMTEN Tresor-Inhalt in diesem Browser löschen?\n\nAlle Bücher werden entfernt. Bereits exportierte .tresor.json-Dateien bleiben erhalten.')) return;
+      try{ localStorage.removeItem('jt-vaults'); }catch(e){}
+      if(window.jtClearVaultMarks) window.jtClearVaultMarks();
+      renderVaultOverview();
+    });
+  }
+  renderVaultOverview();
 
   // Vorschau-Knöpfe (Muster-Buch / Buchsequenz) — harmlos, ohne echten Tresor (kein curId → nichts gespeichert)
   if(btn)    btn.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
@@ -2226,7 +2315,7 @@
     prev.addEventListener('click', dismissHint);
     next.addEventListener('click', dismissHint);
   }
-  if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); });
+  if(toList)  toList.addEventListener('click', function(){ regal.classList.add('is-hidden'); if(window.jtRenderOverview) window.jtRenderOverview(); });
   if(toRegal) toRegal.addEventListener('click', function(){ regal.classList.remove('is-hidden'); });
   document.addEventListener('keydown', function(e){
     if(regal.classList.contains('is-hidden')) return;
