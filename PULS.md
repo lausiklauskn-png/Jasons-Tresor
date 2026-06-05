@@ -3,6 +3,34 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — „Bibliothek": zentrale Buch-Verwaltung (Name/Kategorie/Löschen) (Sitzung 26)
+
+**Klaus' Vision** (groß, in Schritten — Plan-vor-Code, Klaus hat Reihenfolge + Lösch-Sicherheit
+gewählt): Die „Liste" wird zur **Bibliothek** = Schaltzentrale aller Bücher. **Schritt 1** (von Klaus
+zuerst gewählt) gebaut; Schritt 2 (alle Dateiformate) + Schritt 3 (Ebene wählen → Buchrücken) folgen.
+
+**Getan (`npm test` 45/45 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Umbenannt:** Knopf „☰ Liste" → **„☰ Bibliothek"**.
+- **Zentrale Verwaltung je Buch** (in der Bibliothek-Übersicht, ohne jedes Buch zu öffnen):
+  **Name** + **Kategorie** direkt eintragen (Name führt das Regal-Schild via `jtRenameBook` mit;
+  Kategorie additiv in `rec.category`), **Öffnen**, **Löschen** (1 Rückfrage, entfernt nur die
+  lokale Kopie; Exporte bleiben; Regal-🔒 weg via `jtMarkVault`).
+- **„🗑 Gesamten Tresor-Inhalt löschen"** (1 Rückfrage) — entfernt alle Bücher (`jt-vaults`) lokal;
+  Exporte bleiben. Erscheint nur, wenn Bücher da sind.
+- **Deniability gewahrt:** weiterhin **kein** Tarnfach-Hinweis in der Übersicht.
+
+**Offen (nächste Schritte des großen Plans):**
+- **Schritt 2:** beliebige **Dateiformate** (nicht nur JSON) verschlüsselt in Bücher laden (Base64).
+  Ehrliche Grenze: localStorage fasst nur wenige MB → große Dateien später via IndexedDB.
+- **Schritt 3 (großer Umbau):** je Buch **Ebene 1–4 wählen → erscheint als Buchrücken** in der Ebene.
+  Bücher werden von festen Regal-Plätzen zu frei platzierbaren Büchern.
+
+**Manual-Check:** Headless 45/45 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Bibliothek-Verwaltung im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Liste = Übersicht aller Regal-Bücher (Klaus' Browser-Frage) (Sitzung 25)
 
 **Klaus' Frage:** Die „☰ Liste"-Ansicht war leer, obwohl im Regal Bücher stehen — „Soll das die
