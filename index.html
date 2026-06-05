@@ -244,6 +244,14 @@
   .ov-del:hover{border-color:#ff8aa0}
   .ov-del-all{margin-top:10px; font:inherit; cursor:pointer; color:#fff; background:#7a2230; border:1px solid #b1455a; border-radius:9px; padding:8px 12px; font-weight:600}
   .ov-del-all:hover{border-color:#ff8aa0}
+  /* Gesamt-Sicherung (Super-Passwort) */
+  #supersave{margin:6px 0 4px}
+  .ss-note{color:var(--muted); font-size:.86rem; line-height:1.5; margin:.2em 0 .7em}
+  .ss-actions{display:flex; flex-wrap:wrap; gap:8px}
+  .ss-actions button{font:inherit; cursor:pointer; color:var(--ink); background:rgba(17,37,42,.8); border:1px solid var(--line); border-radius:9px; padding:8px 12px}
+  .ss-actions button:hover{border-color:var(--accent)}
+  #ss-create{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
+  .ss-out{width:100%; margin-top:10px; font:inherit; color:var(--ink); background:#06100f; border:1px solid var(--line); border-radius:8px; padding:8px; resize:vertical; white-space:pre}
   /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): Test-Werkzeuge statt normalem Inhalt */
   #bd-testtools{display:none}
   #bookdemo.test-mode #bd-testtools{display:block}
@@ -526,6 +534,19 @@
     <p class="ov-empty" id="ov-empty" hidden>Noch keine Bücher im Tresor. Lege im <b>Regal</b> ein Buch an: ein Buch öffnen → „＋ Jason laden" → „🔒 Verschließen".</p>
     <ul class="ov-list" id="vault-list"></ul>
     <button type="button" id="ov-delete-all" class="ov-del-all" hidden>🗑 Gesamten Tresor-Inhalt löschen</button>
+  </section>
+
+  <section id="supersave">
+    <h2 class="ov-h ov-h2">🛡️ Gesamt-Sicherung (Super-Passwort)</h2>
+    <p class="ss-note">Eine einzige verschlüsselte Datei mit <b>allen Büchern</b> — damit du nach App-Löschung wieder an <b>alles</b> kommst. Die Bücher behalten zusätzlich ihr eigenes Passwort. Bewahre <b>Datei</b> und <b>Super-Passwort</b> (oder <b>3 von 5 Codes</b>) getrennt auf.</p>
+    <div class="ss-actions">
+      <button type="button" id="ss-create">⤓ Gesamt-Sicherung erstellen</button>
+      <button type="button" id="ss-restore">⤒ Gesamt-Sicherung einlesen</button>
+      <button type="button" id="ss-split">🗝️ Super-Passwort → 5 Codes (3 von 5)</button>
+      <button type="button" id="ss-combine">🧩 Super-Passwort aus 3 Codes</button>
+      <input id="ss-file" type="file" accept=".json,application/json" hidden />
+    </div>
+    <textarea id="ss-out" class="ss-out" rows="3" readonly hidden></textarea>
   </section>
 
   <h2 class="ov-h ov-h2">🗂️ Freie Liste <span class="ov-sub">— einzelne Jasons, unabhängig vom Tresor</span></h2>
@@ -2014,6 +2035,78 @@
     });
   }
   renderVaultOverview();
+
+  // --- Gesamt-Sicherung (Super-Passwort): ganze Bibliothek -> EINE verschlüsselte Datei.
+  //     Stellt nach App-Löschung ALLE Bücher wieder her; 3-von-5-Codes teilen das Super-Passwort.
+  //     Bücher behalten zusätzlich ihr eigenes Passwort (Super-Passwort = Schlüssel zur Sicherung). ---
+  var ssCreate = document.getElementById('ss-create'), ssRestoreBtn = document.getElementById('ss-restore');
+  var ssSplit = document.getElementById('ss-split'), ssCombine = document.getElementById('ss-combine');
+  var ssFile = document.getElementById('ss-file'), ssOut = document.getElementById('ss-out');
+  function ssShow(text){ if(!ssOut) return; ssOut.value = text; ssOut.hidden = false; ssOut.focus(); ssOut.select(); }
+  function ssReadLS(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
+  function ssCollect(){
+    return { schemaVersion: 1, kind: 'jt-gesamtsicherung', version: 1, exportedAt: L.nowIso(),
+      vaults: ssReadLS('jt-vaults') || {}, names: ssReadLS('jt-booknames') || {},
+      liste: ssReadLS('jasons-bibliothek-v1'), layout: ssReadLS('jt-booklayout'), shelves: ssReadLS('jt-shelves2') };
+  }
+  function ssApply(b){
+    function mergeMap(key, obj){ if(!obj || typeof obj !== 'object') return; try{
+      var cur = JSON.parse(localStorage.getItem(key) || '{}') || {};
+      for(var k in obj){ if(Object.prototype.hasOwnProperty.call(obj, k)) cur[k] = obj[k]; }
+      localStorage.setItem(key, JSON.stringify(cur)); }catch(e){} }
+    mergeMap('jt-vaults', b.vaults); mergeMap('jt-booknames', b.names);
+    function setIf(key, v){ if(v != null){ try{ localStorage.setItem(key, JSON.stringify(v)); }catch(e){} } }
+    setIf('jasons-bibliothek-v1', b.liste); setIf('jt-booklayout', b.layout); setIf('jt-shelves2', b.shelves);
+  }
+  if(ssCreate){ ssCreate.addEventListener('click', function(){
+    var pw = window.prompt('Super-Passwort für die Gesamt-Sicherung (mind. 8 Zeichen):'); if(pw == null) return;
+    if(pw.length < 8){ alert('Super-Passwort zu kurz (mind. 8 Zeichen).'); return; }
+    var pc = window.prompt('Super-Passwort wiederholen:'); if(pc == null) return;
+    if(pc !== pw){ alert('Die Super-Passwörter stimmen nicht überein.'); return; }
+    L.encryptTresor(ssCollect(), pw).then(function(blob){
+      var b = new Blob([JSON.stringify(blob, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(b), a = document.createElement('a');
+      a.href = url; a.download = 'jasons-tresor-gesamt.tresor.json'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      alert('Gesamt-Sicherung erstellt. 🛡️\n\nBewahre die Datei + das Super-Passwort (oder 3 von 5 Codes) getrennt auf. Damit holst du nach App-Löschung ALLE Bücher zurück.');
+    }).catch(function(err){ alert(String((err && err.message) || err)); });
+  }); }
+  if(ssRestoreBtn && ssFile){
+    ssRestoreBtn.addEventListener('click', function(){ ssFile.click(); });
+    ssFile.addEventListener('change', function(ev){
+      var f = ev.target.files && ev.target.files[0]; ev.target.value = ''; if(!f) return;
+      var rdr = new FileReader();
+      rdr.onload = function(){
+        var p = L.validateAndParse(String(rdr.result));
+        if(!p.ok || !L.isTresor(p.value)){ alert('Das ist keine gültige Gesamt-Sicherung.'); return; }
+        var pw = window.prompt('Super-Passwort der Gesamt-Sicherung:'); if(pw == null) return;
+        L.decryptTresor(p.value, pw).then(function(bundle){
+          if(!bundle || bundle.kind !== 'jt-gesamtsicherung'){ alert('Entschlüsselt, aber keine Gesamt-Sicherung.'); return; }
+          if(!confirm('Gesamt-Sicherung einspielen?\n\nBücher werden wiederhergestellt (gleiche ID wird überschrieben). Fortfahren?')) return;
+          ssApply(bundle);
+          if(window.jtRenderOverview) window.jtRenderOverview();
+          alert('Gesamt-Sicherung eingespielt — deine Bücher sind zurück. Tipp: Seite neu laden (Ctrl+Shift+R).');
+        }).catch(function(){ alert('Falsches Super-Passwort oder Datei beschädigt.'); });
+      };
+      rdr.onerror = function(){ alert('Datei konnte nicht gelesen werden.'); };
+      rdr.readAsText(f);
+    });
+  }
+  if(ssSplit){ ssSplit.addEventListener('click', function(){
+    var pw = window.prompt('Super-Passwort, das du in 5 Codes (3 genügen) aufteilen willst:'); if(pw == null) return;
+    if(!pw){ alert('Kein Passwort eingegeben.'); return; }
+    L.splitSecret(pw).then(function(res){
+      ssShow('5 Codes — getrennt aufbewahren. Beliebige 3 stellen das Super-Passwort wieder her:\n\n' + res.shares.join('\n'));
+    }).catch(function(err){ alert(String((err && err.message) || err)); });
+  }); }
+  if(ssCombine){ ssCombine.addEventListener('click', function(){
+    var raw = window.prompt('Mindestens 3 der 5 Codes eingeben (durch Leerzeichen oder Zeilen getrennt):'); if(raw == null) return;
+    var codes = raw.split(/\s+/).map(function(s){ return s.trim(); }).filter(Boolean);
+    if(codes.length < 3){ alert('Bitte mindestens 3 Codes eingeben.'); return; }
+    L.combineShares(codes).then(function(pw){
+      ssShow('Wiederhergestelltes Super-Passwort (damit „Gesamt-Sicherung einlesen" entschlüsseln):\n\n' + pw);
+    }).catch(function(err){ alert('Konnte nicht wiederherstellen: ' + String((err && err.message) || err)); });
+  }); }
 
   // Vorschau-Knöpfe (Muster-Buch / Buchsequenz) — harmlos, ohne echten Tresor (kein curId → nichts gespeichert)
   if(btn)    btn.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });

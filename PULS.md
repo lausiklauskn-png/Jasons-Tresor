@@ -3,6 +3,35 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Schritt 2b-1: Gesamt-Sicherung mit Super-Passwort + 3-von-5 (Sitzung 28)
+
+**Klaus' Entscheidung:** Super-Passwort = **Schlüssel zur Gesamt-Sicherung** (Bücher behalten
+zusätzlich ihr eigenes Passwort — sicherer). Plan-vor-Code befolgt (Plan + 1 Entscheidung gezeigt).
+
+**Getan (`npm test` 51/51 grün [+3], Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale, Krypto nur aus dem Kern):**
+- **Neue Sektion „🛡️ Gesamt-Sicherung (Super-Passwort)"** in der Bibliothek:
+  - **Erstellen:** ganze Bibliothek (`jt-vaults` + Namen + freie Liste + Layout/Shelves) → **ein**
+    Bündel `jt-gesamtsicherung` v1 → mit **Super-Passwort** AES-256-verschlüsselt → Download
+    `jasons-tresor-gesamt.tresor.json`. Doppel-Schutz: die Bücher darin bleiben einzeln verschlüsselt.
+  - **Einlesen:** Datei + Super-Passwort → entschlüsseln → Bücher zurück in den lokalen Speicher
+    (gleiche ID überschreibt; Übersicht aktualisiert). Überlebt App-Löschung.
+  - **Super-Passwort → 5 Codes (3 von 5)** und **aus 3 Codes wiederherstellen** (Shamir-Kern,
+    schon getestet); Ergebnis erscheint in einem auswählbaren Feld (nicht gespeichert).
+- **Headless-Test `test/gesamtsicherung.test.js` (3 Fälle):** Bündel verschlüsselt→entschlüsselt
+  **deckungsgleich** (inneres Buch bleibt durch sein eigenes Passwort geschützt); falsches
+  Super-Passwort scheitert; 3 von 5 Codes ergeben das Super-Passwort, 2 nicht.
+
+**Offen (Rest von Schritt 2/3):**
+- **2b-2:** fester **Ordner** (Chrome/File System Access), in den genau diese eine Sicherung
+  **automatisch in-place** geschrieben wird (kein Backup-Stapel — Klaus' Sync-Prinzip).
+- **3:** je Buch **Ebene 1–4 wählen → Buchrücken** in der Ebene.
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Gesamt-Sicherung im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Schritt 2a: beliebige Dateiformate in Bücher laden (Sitzung 27)
 
 **Klaus' Schritt-2-Vision** (groß: separater Ordner, Super-Passwort, 3-von-5-Wiederherstellung,
