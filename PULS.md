@@ -3,6 +3,27 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Bibliothek: leere/benannte Bücher + „＋ Neues Buch" (Punkt 1 von 3) (Sitzung 34)
+
+**Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Benannte (noch leere) Bücher erscheinen jetzt** in „Deine Bücher im Tresor": `renderVaultOverview`
+  listet die **Vereinigung** aus `jt-vaults` + `jt-booknames` (gefiltert auf Inhalt/Name/Kategorie;
+  TESTBUCH `1-0-0` ausgelassen). Leere zeigen „leer", verschlossene 🔒.
+- **„＋ Neues Buch"-Knopf** in der Bibliothek: fragt Namen → sucht den **nächsten freien Regal-Platz**
+  (`window.jtFreeBookSlot`, frontale Ebenen 1/3/4, TESTBUCH übersprungen) → schreibt Name (Schild +
+  `jt-booknames`) → öffnet das Buch direkt zum Füllen + Verschließen. Erscheint auch im Regal.
+- **Verwaltung leerer Bücher:** Kategorie legt bei Bedarf einen Datensatz an; der Lösch-Knopf ist bei
+  leeren Büchern **„🗑 Entfernen"** (nimmt das Buch ganz aus der Liste), bei vollen weiter „🗑 Inhalt"
+  (nur Inhalt, Buch bleibt leer).
+
+**Offen (nächste Scheibe):** Punkt 3 (große Dateien >2 MB extern verschlüsselt anbieten — Chrome).
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Browser-ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Freie Liste nimmt alle Dateiformate (Punkt 2 von 3) (Sitzung 33)
 
 **Klaus' 3 Wünsche, in Scheiben (Plan-vor-Code, Entscheidungen abgestimmt):** (1) leere/benannte
