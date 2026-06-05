@@ -578,6 +578,10 @@
         <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
         <button type="button" id="bd-split">🗝️ Passwort aufteilen (3 von 5)</button>
       </div>
+      <!-- Tarnfach (Honigtopf): zweites Passwort → harmlose Fassade. Dezent, kein lauter Schalter;
+           erscheint NUR, wenn das Buch mit dem echten Passwort offen ist. Echte Krypto (eigener
+           AES-256-GCM-Umschlag, getrennt vom echten Tresor). -->
+      <button type="button" id="bd-decoy" class="bd-link" hidden>Tarnfach einrichten (zweites Passwort)…</button>
       <input id="bd-file" type="file" accept=".json,application/json" hidden />
       <!-- TESTBUCH — nur zum Üben; vor dem Echtbetrieb diesen Block (+ Skript/CSS „TESTBUCH") entfernen -->
       <div id="bd-testtools">
@@ -1486,6 +1490,7 @@
   var giftBtn  = document.getElementById('bd-gift');
   var fileIn   = document.getElementById('bd-file');
   var resetBtn = document.getElementById('bd-reset');   // TESTBUCH — vor Echtbetrieb entfernen
+  var decoyBtn = document.getElementById('bd-decoy');   // Tarnfach (Honigtopf): zweites Passwort
   // Shamir 3-von-5 (Schale; echte Krypto im Kern)
   var splitBtn    = document.getElementById('bd-split');
   var splitPanel  = document.getElementById('bd-split-panel');
@@ -1504,6 +1509,7 @@
   var curId = null, curEl = null;
   var openEntries = null;     // entschlüsselte Einträge — NUR im Speicher, nie in localStorage
   var openPw = null;          // Passwort des offenen Buchs — nur im Speicher, nie gespeichert/geloggt
+  var openSide = 'real';      // welches Fach offen ist: 'real' (echt) oder 'decoy' (Tarnfach/Honigtopf)
   var dirty = false;          // ungespeicherte Änderungen → Schutz vor versehentlichem Verlust
   var seqTimer = null, lockTimer = null;
   var attempts = 0, lockedUntil = 0;   // 2 Fehlversuche gelten GLOBAL → 1 Min Sperre
@@ -1561,7 +1567,12 @@
     });
   }
 
-  function showContentMode(){ demo.classList.remove('code-mode', 'test-mode'); demo.classList.add('is-open'); renderEntries(); }
+  function showContentMode(){
+    demo.classList.remove('code-mode', 'test-mode'); demo.classList.add('is-open');
+    // Tarnfach-Knopf NUR im echten Fach eines bereits verschlossenen Buchs — im Tarn-Modus unsichtbar
+    if(decoyBtn) decoyBtn.hidden = !(curId && openSide === 'real' && isLocked(curId));
+    renderEntries();
+  }
   function showTestMode(){ demo.classList.remove('code-mode'); demo.classList.add('is-open', 'test-mode'); }   // TESTBUCH
 
   // --- Öffnen: Testbuch → Werkzeuge; verschlossenes Buch → Passwort; leeres Buch → direkt füllen ---
@@ -1569,7 +1580,7 @@
     opts = opts || {};
     clearTimeout(seqTimer);
     curId = opts.id || null; curEl = opts.el || null;
-    openEntries = null; openPw = null; dirty = false;
+    openEntries = null; openPw = null; openSide = 'real'; dirty = false;
     var label = (opts.label != null) ? opts.label : (opts.title || '');
     demo.classList.remove('is-open', 'test-mode', 'code-mode');
     if(codeIn) codeIn.value = '';
@@ -1614,19 +1625,34 @@
       var pw = (codeIn && codeIn.value) || '';
       var v = getVault(curId);
       if(!v || !v.tresor) return;
-      L.decryptTresor(v.tresor, pw).then(function(plain){
+      var label = (renameIn && renameIn.value) || 'Buch';
+      // gemeinsamer Erfolg-Pfad für beide Fächer — von außen NICHT unterscheidbar
+      function openWith(plain, side){
         attempts = 0; if(codeLock) codeLock.hidden = true;
-        openEntries = L.payloadToEntries(plain, (renameIn && renameIn.value) || 'Buch').entries;
-        openPw = pw; dirty = false;
+        openEntries = L.payloadToEntries(plain, label).entries;
+        openPw = pw; openSide = side; dirty = false;
         if(codeIn) codeIn.value = '';
         showContentMode();               // Schlüssel versinkt + Energie + Buch auf + Inhalt
-      }).catch(function(){               // falsches Passwort/Manipulation → AES-GCM wirft
+      }
+      // falsches Passwort/Manipulation → wie bisher: Shake + 2× falsch = 1 Min Sperre
+      function failOpen(){
         attempts++;
         if(codeIn) codeIn.value = '';
         codeForm.classList.remove('shake'); void codeForm.offsetWidth; codeForm.classList.add('shake');
         if(codeIn) codeIn.focus();
-        if(attempts >= 2){ attempts = 0; startLock(); }   // 2× falsch → 1 Minute Sperre
-      });
+        if(attempts >= 2){ attempts = 0; startLock(); }
+      }
+      // 1) echtes Passwort → echtes Fach
+      L.decryptTresor(v.tresor, pw).then(function(plain){ openWith(plain, 'real'); })
+        .catch(function(){
+          // 2) Tarn-Passwort → harmlose Fassade (Honigtopf springt automatisch, ohne Hinweis)
+          if(v.decoy){
+            L.decryptTresor(v.decoy, pw).then(function(plain){ openWith(plain, 'decoy'); })
+              .catch(failOpen);          // 3) beides falsch → Fehler wie gewohnt
+          } else {
+            failOpen();
+          }
+        });
     });
   }
 
@@ -1674,9 +1700,15 @@
         if(pwc !== pw){ alert('Die Passwörter stimmen nicht überein.'); return; }
       }
       L.encryptTresor(L.buildLibraryExport(list), pw).then(function(blob){
-        var m = loadVaults();
-        m[curId] = { tresor: blob, name: (renameIn && renameIn.value) || '', updatedAt: L.nowIso() };
-        saveVaults(m);
+        var m = loadVaults(); var rec = m[curId] || {};
+        if(openSide === 'decoy'){
+          rec.decoy = blob;                                   // nur das Tarnfach, echtes Fach bleibt
+        } else {
+          rec.tresor = blob;                                  // echtes Fach; vorhandenes Tarnfach bleibt
+          rec.name = (renameIn && renameIn.value) || '';
+        }
+        rec.updatedAt = L.nowIso();
+        m[curId] = rec; saveVaults(m);
         openPw = pw; dirty = false;
         if(window.jtMarkVault) window.jtMarkVault(curId, true);
         hide();
@@ -1701,6 +1733,36 @@
         var url = URL.createObjectURL(b), a = document.createElement('a');
         a.href = url; a.download = name + '.tresor.json'; document.body.appendChild(a); a.click(); a.remove();
         setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      }).catch(function(err){ alert(String((err && err.message) || err)); });
+    });
+  }
+
+  // Tarnfach (Honigtopf) einrichten: zweites Passwort → eigener, getrennter AES-256-GCM-Umschlag.
+  // Im Notfall zeigt das Tarn-Passwort eine harmlose Fassade; das echte Fach bleibt unsichtbar.
+  // Wird leer (ohne Inhalt) angelegt — Klaus füllt es später mit dem Tarn-Passwort harmlos.
+  if(decoyBtn){
+    decoyBtn.addEventListener('click', function(){
+      if(!curId || openSide !== 'real'){ return; }            // nur im echten Fach
+      if(!isLocked(curId)){ alert('Erst das Buch mit deinem echten Passwort verschließen — dann lässt sich ein Tarnfach anlegen.'); return; }
+      var v = getVault(curId);
+      var verb = (v && v.decoy) ? 'ersetzen' : 'anlegen';
+      var dpw = window.prompt('Tarnfach ' + verb + ' — zweites Passwort (mind. 8 Zeichen).\n\nWer dich zwingt, bekommt mit DIESEM Passwort nur eine harmlose Fassade zu sehen.\nDein echtes Passwort bleibt davon unberührt.');
+      if(dpw == null) return;
+      if(dpw.length < 8){ alert('Tarn-Passwort zu kurz (mind. 8 Zeichen).'); return; }
+      if(dpw === openPw){ alert('Das Tarn-Passwort muss sich vom echten Passwort unterscheiden.'); return; }
+      var dpc = window.prompt('Tarn-Passwort zur Sicherheit wiederholen:');
+      if(dpc == null) return;
+      if(dpc !== dpw){ alert('Die Passwörter stimmen nicht überein.'); return; }
+      // leeres Tarnfach (ohne Inhalt) verschlüsseln und ans Buch hängen
+      L.encryptTresor(L.buildLibraryExport([]), dpw).then(function(blob){
+        var m = loadVaults(); var rec = m[curId] || {}; rec.decoy = blob; rec.updatedAt = L.nowIso();
+        m[curId] = rec; saveVaults(m);
+        alert('Tarnfach ' + (verb === 'anlegen' ? 'angelegt' : 'ersetzt') + '.\n\n'
+          + '• Echtes Passwort → deine echten Sachen.\n'
+          + '• Tarn-Passwort → die harmlose Fassade.\n\n'
+          + 'Kein sichtbarer Schalter — von außen sieht man dem Buch nichts an.\n'
+          + 'Zum Befüllen später mit dem Tarn-Passwort öffnen, harmlose .json laden, „🔒 Verschließen".\n\n'
+          + 'Ehrliche Grenze: stark gegen Gelegenheits-Gucker, schwächer gegen Kenner.');
       }).catch(function(err){ alert(String((err && err.message) || err)); });
     });
   }
