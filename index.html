@@ -1336,6 +1336,17 @@
   // Jede Datei: JSON wie bisher (Bibliothek/Tresor), alles andere als verschlüsselbarer
   // Datei-Eintrag (DataURL/Base64) — wird beim „Verschlüsselt sichern" mitverschlüsselt.
   function ingestRawFile(file) {
+    if (file.size > 2 * 1024 * 1024) {
+      var mb = (file.size / 1048576).toFixed(1) + " MB";
+      if (window.showSaveFilePicker && window.jtSaveFileExtern) {
+        if (confirm("„" + file.name + "\" ist " + mb + " groß.\n\nGroße Dateien sprengen den Browser-Speicher. Stattdessen VERSCHLÜSSELT in einen externen Ordner speichern?\n\nOK = extern verschlüsselt · Abbrechen = doch in den Browser laden")) {
+          window.jtSaveFileExtern(file); return;
+        }
+        if (!confirm("Trotzdem in den Browser-Speicher laden?")) return;
+      } else {
+        if (!confirm("„" + file.name + "\" ist " + mb + " groß. Externes Speichern geht nur in Chrome/Edge. Trotzdem laden?")) return;
+      }
+    }
     var r = new FileReader();
     r.onload = function () {
       var entry = L.makeEntry({ name: file.name, category: "", origin: file.name, payload: {
@@ -1769,9 +1780,39 @@
 
   // Dateien ins offene Buch laden — JSON wie bisher (Bibliothek/Tresor), alles andere als
   // verschlüsselte Datei-Einträge (DataURL/Base64). Mehrere Dateien auf einmal möglich.
+  // Große Datei verschlüsselt in einen externen Ordner speichern (Chrome/Edge, File System Access).
+  // Eigene .tresor.json; zum Zurückholen via „＋ Datei laden" + Passwort. Browser-ungeprüft.
+  window.jtSaveFileExtern = function(file){
+    if(!window.showSaveFilePicker){ alert('Externes Speichern geht nur in Chrome/Edge.'); return; }
+    var pw = window.prompt('Passwort zum Verschlüsseln dieser Datei (mind. 8 Zeichen):'); if(pw == null) return;
+    if(pw.length < 8){ alert('Passwort zu kurz (mind. 8 Zeichen).'); return; }
+    var pc = window.prompt('Passwort wiederholen:'); if(pc == null) return;
+    if(pc !== pw){ alert('Die Passwörter stimmen nicht überein.'); return; }
+    var safe = String(file.name || 'datei').replace(/[^a-z0-9._-]+/gi, '_');
+    window.showSaveFilePicker({ suggestedName: safe + '.tresor.json', types: [{ description: 'Verschlüsselte Datei', accept: { 'application/json': ['.json'] } }] }).then(function(handle){
+      var rd = new FileReader();
+      rd.onload = function(){
+        var entry = L.makeEntry({ name: file.name, category: '', payload: { kind: 'jt-datei', filename: file.name, mimeType: file.type || 'application/octet-stream', size: file.size, encoding: 'dataurl', data: String(rd.result) } });
+        L.encryptTresor(L.buildLibraryExport([entry]), pw).then(function(blob){
+          return handle.createWritable().then(function(w){ return w.write(JSON.stringify(blob, null, 2)).then(function(){ return w.close(); }); });
+        }).then(function(){
+          alert('„' + file.name + '" verschlüsselt gespeichert. 🛡️\n\nZum Zurückholen: „＋ Datei laden" mit dieser .tresor.json + Passwort → die Datei erscheint mit „⤓ Herunterladen".');
+        }).catch(function(e){ alert('Fehler: ' + String((e && e.message) || e)); });
+      };
+      rd.onerror = function(){ alert('Datei konnte nicht gelesen werden.'); };
+      rd.readAsDataURL(file);
+    }).catch(function(e){ if(e && e.name === 'AbortError') return; alert('Speichern abgebrochen: ' + String((e && e.message) || e)); });
+  };
   function addRawFile(f){
     if(f.size > 2 * 1024 * 1024){
-      if(!confirm('„' + f.name + '" ist ' + humanSize(f.size) + ' groß.\n\nDer Browser-Speicher fasst nur wenige MB — sehr große Dateien können den Tresor sprengen (für große Dateien kommt später der feste Ordner). Trotzdem laden?')) return;
+      if(window.showSaveFilePicker){
+        if(confirm('„' + f.name + '" ist ' + humanSize(f.size) + ' groß.\n\nGroße Dateien sprengen den Browser-Speicher. Stattdessen VERSCHLÜSSELT in einen externen Ordner speichern?\n\nOK = extern verschlüsselt · Abbrechen = doch in den Browser laden')){
+          window.jtSaveFileExtern(f); return;
+        }
+        if(!confirm('Trotzdem in den Browser-Speicher laden? (kann den Tresor sprengen)')) return;
+      } else {
+        if(!confirm('„' + f.name + '" ist ' + humanSize(f.size) + ' groß. Externes Speichern geht nur in Chrome/Edge. Trotzdem in den Browser-Speicher laden?')) return;
+      }
     }
     var rd = new FileReader();
     rd.onload = function(){
