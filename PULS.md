@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Buchname & Regal-Schilder lesbar (Klaus' Browser-Feedback) (Sitzung 23)
+
+**Klaus im Browser (Screenshot):** WebP-Optik **top**. Zwei Text-Wünsche:
+- Im **Buch-Öffnen-Fenster** stand der Name **oben** und wurde vom Schlüssel verdeckt; darunter der
+  Hinweis „mit dem Passwort öffnen" — **dasselbe** wie das Formular „Passwort eingeben, um das Buch
+  zu öffnen" (doppelte Aussage).
+- Die **Namens-Schilder unter den Regal-Büchern** liefen bei längeren Namen ineinander.
+
+**Getan (`npm test` 39/39 grün, Kern unangetastet, beide Dateien je 8 Skriptblöcke fehlerfrei,
+Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Buchname unter den Schlüssel** verschoben (`.bd-title` von `top:13%` → `bottom:7%`), wo vorher der
+  Hinweis stand. Der **doppelte Hinweis** `.bd-hint` ist entfernt (`display:none`) — das Formular sagt
+  es bereits. Gilt für **alle** Bücher (Regal-Buch + Muster-Buch).
+- **Regal-Schilder: ein Wort pro Zeile.** Neue Hilfsfunktion `spineLines()` bricht nach jedem Wort um;
+  `.sb-label` jetzt `white-space:pre`, `width:max-content` (max 200 %) statt einzeiliger, abgeschnittener
+  210%-Box. **Wichtig:** der echte Name (mit Leerzeichen) bleibt in **`data-name`** erhalten und wird
+  beim Öffnen als Titel genutzt — die Umbrüche sind nur Anzeige (kein kaputter Name im Overlay).
+
+**Manual-Check:** Headless 39/39 grün; Kern unangetastet; beide Skripte fehlerfrei.
+**Optik browser-ungeprüft — wartet auf Klaus' nächsten Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Bilder zu WebP: App ~87 % kleiner (Ladezeit/PWA-Größe) (Sitzung 22)
 
 **Klaus' Vision aus dem Brief umgesetzt — erst gemessen, dann gemeinsam entschieden, dann
