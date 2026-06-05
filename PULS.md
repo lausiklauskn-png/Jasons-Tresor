@@ -30,6 +30,9 @@ fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):
 - **2b:** Super-Passwort + dauerhafte verschlüsselte Sicherung **auf die Platte** (fester Ordner Chrome
   via File System Access **und** Export-Rückfall) + **3-von-5-Wiederherstellung** des Super-Passworts
   (Shamir-Kern ist da). Damit überleben Daten das App-Löschen; großen Dateien bekommen Platz.
+  **Sync in-place (Klaus 2026-06-05):** beim festen Ordner wird **EIN** Speicher **automatisch
+  aktualisiert**, sobald etwas hinzukommt — **keine vielfachen großen Backup-Ordner**, die Platz
+  fressen. Exporte bleiben bewusste Einzel-Schnappschüsse.
 - **3:** je Buch **Ebene 1–4 wählen → Buchrücken** in der Ebene.
 
 **Manual-Check:** Headless 48/48 grün; Kern byte-identisch; beide Skripte fehlerfrei.
