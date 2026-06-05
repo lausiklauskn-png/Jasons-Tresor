@@ -373,8 +373,19 @@
     0%,100%{text-shadow:0 0 4px #6ee7d3, 0 0 9px rgba(110,231,211,.7), 0 0 16px rgba(59,130,246,.5), 0 1px 2px #000}
     50%{text-shadow:0 0 6px #9af3e6, 0 0 14px rgba(110,231,211,.95), 0 0 26px rgba(59,130,246,.8), 0 1px 2px #000}}
   @media (prefers-reduced-motion:reduce){ .sb-label{animation:none} }
-  #regal-caption{position:absolute; left:0; right:0; bottom:22px; text-align:center; color:#e8dcbf;
+  #regal-caption{position:absolute; left:0; right:0; bottom:46px; text-align:center; color:#e8dcbf;
     font-size:.92rem; letter-spacing:.05em; text-shadow:0 2px 8px #000; pointer-events:none; z-index:2}
+  /* Ebenen-Balken unten: alle Ansichten direkt wählbar (nur Ansichtswechsel — verändert KEINE Bücher).
+     Schmal & dezent halb-durchsichtig; verdeckt den Hintergrund nicht. */
+  #regal-levelbar{position:absolute; left:50%; bottom:8px; transform:translateX(-50%); z-index:4;
+    display:flex; gap:4px; flex-wrap:wrap; justify-content:center; max-width:94%;
+    background:rgba(8,8,26,.40); border:1px solid rgba(110,231,211,.22); border-radius:10px; padding:3px 5px}
+  #regal.editing #regal-levelbar{display:none}
+  .lvl-btn{font:inherit; font-size:.78rem; cursor:pointer; color:#e8f6f2; background:rgba(17,37,42,.38);
+    border:1px solid rgba(110,231,211,.20); border-radius:7px; padding:4px 10px; text-shadow:0 1px 2px #000;
+    transition:background .2s ease, border-color .2s ease}
+  .lvl-btn:hover{border-color:var(--accent); background:rgba(17,37,42,.7)}
+  .lvl-btn.active{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
   #regal-tolist{position:absolute; top:14px; right:14px; z-index:4; font:inherit; cursor:pointer; color:var(--ink);
     background:rgba(17,37,42,.72); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
   #regal-tolist:hover{border-color:var(--accent)}
@@ -492,7 +503,14 @@
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links"></button>
   <button id="regal-next" class="regal-torch right" type="button" aria-label="eine Ansicht nach rechts"></button>
   <div id="regal-caption" aria-live="polite"></div>
-  <div id="regal-hint">Mit den Fackeln ◀ ▶ (oder ←/→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
+  <div id="regal-levelbar" aria-label="Ebene direkt wählen">
+    <button type="button" class="lvl-btn" data-view="0">Eingang links</button>
+    <button type="button" class="lvl-btn" data-view="1">Ankunft</button>
+    <button type="button" class="lvl-btn" data-view="2">rechts</button>
+    <button type="button" class="lvl-btn" data-view="3">Übergang</button>
+    <button type="button" class="lvl-btn" data-view="4">Kern</button>
+  </div>
+  <div id="regal-hint">Mit dem Ebenen-Balken unten (oder den Fackeln ◀ ▶ / ←→) wechselst du die Ebenen · ein Buch anklicken zum Öffnen</div>
   <button id="regal-tolist" type="button" title="Zur Bibliothek (Übersicht aller Bücher)">☰ Bibliothek</button>
   <button id="regal-edit" type="button" title="Regale einrichten (Linien)">📐 Regale einrichten</button>
   <div id="regal-edit-tools" aria-label="Regale einrichten">
@@ -2222,6 +2240,8 @@
     { src: P+'regal-ebene3.webp', cap: 'Ebene 3 · Der Kern — nicht von dieser Welt' }
   ];
   var i = 1, busy = false;
+  // Nach App-Schließen/Neustart in der zuletzt gewählten Ebene bleiben (nur Anzeige-Index, keine Daten)
+  try{ var savedView = parseInt(localStorage.getItem('jt-regal-view'), 10); if(savedView >= 0 && savedView < VIEWS.length) i = savedView; }catch(e){}
   function render(){
     busy = true; regal.classList.add('switching'); regal.classList.remove('has-books');
     setTimeout(function(){
@@ -2232,6 +2252,8 @@
       regal.classList.remove('switching'); busy = false;
     }, 300);
     prev.disabled = (i <= 0); next.disabled = (i >= VIEWS.length - 1);
+    updateLevelBar();
+    try{ localStorage.setItem('jt-regal-view', String(i)); }catch(e){}
   }
   // #regal-books exakt auf das angezeigte Bild-Rechteck (object-fit:cover) legen — so sind die
   // Bücher BILD-relativ verankert und bleiben sitzen, egal wie das Fenster geteilt/verzogen wird.
@@ -2251,6 +2273,14 @@
   function go(d){ if(busy) return; var n = i + d; if(n < 0 || n >= VIEWS.length) return; i = n; render(); }
   prev.addEventListener('click', function(){ go(-1); });
   next.addEventListener('click', function(){ go(1); });
+  // Ebenen-Balken unten — direkt anspringen (reiner Ansichtswechsel; kein Buch wird bewegt/geändert)
+  var lvlBtns = regal.querySelectorAll('#regal-levelbar .lvl-btn');
+  function jumpTo(n){ if(busy || editing) return; if(n < 0 || n >= VIEWS.length || n === i) return; i = n; render(); }
+  for(var lb = 0; lb < lvlBtns.length; lb++){ (function(btn){
+    btn.addEventListener('click', function(){ jumpTo(parseInt(btn.getAttribute('data-view'), 10)); });
+  })(lvlBtns[lb]); }
+  function updateLevelBar(){ if(!lvlBtns) return; for(var k = 0; k < lvlBtns.length; k++){
+    lvlBtns[k].classList.toggle('active', parseInt(lvlBtns[k].getAttribute('data-view'), 10) === i); } }
   // Regal füllen: volle Reihen aus Füll-Büchern + echte anklickbare Bücher dazwischen,
   // auf allen FRONTALEN Ebenen (Mitte=1, Ebene2=3, Ebene3=4), gemischt — nie leer.
   var SPINES = [P+'buchruecken-1.webp', P+'buchruecken-2.webp', P+'buchruecken-3.webp', P+'buchruecken-4.webp', P+'buchruecken-5.webp'];
