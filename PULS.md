@@ -3,6 +3,35 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Shamir-UI von Klaus im Browser gesehen ✓ (Sitzung 20)
+
+**Klaus' Browser-Lauf erfolgt — Schritt A aus dem Brief erfüllt.** Kein Code geändert (nur
+Ehrlichkeits-Buchhaltung): `status.json` + dieser PULS.
+
+**Was Klaus gemacht hat (nur Knöpfe, keine echten Daten):**
+- 🧪 **Test-Buch** geöffnet → **„Shamir üben: aufteilen"** → 5 Codes + Selbsttest erschienen.
+- **3 von 5** Codes in **„Shamir üben: wiederherstellen"** eingefügt → es kam das Übungs-Passwort
+  **`ÜBUNG-Beispiel-Passwort-3von5`** byte-genau zurück. (Im Code bestätigt: index.html:1817 in
+  Wurzel & Spiegel — genau dieses feste Übungs-Passwort, kein eigenes Geheimnis.)
+- Kurze Verwunderung „das ist nicht mein Passwort" → aufgeklärt: das Test-Buch nutzt **absichtlich**
+  sein eigenes Beispiel-Passwort, damit nie ein echtes im Spiel ist. **Ergebnis = grün.**
+
+**Damit ehrlich fortgeschrieben:** die Shamir-UI ist nicht mehr „browser-ungeprüft" — sie ist
+**von Klaus im Browser gesehen (2026-06-05)**. Der headless-Beweis (`npm test` 39/39, 11 Shamir-
+Fälle) bleibt unberührt; jetzt zusätzlich der Augen-Beweis.
+
+**Offen / nächste Schritte:**
+1. **Honigtopf / Köder (eigene Scheibe, Plan-vor-Code):** Brief liegt bereit
+   (`docs/sessions/BRIEF_honigtopf-koeder.md`). Klaus' Entscheidungen schon fest: Inhalt =
+   „harmloser Alltag" (belanglose Rezepte/Notizen), Teil-Format Text-Code. Offene Frage: Reichweite
+   **pro Buch (opt-in)** oder **globaler Schalter**? → kurz an Klaus, dann bauen.
+2. **Später optional:** QR-Codes / `.txt`-Download je Shamir-Teil (offline obendrauf).
+3. **Auch noch browser-offen** (eigene Läufe): Buch-Tresor-Fluss + Not-Aus Stufe 3 (Sitzungen 17/19).
+
+**Manual-Check:** Shamir-UI **von Klaus im Browser gesehen ✓ (2026-06-05)**. Headless weiter 39/39 grün.
+
+---
+
 ## 2026-06-04 — Shamir 3-von-5 scharf: echter Kern + Tests + UI (Sitzung 19)
 
 **Plan-vor-Code befolgt** (kein Freibrief, echte Krypto + berührt Daten): Pflichtlektüre durch →
