@@ -3,6 +3,29 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Freie Liste nimmt alle Dateiformate (Punkt 2 von 3) (Sitzung 33)
+
+**Klaus' 3 Wünsche, in Scheiben (Plan-vor-Code, Entscheidungen abgestimmt):** (1) leere/benannte
+Bücher in der Bibliothek + „＋ Neues Buch"; (2) Freie Liste auf alle Formate; (3) große Dateien
+(>2 MB) extern verschlüsselt anbieten. **Hier Scheibe = Punkt 2.**
+
+**Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff nur 32 Bildpfad-Zeilen — reine Schale):**
+- **Freie Liste / Haupt-App nimmt jede Datei** (nicht nur JSON): `ingestFile` zweigt ab — `.json`
+  läuft wie bisher (Bibliothek/Tresor), alles andere wird als **Datei-Eintrag** abgelegt
+  (`payload {kind:'jt-datei', filename, mimeType, size, dataurl}`); **mehrere Dateien** auf einmal.
+- **Anzeige:** Datei-Einträge bekommen **„⤓ Herunterladen"** (statt „Ansehen"/„Bearbeiten"); Export/
+  Verschenken/Löschen bleiben. Beim „Verschlüsselt sichern" werden die Dateien mitverschlüsselt.
+- **Wortlaut entjsont:** Untertitel, „＋ Datei laden (alle Formate)", Leer-Hinweis, Meta-Description.
+
+**Offen (nächste Scheiben):** Punkt 1 (leere/benannte Bücher + „＋ Neues Buch"), Punkt 3 (große
+Dateien extern verschlüsselt — Chrome). 
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Browser-ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Bugfix „Schließen" (loadNames out of scope) + Diagnose entfernt (Sitzung 32)
 
 **Diagnose-Fenster (Sitzung 31) lieferte die Ursache** — Klaus' Klick-Log zeigte:

@@ -11,7 +11,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Jasons-Bibliothek</title>
-<meta name="description" content="Deine Bibliothek fuer JSON-Dateien: laden, benennen, ordnen, exportieren, wieder einlesen. Offline." />
+<meta name="description" content="Deine Bibliothek fuer Dateien (alle Formate): laden, benennen, ordnen, exportieren, wieder einlesen. Offline." />
 <meta name="theme-color" content="#0b1416" />
 <meta name="color-scheme" content="dark" />
 <meta name="mobile-web-app-capable" content="yes" />
@@ -533,21 +533,21 @@
           style="position:absolute;top:-.5em;right:-.5em;min-width:1.4em;height:1.4em;padding:0 .3em;border-radius:.7em;background:#c0392b;color:#fff;font-size:.75em;line-height:1.4em;text-align:center"></span>
   </button>
   <h1><span class="glyph">▤</span> Jasons-Bibliothek</h1>
-  <p class="sub">Deine Bibliothek fuer JSON-Dateien — laden, benennen, ordnen, exportieren, wieder einlesen.</p>
+  <p class="sub">Deine Bibliothek fuer Dateien (alle Formate) — laden, benennen, ordnen, exportieren, wieder einlesen.</p>
   <p><span class="chip">offline</span> <span class="chip">Scheibe 2</span>
      <span class="chip">🔒 Tresor: Passwort-Schutz</span></p>
 </header>
 
 <main>
   <div class="bar">
-    <button id="btn-add" class="btn-primary">＋ Jason laden (.json)</button>
+    <button id="btn-add" class="btn-primary">＋ Datei laden (alle Formate)</button>
     <button id="btn-export-all" class="btn-ghost">⤓ Bibliothek sichern</button>
     <button id="btn-export-enc" class="btn-ghost">🔒 Verschlüsselt sichern</button>
     <button id="btn-import-lib" class="btn-ghost">⤒ Einlesen / Tresor öffnen</button>
     <button id="btn-bookdemo" class="btn-ghost" title="Vorschau: wie ein Jason als Buch aussieht">📚 Muster-Buch</button>
     <button id="btn-bookseq" class="btn-ghost" title="Die Buch-Öffnen-Sequenz automatisch ansehen">▶ Buchsequenz</button>
     <button id="btn-regal" class="btn-ghost" title="Zur Regal-Ansicht (Tresor)">📚 Regal</button>
-    <input id="file-add" type="file" accept=".json,application/json" class="hidden" />
+    <input id="file-add" type="file" multiple class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
 
@@ -593,7 +593,7 @@
   <div class="count" id="count"></div>
 
   <div id="empty" class="empty hidden">
-    Noch nichts in der Bibliothek. Lade deine erste Jason mit <b>„＋ Jason laden"</b>.
+    Noch nichts in der Bibliothek. Lade deine erste Datei mit <b>„＋ Datei laden"</b>.
   </div>
   <ul class="list" id="list"></ul>
 </main>
@@ -1295,8 +1295,16 @@
 
       var act = document.createElement("div");
       act.className = "item-actions";
-      act.appendChild(btn("Ansehen", function () { toggleView(li, e); }));
-      act.appendChild(btn("Bearbeiten", function () { openEdit(e); }));
+      var isFile = e.payload && e.payload.kind === "jt-datei" && typeof e.payload.data === "string";
+      if (isFile) {
+        act.appendChild(btn("⤓ Herunterladen", function () {
+          var a = document.createElement("a"); a.href = e.payload.data; a.download = e.payload.filename || e.name || "datei";
+          document.body.appendChild(a); a.click(); a.remove();
+        }));
+      } else {
+        act.appendChild(btn("Ansehen", function () { toggleView(li, e); }));
+        act.appendChild(btn("Bearbeiten", function () { openEdit(e); }));
+      }
       act.appendChild(btn("Exportieren", function () { exportOne(e); }));
       act.appendChild(btn("Verschenken 🔒", function () { giftEncrypted(e); }));
       act.appendChild(btn("Loeschen", function () { removeOne(e); }, "btn-bad"));
@@ -1322,11 +1330,27 @@
   }
 
   // ---- Actions ----
+  // Jede Datei: JSON wie bisher (Bibliothek/Tresor), alles andere als verschlüsselbarer
+  // Datei-Eintrag (DataURL/Base64) — wird beim „Verschlüsselt sichern" mitverschlüsselt.
+  function ingestRawFile(file) {
+    var r = new FileReader();
+    r.onload = function () {
+      var entry = L.makeEntry({ name: file.name, category: "", origin: file.name, payload: {
+        kind: "jt-datei", filename: file.name, mimeType: file.type || "application/octet-stream",
+        size: file.size, encoding: "dataurl", data: String(r.result) } });
+      entries = L.mergeEntries(entries, [entry]);
+      persist(); render();
+      toast("Datei geladen: " + file.name);
+    };
+    r.onerror = function () { toast("„" + file.name + "\" konnte nicht gelesen werden", true); };
+    r.readAsDataURL(file);
+  }
   function ingestFile(file) {
+    if (!/\.json$/i.test(file.name)) { ingestRawFile(file); return; }   // nicht-JSON -> als Datei
     readFile(file, function (err, text) {
       if (err) { toast("Datei konnte nicht gelesen werden", true); return; }
       var p = L.validateAndParse(text);
-      if (!p.ok) { toast("Keine gueltige JSON-Datei: " + p.error, true); return; }
+      if (!p.ok) { ingestRawFile(file); return; }   // .json, aber kein gültiges JSON -> als Datei
       var base = file.name.replace(/\.json$/i, "");
       if (L.isTresor(p.value)) {
         var pw = window.prompt("Passwort fuer diesen Tresor:");
@@ -1410,9 +1434,9 @@
   // ---- Wiring ----
   $("btn-add").addEventListener("click", function () { $("file-add").click(); });
   $("file-add").addEventListener("change", function (ev) {
-    var f = ev.target.files && ev.target.files[0];
-    if (f) ingestFile(f);
+    var files = ev.target.files ? Array.prototype.slice.call(ev.target.files) : [];
     ev.target.value = "";
+    files.forEach(function (f) { ingestFile(f); });
   });
   $("btn-export-all").addEventListener("click", exportAll);
   $("btn-export-enc").addEventListener("click", exportEncrypted);
