@@ -3,6 +3,16 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Ebenen-Caption entdoppelt (Klaus) (Sitzung 36)
+
+**Klaus:** Die Beschriftungs-Zeile wiederholte Wörter, die schon im Ebenen-Balken stehen
+(„Ankunft", „Übergang", „Kern"). Caption vereinfacht: **Ebene-1-Ansichten → „Ebene 1"**, Ebene 2 →
+**„Ebene 2"**, Ebene 3 → **„Ebene 3 · nicht von dieser Welt"** („Der Kern" entfernt). Nur die 5
+`VIEWS`-cap-Texte geändert; Balken-Knöpfe unverändert. `npm test` 51/51 grün; Kern byte-identisch.
+(Auf demselben Branch wie PR #79/Punkt 3.)
+
+---
+
 ## 2026-06-05 — Große Dateien (>2 MB) extern verschlüsselt speichern (Punkt 3 von 3) (Sitzung 35)
 
 **Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
