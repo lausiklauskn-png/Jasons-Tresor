@@ -332,9 +332,9 @@
     line-height:1; filter:drop-shadow(0 0 3px #000); pointer-events:none}
   /* Regal-Schild unter dem Buch: cyan/blaues Leuchten wie Ebene 2/3, Breite per JS eingepasst */
   .sb-label{position:absolute; top:92%; left:50%; transform:translateX(-50%); margin-top:0;
-    width:max-content; max-width:200%; display:block; text-align:center;
-    white-space:pre; letter-spacing:.06em; font-weight:700; pointer-events:none;
-    color:#d3fbf3; font-size:18px; line-height:1.12;
+    width:150%; max-width:150%; display:block; text-align:center;
+    white-space:pre; letter-spacing:.04em; font-weight:700; pointer-events:none;
+    color:#d3fbf3; font-size:13px; line-height:1.1;
     text-shadow:0 0 4px #6ee7d3, 0 0 10px rgba(110,231,211,.85), 0 0 18px rgba(59,130,246,.6), 0 1px 2px #000;
     animation:sb-glow 3s ease-in-out infinite}
   @keyframes sb-glow{
@@ -1913,7 +1913,7 @@
   function spineLines(s){ return String(s == null ? '' : s).trim().replace(/\s+/g, '\n'); }
   // Schrift automatisch in Höhe/Breite an den Buchrücken einpassen
   function fitSpineText(el){
-    if(!el) return; var fs = 27, min = 14, guard = 60; el.style.fontSize = fs + 'px';
+    if(!el) return; var fs = 13, min = 7, guard = 60; el.style.fontSize = fs + 'px';
     while(guard-- > 0 && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1) && fs > min){
       fs -= 1; el.style.fontSize = fs + 'px';
     }

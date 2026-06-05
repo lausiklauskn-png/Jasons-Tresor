@@ -21,6 +21,12 @@ Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
   210%-Box. **Wichtig:** der echte Name (mit Leerzeichen) bleibt in **`data-name`** erhalten und wird
   beim Öffnen als Titel genutzt — die Umbrüche sind nur Anzeige (kein kaputter Name im Overlay).
 
+**Nachtrag (Klaus' Browser-Feedback):** Schild-Schrift war zu groß (skalierte seit dem
+`width:max-content`-Wechsel nicht mehr mit der Buchgröße → riesig auf entfernten Ebenen).
+Behoben: Grundgröße halbiert (`fitSpineText` 27→13 px, min 14→7) **und** buch-relative Breite
+(`width:150%`) zurück, damit das automatische Einpassen wieder greift (kleinere Bücher → kleinere
+Schilder). Der Liste↔Regal-Umschalt-Hänger ist Klaus „nicht so schlimm" → später.
+
 **Manual-Check:** Headless 39/39 grün; Kern unangetastet; beide Skripte fehlerfrei.
 **Optik browser-ungeprüft — wartet auf Klaus' nächsten Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
 
