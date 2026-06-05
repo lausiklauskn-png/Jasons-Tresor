@@ -3,6 +3,47 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Honigtopf / Tarnfach gebaut (zweites Passwort → harmlose Fassade) (Sitzung 21)
+
+**Klaus' Freibrief für diese Scheibe** (Honigtopf fertig bauen, dezent, ohne vorgegebenen Inhalt,
+freie Gestaltung; Browser-Test macht Klaus später selbst). Leitplanken eingehalten: echte Krypto,
+`npm test` grün, kein PII, ehrliche Markierung. **Kern unberührt** (nur Schale).
+
+**Was es ist (echt, über dem getesteten Kern):**
+- **Pro Buch optional ein zweites Passwort (Tarnfach).** Eigener, **getrennter** AES-256-GCM-Umschlag
+  `rec.decoy` **neben** dem echten Tresor `rec.tresor` (gleiche `localStorage`-Ablage `jt-vaults`).
+- **Öffnen probiert zuerst das echte Fach** (`decryptTresor(v.tresor)`). Schlägt das fehl **und**
+  ein Tarnfach existiert → `decryptTresor(v.decoy)` → **harmlose Fassade ohne Fehler/Hinweis**
+  (der Honigtopf springt **automatisch** beim eingetippten Passwort — **kein sichtbarer Schalter**).
+  **Beides falsch** → Shake + 2× = 1 Min Sperre wie bisher (Sperre verrät den Köder nicht).
+- **„Tarnfach einrichten"** ist ein **dezenter Text-Link**, der **nur im echten Fach** eines bereits
+  verschlossenen Buchs erscheint — **im Tarn-Modus unsichtbar** (das Köder-Buch sieht ganz gewöhnlich aus).
+- Tarnfach wird **leer (ohne Inhalt)** angelegt; Klaus füllt es später mit dem Tarn-Passwort harmlos.
+- **Verschließen** schreibt ins **richtige** Fach (`openSide`), nie ins andere → echtes und Tarn-Fach
+  bleiben getrennt und überschreiben sich nie.
+
+**Getan (`npm test` 39/39 grün [unverändert], Kern byte-identisch [17169 B, sha 59b2aec7…, Wurzel &
+Spiegel], 8 Skriptblöcke je Datei `new Function`-syntaxgeprüft):** Schale in Wurzel + Spiegel
+identisch erweitert; Krypto ausschließlich über den Kern (`encryptTresor`/`decryptTresor`).
+
+**Offen / ehrlich:**
+- **Browser-Lauf nötig:** das ganze Tarnfach (einrichten, mit Tarn-Passwort öffnen, befüllen,
+  Fassade zeigen) ist im Browser **ungeprüft — Klaus testet später selbst**.
+- **Ehrliche Grenze:** stark gegen Gelegenheits-Gucker, **schwach gegen Kenner** — so etikettiert.
+
+**Manual-Check:** Headless 39/39 grün; Kern byte-identisch; Skriptblöcke syntaxgeprüft.
+**Tarnfach im Browser ungeprüft — wartet auf Klaus (Hard-Reload Ctrl+Shift+R).**
+
+**Nächste Schritte (priorisiert):**
+1. **Datenmengen-Reduzierung / Optimierung (Klaus' nächste Vision, WICHTIGER als ein neues Repo):**
+   Ladezeit verkürzen, Datei als PWA kleiner machen (Bilder sind der große Brocken). Eigener
+   Plan-vor-Code-Schritt — neuer Brief liegt bereit.
+2. **Klaus' Browser-Lauf** des Tarnfachs (wenn er mag) + der noch offenen Abläufe (Buch füllen/
+   verschließen, Not-Aus Stufe 3).
+3. **Später optional:** QR-Codes / `.txt`-Download je Shamir-Teil.
+
+---
+
 ## 2026-06-05 — Shamir-UI von Klaus im Browser gesehen ✓ (Sitzung 20)
 
 **Klaus' Browser-Lauf erfolgt — Schritt A aus dem Brief erfüllt.** Kein Code geändert (nur
