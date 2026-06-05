@@ -3,6 +3,38 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Ebenen-Caption entdoppelt (Klaus) (Sitzung 36)
+
+**Klaus:** Die Beschriftungs-Zeile wiederholte Wörter, die schon im Ebenen-Balken stehen
+(„Ankunft", „Übergang", „Kern"). Caption vereinfacht: **Ebene-1-Ansichten → „Ebene 1"**, Ebene 2 →
+**„Ebene 2"**, Ebene 3 → **„Ebene 3 · nicht von dieser Welt"** („Der Kern" entfernt). Nur die 5
+`VIEWS`-cap-Texte geändert; Balken-Knöpfe unverändert. `npm test` 51/51 grün; Kern byte-identisch.
+(Auf demselben Branch wie PR #79/Punkt 3.)
+
+---
+
+## 2026-06-05 — Große Dateien (>2 MB) extern verschlüsselt speichern (Punkt 3 von 3) (Sitzung 35)
+
+**Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff nur 32 Bildpfad-Zeilen — reine Schale):**
+- Bei Dateien **>2 MB** kommt jetzt (in Chrome/Edge) die Nachfrage **„verschlüsselt in einen externen
+  Ordner speichern?"** statt nur „zu groß". Gemeinsamer Helfer **`window.jtSaveFileExtern(file)`**:
+  Passwort 2× → `showSaveFilePicker` → Datei als verschlüsselter **`<name>.tresor.json`** auf die Platte
+  (umgeht das Browser-Speicher-Limit). **Zurückholen:** „＋ Datei laden" mit der .tresor.json + Passwort
+  → die Datei erscheint mit „⤓ Herunterladen" (nutzt die bestehende Tresor-Einlese-Kette).
+- Greift in **beiden** Ladern: Buch (`addRawFile`) **und** Freie Liste (`ingestRawFile`). In anderen
+  Browsern ohne File System Access: ehrlicher Hinweis + „trotzdem laden?".
+- Echte Krypto über den Kern (`encryptTresor`); der Rundlauf (Datei verschlüsselt → entschlüsselt
+  byte-genau) ist bereits durch `test/datei.test.js` belegt; der Datei-Picker selbst ist browser-only.
+
+**Damit alle 3 Klaus-Wünsche dieser Runde umgesetzt:** Punkt 2 (alle Formate), Punkt 1 (leere Bücher +
+„＋ Neues Buch"), Punkt 3 (große Dateien extern).
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Extern-Speichern im Browser ungeprüft (Chrome) — wartet auf Klaus' Browser-Lauf.**
+
+---
+
 ## 2026-06-05 — Bibliothek: leere/benannte Bücher + „＋ Neues Buch" (Punkt 1 von 3) (Sitzung 34)
 
 **Getan (`npm test` 51/51 grün, Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
