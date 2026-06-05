@@ -252,6 +252,10 @@
   .ss-actions button:hover{border-color:var(--accent)}
   #ss-create{color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:600}
   .ss-out{width:100%; margin-top:10px; font:inherit; color:var(--ink); background:#06100f; border:1px solid var(--line); border-radius:8px; padding:8px; resize:vertical; white-space:pre}
+  .ss-sync{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  .ss-sync button{font:inherit; cursor:pointer; color:var(--ink); background:rgba(17,37,42,.8); border:1px solid var(--line); border-radius:9px; padding:8px 12px}
+  .ss-sync button:hover{border-color:var(--accent)}
+  .ss-sync-status{color:var(--muted); font-size:.85rem}
   /* TESTBUCH (nur zum Üben — vor Echtbetrieb entfernen): Test-Werkzeuge statt normalem Inhalt */
   #bd-testtools{display:none}
   #bookdemo.test-mode #bd-testtools{display:block}
@@ -547,6 +551,12 @@
       <input id="ss-file" type="file" accept=".json,application/json" hidden />
     </div>
     <textarea id="ss-out" class="ss-out" rows="3" readonly hidden></textarea>
+    <div class="ss-sync" id="ss-sync" hidden>
+      <button type="button" id="ss-sync-btn">📂 Festen Ordner verbinden &amp; Auto-Sync aktivieren</button>
+      <button type="button" id="ss-sync-off" hidden>⏸ Auto-Sync pausieren</button>
+      <span class="ss-sync-status" id="ss-sync-status">Auto-Sync aus.</span>
+    </div>
+    <p class="ss-note" id="ss-sync-note" hidden>Auto-Sync in einen festen Ordner gibt es nur in <b>Chrome/Edge</b>. In anderen Browsern nutze „Gesamt-Sicherung erstellen/einlesen".</p>
   </section>
 
   <h2 class="ov-h ov-h2">🗂️ Freie Liste <span class="ov-sub">— einzelne Jasons, unabhängig vom Tresor</span></h2>
@@ -1579,7 +1589,7 @@
   // --- Buch-Tresore (lokal): Buch-ID → { tresor: jason-tresor v2, name }. Gespeichert wird
   //     NUR der verschlüsselte Umschlag (kdf/cipher/ciphertext) — nie Klartext, nie Passwort. ---
   function loadVaults(){ try{ return JSON.parse(localStorage.getItem('jt-vaults')||'{}')||{}; }catch(e){ return {}; } }
-  function saveVaults(m){ try{ localStorage.setItem('jt-vaults', JSON.stringify(m)); }catch(e){} }
+  function saveVaults(m){ try{ localStorage.setItem('jt-vaults', JSON.stringify(m)); }catch(e){} scheduleSync(); }
   function getVault(id){ var m=loadVaults(); return id ? m[id] : null; }
   function isLocked(id){ var v=getVault(id); return !!(v && v.tresor && L.isTresor(v.tresor)); }
   window.jtBookLocked = isLocked;     // Regal markiert echte Tresor-Bücher mit 🔒
@@ -2108,6 +2118,74 @@
     }).catch(function(err){ alert('Konnte nicht wiederherstellen: ' + String((err && err.message) || err)); });
   }); }
 
+  // --- Auto-Sync in einen festen Ordner (nur Chrome/Edge, File System Access).
+  //     Schreibt GENAU EINE verschlüsselte Gesamt-Sicherung in den Ordner und aktualisiert sie
+  //     in-place bei Änderungen (kein Backup-Stapel). Super-Passwort lebt NUR im Speicher (nie
+  //     gespeichert); der Ordner-Zugriff wird in IndexedDB gemerkt. Browser-ungeprüft. ---
+  var syncDir = null, syncPw = null, syncOn = false, syncTimer = null;
+  var ssSync = document.getElementById('ss-sync'), ssSyncBtn = document.getElementById('ss-sync-btn');
+  var ssSyncOff = document.getElementById('ss-sync-off'), ssSyncStatus = document.getElementById('ss-sync-status');
+  var ssSyncNote = document.getElementById('ss-sync-note');
+  var SYNC_FILE = 'jasons-tresor-gesamt.tresor.json';
+  function syncStatus(t){ if(ssSyncStatus) ssSyncStatus.textContent = t; if(ssSyncOff) ssSyncOff.hidden = !syncOn; }
+  function idbDir(mode, val){
+    return new Promise(function(res){
+      var rq; try{ rq = indexedDB.open('jt-sync', 1); }catch(e){ res(null); return; }
+      rq.onupgradeneeded = function(){ try{ rq.result.createObjectStore('h'); }catch(e){} };
+      rq.onerror = function(){ res(null); };
+      rq.onsuccess = function(){
+        var db = rq.result;
+        try{
+          var st = db.transaction('h', mode === 'get' ? 'readonly' : 'readwrite').objectStore('h');
+          var op = mode === 'get' ? st.get('dir') : st.put(val, 'dir');
+          op.onsuccess = function(){ res(mode === 'get' ? (op.result || null) : true); };
+          op.onerror = function(){ res(null); };
+        }catch(e){ res(null); }
+      };
+    });
+  }
+  function verifyPerm(handle){
+    var opts = { mode: 'readwrite' };
+    return handle.queryPermission(opts).then(function(p){
+      if(p === 'granted') return true;
+      return handle.requestPermission(opts).then(function(q){ return q === 'granted'; });
+    });
+  }
+  function writeSync(){
+    if(!syncDir || !syncPw) return Promise.resolve(false);
+    return L.encryptTresor(ssCollect(), syncPw).then(function(blob){
+      return syncDir.getFileHandle(SYNC_FILE, { create: true }).then(function(fh){
+        return fh.createWritable().then(function(w){ return w.write(JSON.stringify(blob, null, 2)).then(function(){ return w.close(); }); });
+      });
+    }).then(function(){ return true; });
+  }
+  function scheduleSync(){
+    if(!syncOn || !syncDir || !syncPw) return;
+    if(syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(function(){
+      writeSync().then(function(){ syncStatus('Auto-Sync aktiv ✓ (zuletzt ' + new Date().toLocaleTimeString() + ')'); })
+        .catch(function(){ syncOn = false; syncPw = null; syncStatus('Sync gestoppt (Ordner-Zugriff verloren) — bitte neu aktivieren.'); });
+    }, 800);
+  }
+  if(window.showDirectoryPicker && ssSync){
+    ssSync.hidden = false;
+    idbDir('get').then(function(h){ if(h){ syncDir = h; syncStatus('Ordner verbunden — „Auto-Sync aktivieren" drücken + Super-Passwort.'); } });
+    if(ssSyncBtn){ ssSyncBtn.addEventListener('click', function(){
+      var step = syncDir ? Promise.resolve(syncDir) : window.showDirectoryPicker().then(function(h){ syncDir = h; return idbDir('put', h).then(function(){ return h; }); });
+      step.then(function(){ return verifyPerm(syncDir); }).then(function(ok){
+        if(!ok){ syncStatus('Kein Schreibrecht für den Ordner.'); return; }
+        var pw = window.prompt('Super-Passwort für die Auto-Sync-Datei (mind. 8 Zeichen):'); if(pw == null) return;
+        if(pw.length < 8){ alert('Super-Passwort zu kurz (mind. 8 Zeichen).'); return; }
+        syncPw = pw; syncOn = true; syncStatus('Auto-Sync wird eingerichtet …');
+        writeSync().then(function(){ syncStatus('Auto-Sync aktiv ✓ (' + new Date().toLocaleTimeString() + ')'); })
+          .catch(function(e){ syncOn = false; syncPw = null; syncStatus('Fehler: ' + String((e && e.message) || e)); });
+      }).catch(function(e){ if(e && e.name === 'AbortError') return; syncStatus('Abgebrochen.'); });
+    }); }
+    if(ssSyncOff){ ssSyncOff.addEventListener('click', function(){ syncOn = false; syncPw = null; syncStatus('Auto-Sync pausiert (Super-Passwort aus dem Speicher entfernt).'); }); }
+  } else if(ssSyncNote){
+    ssSyncNote.hidden = false;
+  }
+
   // Vorschau-Knöpfe (Muster-Buch / Buchsequenz) — harmlos, ohne echten Tresor (kein curId → nichts gespeichert)
   if(btn)    btn.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
   if(btnSeq) btnSeq.addEventListener('click', function(){ openBook({ title: 'Muster-Buch' }); });
@@ -2183,7 +2261,7 @@
   // Alle Bücher sind gleich & anonym; jedes ist anklickbar und unten frei beschriftbar.
   // Frei wählbare Beschriftungen (nur lokal im Browser gespeichert)
   function loadNames(){ try{ return JSON.parse(localStorage.getItem('jt-booknames') || '{}') || {}; }catch(e){ return {}; } }
-  function saveNames(m){ try{ localStorage.setItem('jt-booknames', JSON.stringify(m)); }catch(e){} }
+  function saveNames(m){ try{ localStorage.setItem('jt-booknames', JSON.stringify(m)); }catch(e){} scheduleSync(); }
   // Schild-Text: ein Wort pro Zeile (Umbruch nach jedem Wort), damit lange Namen schmal
   // bleiben und sich benachbarte Bücher nicht ins Gehege kommen. Der echte Name (mit
   // Leerzeichen) bleibt unverändert in data-name erhalten und wird beim Öffnen genutzt.

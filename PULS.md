@@ -3,6 +3,31 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Schritt 2b-2: Auto-Sync in festen Ordner (Chrome) (Sitzung 29)
+
+**Getan (`npm test` 51/51 grün [unverändert — Folder-Sync ist browser-only, genutzte Krypto schon
+getestet], Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke fehlerfrei,
+Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **„📂 Festen Ordner verbinden & Auto-Sync aktivieren"** in der Gesamt-Sicherung (nur Chrome/Edge,
+  File System Access): einmal Ordner wählen + Super-Passwort → die App schreibt **genau eine** Datei
+  `jasons-tresor-gesamt.tresor.json` in den Ordner und aktualisiert sie **in-place** bei jeder Änderung
+  (kein Backup-Stapel — Klaus' Sync-Prinzip). Auslöser: `saveVaults`/`saveNames` rufen ein
+  **entprelltes** `scheduleSync()` (800 ms).
+- **Ehrlich/Sicherheit:** Super-Passwort lebt **nur im Speicher** (nie gespeichert), beim Pausieren
+  sofort gelöscht. Der **Ordner-Zugriff** wird in **IndexedDB** gemerkt (übersteht Reloads); nach
+  Daten-Reset einmal neu freigeben. Nur Chromium; sonst Hinweis + Export/Einlese-Weg (2b-1) als Rückfall.
+- **Status-Zeile** zeigt verbunden/aktiv/pausiert/Fehler. „⏸ Auto-Sync pausieren" entfernt das
+  Super-Passwort aus dem Speicher.
+
+**Offen:** Schritt 3 (je Buch Ebene 1–4 → Buchrücken). Optional: auch Änderungen der „Freien Liste"
+in den Sync einbeziehen (derzeit triggert Sync auf Buch-Daten; das geschriebene Bündel enthält aber
+immer den Gesamtstand).
+
+**Manual-Check:** Headless 51/51 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Auto-Sync im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Chrome, Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — Schritt 2b-1: Gesamt-Sicherung mit Super-Passwort + 3-von-5 (Sitzung 28)
 
 **Klaus' Entscheidung:** Super-Passwort = **Schlüssel zur Gesamt-Sicherung** (Bücher behalten
