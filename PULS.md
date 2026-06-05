@@ -3,6 +3,40 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Schritt 2a: beliebige Dateiformate in Bücher laden (Sitzung 27)
+
+**Klaus' Schritt-2-Vision** (groß: separater Ordner, Super-Passwort, 3-von-5-Wiederherstellung,
+speichersparend) — **ehrlich eingeordnet** (Browser-Grenze: dauerhafter Ordner nur via
+File-System-Access [Chrome] oder Export-Dateien; localStorage wird beim App-Löschen mitgelöscht).
+**Klaus' Wahl:** Speicher-Weg = **beides** (fester Ordner Chrome + Export-Rückfall); **zuerst
+beliebige Dateien laden**. Diese Scheibe (2a) gebaut; Super-Passwort/Ordner/Shamir folgen.
+
+**Getan (`npm test` 48/48 grün [+3], Kern byte-identisch [17997 B], beide Dateien je 8 Skriptblöcke
+fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):**
+- **„＋ Datei laden (alle Formate)"** im offenen Buch: JSON läuft wie bisher (Bibliothek/Tresor);
+  **jede andere Datei** wird als verschlüsselter Datei-Eintrag abgelegt
+  (`payload {kind:'jt-datei', filename, mimeType, size, encoding:'dataurl', data}`), inkl.
+  **selbstgebauter Formate** (opake Bytes). **Mehrere Dateien** auf einmal möglich.
+- **Anzeige:** Datei-Einträge zeigen Typ + Größe und einen **„⤓ Herunterladen"**-Knopf
+  (rekonstruiert die Originaldatei aus der DataURL). JSON-Einträge behalten „Ansehen".
+- **Ehrliche Größen-Warnung** ab 2 MB (localStorage fasst nur wenige MB; große Dateien kommen mit
+  dem festen Ordner in Scheibe 2b).
+- **Datenvertrag additiv:** Datei-Eintrag ist ein normaler `jason-eintrag` mit Datei-Payload —
+  verschlüsselt sich mit dem Buch-Passwort wie alles andere.
+- **Headless-Test `test/datei.test.js` (3 Fälle):** Datei-Eintrag überlebt encrypt→decrypt
+  **byte-genau**; mehrere Dateien + falsches Passwort scheitert; selbstgebautes Format bleibt opak erhalten.
+
+**Offen (nächste Scheiben):**
+- **2b:** Super-Passwort + dauerhafte verschlüsselte Sicherung **auf die Platte** (fester Ordner Chrome
+  via File System Access **und** Export-Rückfall) + **3-von-5-Wiederherstellung** des Super-Passworts
+  (Shamir-Kern ist da). Damit überleben Daten das App-Löschen; großen Dateien bekommen Platz.
+- **3:** je Buch **Ebene 1–4 wählen → Buchrücken** in der Ebene.
+
+**Manual-Check:** Headless 48/48 grün; Kern byte-identisch; beide Skripte fehlerfrei.
+**Datei-Laden im Browser ungeprüft — wartet auf Klaus' Browser-Lauf (Hard-Reload Ctrl+Shift+R).**
+
+---
+
 ## 2026-06-05 — „Bibliothek": zentrale Buch-Verwaltung (Name/Kategorie/Löschen) (Sitzung 26)
 
 **Klaus' Vision** (groß, in Schritten — Plan-vor-Code, Klaus hat Reihenfolge + Lösch-Sicherheit

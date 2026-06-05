@@ -600,16 +600,16 @@
       <label class="bd-rename-row"><span>Beschriftung (leuchtet auf dem Buchrücken)</span>
         <input id="bd-rename" type="text" maxlength="24" autocomplete="off" placeholder="Name auf dem Buch" /></label>
       <p id="bd-status">Dieses Buch ist dein Tresor — der Inhalt wird mit deinem Passwort AES-256-verschlüsselt. „Offen" heißt: nur jetzt im Speicher entschlüsselt, nie im Klartext gespeichert.</p>
-      <p class="bd-empty" id="bd-empty" hidden>Noch leer. Lade eine <b>.json</b> und verschließe dann mit einem Passwort.</p>
+      <p class="bd-empty" id="bd-empty" hidden>Noch leer. Lade eine <b>Datei</b> (beliebiges Format) und verschließe dann mit einem Passwort.</p>
       <ul id="bd-entries"></ul>
       <div class="bd-actions" id="bd-normal-actions">
-        <button type="button" id="bd-load">＋ Jason laden (.json)</button>
+        <button type="button" id="bd-load">＋ Datei laden (alle Formate)</button>
         <button type="button" id="bd-lock" class="bd-lock">🔒 Verschließen</button>
         <button type="button" id="bd-gift">⤓ Verschenken / Sichern</button>
         <button type="button" id="bd-split">🗝️ Passwort aufteilen (3 von 5)</button>
         <button type="button" id="bd-decoy" title="Köder-Passwort: ein zweites Passwort zeigt eine harmlose Bibliothek statt deiner echten Daten">🪤 Tarnfach</button>
       </div>
-      <input id="bd-file" type="file" accept=".json,application/json" hidden />
+      <input id="bd-file" type="file" multiple hidden />
       <!-- TESTBUCH — nur zum Üben; vor dem Echtbetrieb diesen Block (+ Skript/CSS „TESTBUCH") entfernen -->
       <div id="bd-testtools">
         <p class="bd-test-note">🧪 <b>Testbuch — nur zum Üben.</b> Hier setzt du den ganzen Probelauf
@@ -1580,7 +1580,9 @@
   }
   function startLock(){ lockedUntil = Date.now() + 60000; updateLockUI(); clearLockTimer(); lockTimer = setInterval(updateLockUI, 500); }
 
-  // --- Inhalt des offenen Buchs rendern (Einträge read-only + „Ansehen") ---
+  // --- Inhalt des offenen Buchs rendern (Einträge read-only + „Ansehen"/„Herunterladen") ---
+  function humanSize(b){ b = Number(b) || 0; if(b < 1024) return b + ' B'; if(b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }
+  function isFileEntry(e){ return !!(e && e.payload && e.payload.kind === 'jt-datei' && typeof e.payload.data === 'string'); }
   function renderEntries(){
     if(!listEl) return;
     listEl.innerHTML = '';
@@ -1591,19 +1593,30 @@
       var li = document.createElement('li');
       var nm = document.createElement('div'); nm.className = 'bd-en-name'; nm.textContent = e.name || 'Unbenannt';
       li.appendChild(nm);
+      var file = isFileEntry(e);
       var parts = [];
       if(e.category) parts.push(e.category);
-      if(e.size != null) parts.push(e.size + ' B');
+      if(file){ parts.push(e.payload.mimeType || 'Datei'); parts.push(humanSize(e.payload.size)); }
+      else if(e.size != null) parts.push(e.size + ' B');
       if(parts.length){ var mt = document.createElement('div'); mt.className = 'bd-en-meta'; mt.textContent = parts.join(' · '); li.appendChild(mt); }
-      var view = document.createElement('button'); view.type = 'button'; view.className = 'bd-view'; view.textContent = 'Ansehen';
-      view.addEventListener('click', function(){
-        var pre = li.querySelector('pre');
-        if(pre){ pre.remove(); return; }
-        pre = document.createElement('pre');
-        try{ pre.textContent = JSON.stringify(e.payload, null, 2); }catch(_){ pre.textContent = String(e.payload); }
-        li.appendChild(pre);
-      });
-      li.appendChild(view);
+      if(file){
+        var dl = document.createElement('button'); dl.type = 'button'; dl.className = 'bd-view'; dl.textContent = '⤓ Herunterladen';
+        dl.addEventListener('click', function(){
+          var a = document.createElement('a'); a.href = e.payload.data; a.download = e.payload.filename || e.name || 'datei';
+          document.body.appendChild(a); a.click(); a.remove();
+        });
+        li.appendChild(dl);
+      } else {
+        var view = document.createElement('button'); view.type = 'button'; view.className = 'bd-view'; view.textContent = 'Ansehen';
+        view.addEventListener('click', function(){
+          var pre = li.querySelector('pre');
+          if(pre){ pre.remove(); return; }
+          pre = document.createElement('pre');
+          try{ pre.textContent = JSON.stringify(e.payload, null, 2); }catch(_){ pre.textContent = String(e.payload); }
+          li.appendChild(pre);
+        });
+        li.appendChild(view);
+      }
       listEl.appendChild(li);
     });
   }
@@ -1678,31 +1691,51 @@
     });
   }
 
-  // Jason (.json) ins offene Buch laden — bestehende Bibliothek-Logik (additiv)
+  // Dateien ins offene Buch laden — JSON wie bisher (Bibliothek/Tresor), alles andere als
+  // verschlüsselte Datei-Einträge (DataURL/Base64). Mehrere Dateien auf einmal möglich.
+  function addRawFile(f){
+    if(f.size > 2 * 1024 * 1024){
+      if(!confirm('„' + f.name + '" ist ' + humanSize(f.size) + ' groß.\n\nDer Browser-Speicher fasst nur wenige MB — sehr große Dateien können den Tresor sprengen (für große Dateien kommt später der feste Ordner). Trotzdem laden?')) return;
+    }
+    var rd = new FileReader();
+    rd.onload = function(){
+      var entry = L.makeEntry({ name: f.name, category: '', payload: {
+        kind: 'jt-datei', filename: f.name, mimeType: f.type || 'application/octet-stream',
+        size: f.size, encoding: 'dataurl', data: String(rd.result)
+      }});
+      openEntries = L.mergeEntries(openEntries || [], [entry]);
+      dirty = true; renderEntries();
+    };
+    rd.onerror = function(){ alert('„' + f.name + '" konnte nicht gelesen werden.'); };
+    rd.readAsDataURL(f);
+  }
+  function addJsonFile(f){
+    var rd = new FileReader();
+    rd.onload = function(){
+      var text = String(rd.result), base = f.name.replace(/\.json$/i, '');
+      var p = L.validateAndParse(text);
+      if(!p.ok){ addRawFile(f); return; }                 // kein gültiges JSON -> als Datei ablegen
+      if(L.isTresor(p.value)){
+        var pw2 = window.prompt('„' + f.name + '" ist selbst ein Tresor. Passwort:');
+        if(pw2 == null) return;
+        L.decryptTresor(p.value, pw2).then(function(plain){
+          openEntries = L.mergeEntries(openEntries || [], L.payloadToEntries(plain, base).entries);
+          dirty = true; renderEntries();
+        }).catch(function(){ alert('Falsches Passwort oder Tresor beschädigt.'); });
+        return;
+      }
+      openEntries = L.mergeEntries(openEntries || [], L.parseLibraryImport(text, base).entries);
+      dirty = true; renderEntries();
+    };
+    rd.onerror = function(){ alert('„' + f.name + '" konnte nicht gelesen werden.'); };
+    rd.readAsText(f);
+  }
   if(loadBtn && fileIn){
     loadBtn.addEventListener('click', function(){ fileIn.click(); });
     fileIn.addEventListener('change', function(ev){
-      var f = ev.target.files && ev.target.files[0]; ev.target.value = '';
-      if(!f) return;
-      var rd = new FileReader();
-      rd.onload = function(){
-        var text = String(rd.result), base = f.name.replace(/\.json$/i, '');
-        var p = L.validateAndParse(text);
-        if(!p.ok){ alert('Keine gültige JSON-Datei: ' + p.error); return; }
-        if(L.isTresor(p.value)){
-          var pw2 = window.prompt('Diese Datei ist selbst ein Tresor. Passwort:');
-          if(pw2 == null) return;
-          L.decryptTresor(p.value, pw2).then(function(plain){
-            openEntries = L.mergeEntries(openEntries || [], L.payloadToEntries(plain, base).entries);
-            dirty = true; renderEntries();
-          }).catch(function(){ alert('Falsches Passwort oder Tresor beschädigt.'); });
-          return;
-        }
-        openEntries = L.mergeEntries(openEntries || [], L.parseLibraryImport(text, base).entries);
-        dirty = true; renderEntries();
-      };
-      rd.onerror = function(){ alert('Datei konnte nicht gelesen werden.'); };
-      rd.readAsText(f);
+      var files = ev.target.files ? Array.prototype.slice.call(ev.target.files) : [];
+      ev.target.value = '';
+      files.forEach(function(f){ if(/\.json$/i.test(f.name)) addJsonFile(f); else addRawFile(f); });
     });
   }
 
