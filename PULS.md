@@ -19,6 +19,10 @@ fehlerfrei, Wurzel/Spiegel-Diff weiter nur 32 Bildpfad-Zeilen — reine Schale):
 - **„🗑 Gesamten Tresor-Inhalt löschen"** (1 Rückfrage) — entfernt alle Bücher (`jt-vaults`) lokal;
   Exporte bleiben. Erscheint nur, wenn Bücher da sind.
 - **Deniability gewahrt:** weiterhin **kein** Tarnfach-Hinweis in der Übersicht.
+- **Korrektur (Klaus):** „Buch löschen" heißt **nur Inhalt** — das 🗑 leert jetzt nur den Inhalt
+  (echter Umschlag + evtl. Tarnfach), **Name/Kategorie bleiben**, das Buch bleibt als **leeres** Buch
+  in der Bibliothek (Marke „leer" statt 🔒) und kann neu gefüllt werden. Erst wenn auch Name + Kategorie
+  leer sind, verschwindet der Eintrag ganz. (Globales „alles löschen" bleibt der volle Reset.)
 
 **Offen (nächste Schritte des großen Plans):**
 - **Schritt 2:** beliebige **Dateiformate** (nicht nur JSON) verschlüsselt in Bücher laden (Base64).

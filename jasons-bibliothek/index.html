@@ -234,6 +234,7 @@
   .ov-item{display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     background:rgba(17,37,42,.45); border:1px solid var(--line); border-radius:10px; padding:7px 10px}
   .ov-lock{opacity:.85}
+  .ov-lock-empty{opacity:.6; font-size:.74rem; font-weight:600; color:var(--muted)}
   .ov-name-in{flex:2 1 140px; min-width:110px}
   .ov-cat-in{flex:1 1 100px; min-width:80px}
   .ov-name-in,.ov-cat-in{font:inherit; color:var(--ink); background:#06100f; border:1px solid var(--line); border-radius:8px; padding:6px 9px}
@@ -521,7 +522,7 @@
   </div>
 
   <section id="vault-overview">
-    <h2 class="ov-h">📚 Deine Bücher im Tresor <span class="ov-sub">— Name &amp; Kategorie eintragen, öffnen oder löschen</span></h2>
+    <h2 class="ov-h">📚 Deine Bücher im Tresor <span class="ov-sub">— Name &amp; Kategorie eintragen, öffnen, Inhalt leeren</span></h2>
     <p class="ov-empty" id="ov-empty" hidden>Noch keine Bücher im Tresor. Lege im <b>Regal</b> ein Buch an: ein Buch öffnen → „＋ Jason laden" → „🔒 Verschließen".</p>
     <ul class="ov-list" id="vault-list"></ul>
     <button type="button" id="ov-delete-all" class="ov-del-all" hidden>🗑 Gesamten Tresor-Inhalt löschen</button>
@@ -1929,15 +1930,17 @@
     var ovEmpty = document.getElementById('ov-empty');
     var delAll  = document.getElementById('ov-delete-all');
     var vaults = loadVaults(), names = loadNames();
-    var ids = Object.keys(vaults).filter(function(id){ var v = vaults[id]; return !!(v && v.tresor && L.isTresor(v.tresor)); });
+    var ids = Object.keys(vaults).filter(function(id){ var v = vaults[id]; return !!(v && ((v.tresor && L.isTresor(v.tresor)) || (v.name && v.name.length) || (v.category && v.category.length))); });
     ids.sort(function(a,b){ var na = String(vaults[a].name || names[a] || a).toLowerCase(), nb = String(vaults[b].name || names[b] || b).toLowerCase(); return na < nb ? -1 : na > nb ? 1 : 0; });
     ul.innerHTML = '';
     if(ovEmpty) ovEmpty.hidden = (ids.length !== 0);
     if(delAll)  delAll.hidden  = (ids.length === 0);
     ids.forEach(function(id){
       var rec = vaults[id], nm = rec.name || names[id] || '';
+      var locked = !!(rec.tresor && L.isTresor(rec.tresor));
       var li = document.createElement('li'); li.className = 'ov-item';
-      var lk = document.createElement('span'); lk.className = 'ov-lock'; lk.textContent = '🔒'; lk.setAttribute('aria-hidden','true');
+      var lk = document.createElement('span'); lk.className = locked ? 'ov-lock' : 'ov-lock ov-lock-empty';
+      lk.textContent = locked ? '🔒' : 'leer'; lk.title = locked ? 'verschlossen' : 'leeres Buch'; lk.setAttribute('aria-hidden','true');
       var nin = document.createElement('input'); nin.className = 'ov-name-in'; nin.type = 'text'; nin.maxLength = 24; nin.value = nm; nin.placeholder = 'Name …';
       nin.setAttribute('aria-label', 'Buchname');
       nin.addEventListener('change', function(){
@@ -1952,12 +1955,15 @@
       });
       var op = document.createElement('button'); op.type = 'button'; op.className = 'ov-open2'; op.textContent = 'Öffnen';
       op.addEventListener('click', function(){ var lab = nin.value.trim() || nm || 'Buch'; openBook({ id: id, label: lab, title: lab }); });
-      var del = document.createElement('button'); del.type = 'button'; del.className = 'ov-del'; del.title = 'Dieses Buch löschen'; del.textContent = '🗑';
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'ov-del'; del.title = 'Inhalt löschen (das Buch bleibt leer erhalten)'; del.textContent = '🗑 Inhalt';
       del.addEventListener('click', function(){
         var lab = nin.value.trim() || nm || 'dieses Buch';
-        if(!confirm('Buch „' + lab + '" wirklich löschen?\n\nDer verschlüsselte Inhalt in diesem Browser wird entfernt. Bereits exportierte Dateien bleiben erhalten.')) return;
-        var mm = loadVaults(); delete mm[id]; saveVaults(mm);
-        if(window.jtMarkVault) window.jtMarkVault(id, false);
+        if(!confirm('Inhalt von „' + lab + '" löschen?\n\nNur der Inhalt wird entfernt — das Buch bleibt (leer) erhalten und kann neu gefüllt werden. Bereits exportierte Dateien bleiben erhalten.')) return;
+        var mm = loadVaults(), r2 = mm[id];
+        if(r2){ delete r2.tresor; delete r2.decoy; r2.updatedAt = L.nowIso();   // nur der Inhalt (echt + Tarnfach) weg
+          if(!r2.name && !r2.category){ delete mm[id]; } }                      // gar nichts mehr übrig -> Buch ganz weg
+        saveVaults(mm);
+        if(window.jtMarkVault) window.jtMarkVault(id, false);                   // Regal-🔒 weg (jetzt leer)
         renderVaultOverview();
       });
       li.appendChild(lk); li.appendChild(nin); li.appendChild(cin); li.appendChild(op); li.appendChild(del);
