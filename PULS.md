@@ -3,6 +3,34 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-05 — Bootstrap-Brief für Schwester-Repo „Mein-Tresor" (Planung) (Sitzung 37)
+
+**Klaus' Vision (eigene Sitzung/Repo):** „Mein-Tresor" = design-vereinfachte Schwester (gleiche
+Funktion, neues Gesicht: futuristischer Dreh-Safe-Eingang → ein Tresorraum mit 20 nummerierten
+Fächern, beide Orientierungen, Offline-PWA, eigener SBKIM-Endknoten + Briefkasten + Sync). Plan-Modus:
+ausführlich erkundet (Eingangs-Sequenz, Vault-Krypto, Koordinaten-System, SBKIM/Andock/Mailbox,
+Bootstrap-URLs) + 4 Entscheidungen mit Klaus geklärt.
+
+**Getan (reine Planung/Doku, kein App-Code, `npm test` unverändert grün):**
+- **Neuer Brief `docs/sessions/BRIEF_mein-tresor-bootstrap.md`** geschrieben — eine **eigenständige
+  Bootstrap-Anweisung**, mit der die erste KI-Sitzung im neuen Repo sich **selbst baut**: holt die
+  getesteten Originale aus Jasons-Tresor über **öffentliche raw-URLs** (Kern 1:1, Vault-Logik, Andock,
+  Briefkasten), baut nur die neue Schale (Dreh-Safe + 20-Fächer-Raster) + **4 Bild-Prompts** +
+  **Koordinaten-Spec** + **SBKIM-Andock** + **Briefkasten/Synchronisation** (SIGNAL.json/AUSTAUSCH/Watcher,
+  Details in Sage-Protokol + SB-KIMTool-Point).
+- **Repos geprüft:** `lausiklauskn-png/Mein-Tresor` existiert (public, Branch `main`, leer),
+  Endpoint `https://lausiklauskn-png.github.io/Mein-Tresor/`. **Jasons-Tresor ist noch privat → muss
+  public werden**, damit die raw-Bootstrap-URLs greifen.
+
+**Klaus' Entscheidungen:** Fächer per App-Raster platzieren · Drehräder nur Inszenierung · 20 Fächer
+(4×5/5×4 responsiv) · beide Orientierungen (Beschnitt okay) · jetzt nur Prompts+Spec (App-Bau im neuen Repo).
+
+**Nächste Schritte:** 1. Jasons-Tresor public schalten. 2. Brief ins Repo `Mein-Tresor` legen
+(als `CLAUDE.md`/`BRIEF_start.md`). 3. Klaus erzeugt die 4 Bilder. 4. Neue Sitzung im Mein-Tresor-Repo
+startet den Bootstrap (Kern+Tests, Andock, Schale).
+
+---
+
 ## 2026-06-05 — Ebenen-Caption entdoppelt (Klaus) (Sitzung 36)
 
 **Klaus:** Die Beschriftungs-Zeile wiederholte Wörter, die schon im Ebenen-Balken stehen
