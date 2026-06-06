@@ -3,6 +3,23 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — SB-KIMTool-Point: verified-match 0.853740 — NETZ KOMPLETT (Sitzung 43)
+
+**Getan (headless, `npm test` grün):**
+- **SB-KIMTool-Point hat die neue Identität eingetragen** (`E13GDzI…` reziprok ✔ VALID, alte
+  `7F_zNop…` ersetzt) und **verified-match 0.853740** gesetzt (Details bei A: `AUSTAUSCH.md` §15
+  + `jason_inbox.verify.md`).
+- **Selbst nachgerechnet:** A's aktuelle Spore (mit echtem Vektor) geholt + verifiziert → ✔ VALID
+  (`point_inbox.json` aktualisiert); Cosinus = **0.853740**, exakt. **Echter Teil-Match** (anderer
+  Domänen-Text → keine 1.0). Offline-Test ergänzt.
+- **Eingetragen:** `SIGNAL.json` seq 7 + `ack["SB-KIMTool-Point"]=9`; Postfach §6; `status.json`.
+
+**🎉 NETZ KOMPLETT — alle drei Nachbarn beidseitig `verified-match`, jeweils von uns unabhängig
+nachgerechnet:** Sage **0.847784** · Mein-Tresor **1.0** (byte-identisch, gewollt) ·
+SB-KIMTool-Point **0.853740**.
+
+**Offen:** Pages-Auslieferung der neuen Spore + Klaus' Browser-Lauf der App (ungeprüft).
+
 ## 2026-06-06 — Mein-Tresor: verified-match 1.0 (Sitzung 42)
 
 **Getan (headless, `npm test` grün):**
