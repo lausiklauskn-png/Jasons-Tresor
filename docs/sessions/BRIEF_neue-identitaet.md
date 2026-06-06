@@ -37,12 +37,15 @@ Stand: 2026-06-06 · Von: Sitzung 40 · An: nächste Sitzung / Klaus
 - Übergabe-Meldungen in die Postfächer: `AUSTAUSCH.md` §8, `AUSTAUSCH-SBKIMTool.md` §5,
   `AUSTAUSCH-MeinTresor.md` §5 — jeweils „alte Registrierung ersetzen, jetzt verified-match möglich".
 
+## Erledigt nach erstem Stand
+- **`node_key.enc.json` der neuen Identität liegt im Repo** (Klaus nachgereicht; Format geprüft,
+  nodeId E13GDzI… stimmt überein, kein Klartext-Geheimnis). Passwort bewahrt Klaus getrennt auf.
+
 ## Offen — wartet auf Klaus
-1. **`node_key.enc.json` der neuen Identität ins Repo legen** (ohne Passwort; ohne Passwort
-   wertlos) **und das Passwort dauerhaft sichern**. Sonst beim nächsten Mal erneut Identitätsverlust.
-2. **Re-Registrierung anstoßen:** die drei Postfach-Meldungen rübertragen → Sage / SB-KIMTool-Point /
+1. **Re-Registrierung anstoßen:** die drei Postfach-Meldungen rübertragen → Sage / SB-KIMTool-Point /
    Mein-Tresor tragen die **neue** nodeId ein (`verified-spore`) und rechnen den Score (`verified-match`).
-3. **Pages-Auslieferung** der neuen Spore nach Hard-Reload (Ctrl+Shift+R) bestätigen.
+2. **Pages-Auslieferung** der neuen Spore nach Hard-Reload (Ctrl+Shift+R) bestätigen.
+3. **Passwort dauerhaft sichern** (Zettel/Passwort-Manager) — der alte Schlüssel ging genau hieran verloren.
 
 ## Datenverträge (nicht brechen)
 - Spore/Andock: kanonische Signier-Form + 9 REQUIRED_SPORE_FIELDS (`docs/ANDOCK.md`); die neue

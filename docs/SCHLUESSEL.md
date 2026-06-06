@@ -22,10 +22,11 @@ Teil A) wurde eine **neue** Identität erzeugt:
 - **dauerhafte nodeId:** `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM`
 - Spore `sbkim/spore.json` echt signiert + ✔ VALID, **mit echtem 384-dim domainVector** (L2 ≈ 1).
 
-**Wichtig / offen:** Die verschlüsselte Sicherung `node_key.enc.json` der neuen Identität liegt
-**noch nicht im Repo** — Klaus hält sie **und das Passwort**. Empfehlung: die `node_key.enc.json`
-(ohne Passwort, wertlos ohne dieses) ins Repo legen, **damit künftiges Neu-Signieren möglich
-bleibt** — und das **Passwort diesmal dauerhaft sichern** (sonst erneut Identitätsverlust).
+**Sicherung wieder im Repo:** Die verschlüsselte `node_key.enc.json` der neuen Identität liegt
+**jetzt im Repo** (von Klaus im Browser erzeugt; Format geprüft, nodeId stimmt überein,
+AES-256-GCM / PBKDF2-SHA256 600k — ohne Passwort wertlos). **Das Passwort hält Klaus getrennt
+und dauerhaft** — genau das war beim alten Schlüssel das Problem (Passwort nie gesichert →
+Identität verloren). Mit Datei **und** Passwort ist künftiges Neu-Signieren wieder möglich.
 
 Sage / SB-KIMTool-Point / Mein-Tresor müssen die **neue** nodeId übernehmen (die alte ist
 hinfällig). Re-Sign (z. B. wenn

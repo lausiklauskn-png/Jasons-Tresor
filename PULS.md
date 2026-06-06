@@ -22,11 +22,13 @@ dessen Passwort nie gesichert wurde** → nicht wiederherstellbar. Statt langer 
   Mein-Tresor §5): „alte Registrierung 7F_zNop… → neue E13GDzI…, jetzt mit echtem Vektor
   → `verified-match` möglich".
 
+**Nachgereicht (in dieser Sitzung):** Klaus hat die **`node_key.enc.json` der neuen Identität**
+geschickt → liegt jetzt im Repo (Format geprüft, nodeId E13GDzI… stimmt überein, kein
+Klartext-Geheimnis). Das **Passwort** bewahrt Klaus getrennt auf → Backup vollständig.
+
 **Offen / wartet auf Klaus:**
-- **`node_key.enc.json` der NEUEN Identität liegt noch nicht im Repo** — Klaus hält Datei +
-  Passwort. Bitte die enc-Datei (ohne Passwort) einlegen **und Passwort diesmal sichern**.
 - **Re-Registrierung durch die drei Nachbarn** (sie tragen die neue nodeId ein) — Klaus trägt
-  die Briefe rüber.
+  die Briefe (Postfächer §8/§5/§5) rüber.
 - Pages-Auslieferung der **neuen** Spore nach Hard-Reload bestätigen.
 
 **Manual-Check:** Krypto headless grün (✔ VALID, 53/53). App/Pages ungeprüft im Browser.
