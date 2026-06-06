@@ -3,6 +3,25 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — SITZUNGSABSCHLUSS
+
+**Netz:** komplett — alle drei Nachbarn beidseitig `verified-match`, von uns selbst nachgerechnet
+(Sage 0.847784 · Mein-Tresor 1.0 · SB-KIMTool-Point 0.853740). `npm test` **55/55**.
+
+**App (Wurzel + Spiegelung identisch):** HUD-📬-Briefkasten als Live-Verbund (① Spore · ② Match live ·
+③ Sync · ④ Brief→MD), reicher Siegel-Dialog (Module + lebendes Dokument), Siegel-Band „JASONS-TRESOR",
+„Regale einrichten" verborgen, ANDOCK §9 (Werkzeug-Souveränität) erfüllt.
+
+**Postfach Mein-Tresor:** §7 (Briefkasten-Bauanleitung, von ihnen bereits übernommen), §8 (Anfrage:
+Doku ihrer Synchronisations-Vereinbarung — Antwort offen).
+
+**Offen / nächste Schritte:**
+1. **Klaus' Browser-Lauf** — Siegel-Dialog, Briefkasten, Spiegelung optisch bestätigen (einziger „grün"-Punkt).
+2. **Kombinations-Briefkasten vollenden**, sobald Mein-Tresor §8 beantwortet (Bau-Meldung je Nachbar ergänzen).
+3. Details im neuen Brief `docs/sessions/BRIEF_briefkasten-kombination.md`.
+
+---
+
 ## 2026-06-06 — Spiegelung vollständig auf Wurzel-Stand (Sitzung 50)
 
 **Getan:** Die Spiegelung `jasons-bibliothek/index.html` war stark veraltet (alter 2-Nachbar-
