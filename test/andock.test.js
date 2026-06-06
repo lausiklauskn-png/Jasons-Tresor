@@ -81,11 +81,18 @@ test("reziprok: Mein-Tresors Spore (sbkim/meintresor_inbox.json) verifiziert ✔
   assert.equal(spore.id, "wRsGQouOYPVBOLzAB3nBteRvyvJ-AGv461WTJMKtkS0");
 });
 
-test("ehrlich: Mein-Tresors Spore traegt (noch) KEINEN domainVector", () => {
-  // Mein-Tresors eigene SIGNAL.json sagt selbst: "domainVector folgt
-  // (verified-match spaeter)". Darum: verified-spore ja, verified-match nein.
-  const spore = load("sbkim/meintresor_inbox.json");
-  assert.equal("domainVector" in spore, false);
+test("verified-match Mein-Tresor: Cosinus = 1.0 (>= 0.80), Vektoren identisch", () => {
+  // Mein-Tresor traegt jetzt einen echten domainVector. Cosinus = 1.0, weil der
+  // Domaenen-Text byte-gleich zu unserem ist (Schwester-Tresore, gewollt) -> identische
+  // Embeddings. Ehrlich: kein "entdeckter" Treffer, sondern Identitaet der Eingaben.
+  const us = load("sbkim/spore.json").domainVector;
+  const mt = load("sbkim/meintresor_inbox.json").domainVector;
+  assert.equal(mt.length, 384);
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = (a) => Math.sqrt(dot(a, a));
+  const cos = dot(us, mt) / (norm(us) * norm(mt));
+  assert.ok(Math.abs(cos - 1) < 1e-4, `Cosinus ${cos} != 1.0 (Mein-Tresor meldete 1.0)`);
+  assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
 });
 
 test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.847784 (>= 0.80)", () => {

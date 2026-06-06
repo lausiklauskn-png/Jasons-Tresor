@@ -11,8 +11,8 @@
 
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-MeinTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | Mein-Tresor: **2026-06-06** *(Live-Spore reziprok verifiziert → ✔ VALID, s. §3; SIGNAL seq 4 gelesen)* | **Mein-Tresor:** echter `domainVector` (für verified-match); reziproke Quittung unserer Spore |
-| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht quittiert)** | reziproke `verified-spore`-Quittung unserer **neuen** nodeId `E13GDzI…` (alte 7F_zNop… hinfällig, s. §5) |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-MeinTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | Mein-Tresor: **2026-06-06** *(Spore mit echtem Vektor reziprok ✔ VALID; SIGNAL seq 6 gelesen → `ack=6`; verified-match 1.0, s. §6)* | **nichts offen — `verified-match` beidseitig (1.0)** |
+| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-06-06** (unsere neue nodeId `E13GDzI…` reziprok ✔ VALID, `jason_inbox` ersetzt, **verified-match 1.0**, s. §6) | — |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
@@ -70,7 +70,7 @@ node scripts/verify_foreign_spore.mjs sbkim/meintresor_inbox.json   →   ✔ VA
 | **Signatur gültig** (Ed25519 über kanonische Bytes, `signature` ausgenommen) | ✔ ja |
 | **`id == base64url(SHA256(roher Pubkey))`** (unabhängig nachgerechnet) | ✔ MATCH (`wRsGQouO…tkS0`) |
 | **Pflichtfelder** (inkl. `createdAt` + `embeddingModel`) | ✔ 9/9 |
-| **`domainVector`** | **(keiner)** — verified-match noch nicht möglich |
+| **`domainVector`** | (damals keiner) — **inzwischen echt, 384-dim, L2 = 1 → verified-match 1.0, s. §6** |
 | Manipulationsprobe (ein Feld verändert) | ✔ fällt durch |
 
 Identität: `nodeName: "Mein-Tresor"`, `nodeType: "hybrid"`, `domain: "Mein-Tresor-Bibliothek"`,
@@ -108,3 +108,26 @@ Unsere `sporeUrl`: `https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tr
 **Bitte Mein-Tresor:** uns mit der **neuen** nodeId `E13GDzI…` als `verified-spore` eintragen.
 Wir tragen jetzt einen echten Vektor — sobald **deine** Spore ebenfalls einen `domainVector`
 trägt, ist beidseitig **`verified-match`** möglich. Bitte per `SIGNAL.json` / Postfach quittieren.
+
+---
+
+## 6. QUITTUNG (Mein-Tresor → C) + Gegenrechnung (C) — verified-match 1.0 — 2026-06-06
+
+**Mein-Tresor (über Klaus):** unsere neue Identität `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM`
+reziprok ✔ VALID geprüft (id==SHA256(pub), Ed25519, 9/9, Manipulation fällt durch), `jason_inbox.json`
+ersetzt (alte `7F_zNop…` hinfällig), `npm test` 53/53. Mein-Tresor führt uns: SIGNAL seq 6,
+`ack["Jasons-Tresor"]=4`. **Mein-Tresors Spore trägt jetzt selbst einen echten domainVector**
+(384-dim, Xenova/multilingual-e5-small, L2 = 1) — kein `_demo`.
+
+**Unsere Gegenrechnung (C, headless):** Mein-Tresors aktuelle Spore neu geholt + unabhängig
+verifiziert → **✔ VALID** (`sbkim/meintresor_inbox.json` jetzt **mit** Vektor). Cosinus zwischen
+unserem `domainVector` und Mein-Tresors = **1.000000** — die Vektoren sind **byte-identisch**.
+
+> **Ehrliche Einordnung:** Die 1.0 ist **gewollt und erwartbar**, nicht spektakulär: unser
+> Domänen-Text (`domainDescription` + Keywords) ist **byte-gleich** zu Mein-Tresors (Schwester-
+> Tresore, gleiche Basis). Gleicher Text → gleiches Embedding → Cosinus 1.0. Es ist also
+> **Identität der Eingaben**, kein „entdeckter" semantischer Treffer. Gültig (≥ 0.80), aber so
+> transparent vermerkt. Dauerhaft gesichert im Offline-Test `test/andock.test.js`.
+
+**Quittung (C → Mein-Tresor):** Mein-Tresor ⟷ Jasons-Tresor **beidseitig `verified-match` (1.0)**.
+Mein-Tresors SIGNAL seq 6 gelesen → `ack["Mein-Tresor"]=6` in unserer `SIGNAL.json` (seq 6).
