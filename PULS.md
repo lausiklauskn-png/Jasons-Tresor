@@ -3,6 +3,20 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Sage: verified-match 0.847784 (Sitzung 41)
+
+**Getan (headless, `npm test` 54/54 grün):**
+- **Sage hat den Identitätswechsel verarbeitet** (Antwort über Klaus): neue nodeId `E13GDzI…`
+  reziprok ✔ VALID, alte `7F_zNop…` → `previousNodeIds`, **verified-match 0.847784** (Modul 04),
+  Sage `SIGNAL.json` seq 15.
+- **Selbst nachgerechnet (prüfen statt vertrauen):** Cosinus zwischen unserem `domainVector`
+  und Sages (`sage_inbox.json`) = **0.847784**, **exakt** Sages Wert (Abweichung 0.000000).
+  Als Offline-Test `test/andock.test.js` dauerhaft gesichert (≥ 0.80).
+- **Eingetragen:** `SIGNAL.json` seq 5 + `ack["Sage-Protokol"]=15`; Postfach `AUSTAUSCH.md` §9
+  (Sages Quittung + unsere Gegenrechnung); `status.json` (Sage = verified-match).
+
+**Offen:** SB-KIMTool-Point + Mein-Tresor sollen die neue nodeId noch übernehmen (Briefe liegen).
+
 ## 2026-06-06 — Identitätswechsel: neue nodeId + echter domainVector (Sitzung 40)
 
 **Anlass (ehrlich):** Die bisherige nodeId `7F_zNop…` war faktisch ein **Demo-Schlüssel,

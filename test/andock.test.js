@@ -87,3 +87,18 @@ test("ehrlich: Mein-Tresors Spore traegt (noch) KEINEN domainVector", () => {
   const spore = load("sbkim/meintresor_inbox.json");
   assert.equal("domainVector" in spore, false);
 });
+
+test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.847784 (>= 0.80)", () => {
+  // Unabhaengige Gegenrechnung zu Sages gemeldetem Modul-04-Score. Beide Vektoren
+  // sind L2-normalisiert -> Cosinus == Skalarprodukt.
+  const us = load("sbkim/spore.json").domainVector;
+  const sage = load("sbkim/sage_inbox.json").domainVector;
+  assert.equal(us.length, 384);
+  assert.equal(sage.length, 384);
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = (a) => Math.sqrt(dot(a, a));
+  assert.ok(Math.abs(norm(us) - 1) < 1e-3, "eigener Vektor nicht L2-normalisiert");
+  const cos = dot(us, sage) / (norm(us) * norm(sage));
+  assert.ok(Math.abs(cos - 0.847784) < 1e-4, `Cosinus ${cos} != 0.847784 (Sages Score)`);
+  assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
+});
