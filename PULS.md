@@ -3,6 +3,20 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Brief an Mein-Tresor: Bauanleitung Live-Verbund-Briefkasten (Sitzung 47)
+
+**Getan:** In `sbkim/AUSTAUSCH-MeinTresor.md` **§7** geschrieben — vollständige 1:1-Bauanleitung,
+damit Mein-Tresor unseren Live-Verbund-Briefkasten (drei Ebenen + Siegel-Kopf) selbst nachbauen
+kann: Voraussetzung (Inbox je Nachbar **mit** `domainVector`), Config (Mein-Tresor-Sicht), Cosinus-
+Helfer + `sbkimMailboxCheck` (byte-treu aus unserer `index.html`), Hinweis gegen doppelten Siegel-
+Kopf, Badge-Hinweis, erwartetes Ergebnis. **Wir bauen NICHT in deren Repo** — reiner Brief.
+
+**Geprüft (live):** Mein-Tresors Briefkasten im Bild ist echt live (Nachbar-seqs Sage 15/Point 9/
+Jasons-Tresor 7 = aktuelle `SIGNAL.json`). „3 ungelesen" = Mein-Tresors eigenes `ack` hängt nach
+(deren Seite). Unsere Änderungen (Siegel-Band JASONS-TRESOR, HUD-Knopf, Live-Briefkasten, Regale-
+einrichten versteckt) sind alle auf `main` (= Pages-Quelle) bestätigt. Hinweis: dieses Environment
+darf `github.io` nicht direkt abfragen — Prüfung daher gegen `main` (raw).
+
 ## 2026-06-06 — Siegel trägt den Tresor-Namen + „Regale einrichten" ausgeblendet (Sitzung 46)
 
 **Getan (Klaus' Wünsche):**
