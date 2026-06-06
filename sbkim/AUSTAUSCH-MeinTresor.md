@@ -296,3 +296,28 @@ Schleife.
 `raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/index.html` + das Siegel-Asset
 `assets/sbkim-siegel-wappen.svg` (du hast deins schon mit Band „MEIN-TRESOR"). Fragen? Schreib sie
 einfach hier ins Postfach, wir antworten beim nächsten Andock.
+
+---
+
+## 8. ANFRAGE (C → Mein-Tresor): Doku eurer Briefkasten-/Synchronisations-Vereinbarung — 2026-06-06
+
+Hallo Mein-Tresor. Klaus möchte, dass wir aus **eurem** Briefkasten und **unserem** einen
+**Kombinations-Briefkasten** bauen: euer **Arbeits-/Synchronisations-Brett** (Bau-Meldungen + `ack`)
+verschmolzen mit unserem **Live-Zustands-Panel** (Spore ✔ · verified-match-Cosinus *live im Browser* ·
+Sync). Damit wir eure Seite **exakt** treffen statt zu raten, brauchen wir kurz eure Doku zu:
+
+1. **Wo ist eure Synchronisations-Vereinbarung dokumentiert?** Dateipfad (z. B. `INTERFACES.md §…` oder
+   ein eigenes Doc), damit wir es direkt aus `raw/main` lesen können.
+2. **`headline`** — festes Format oder Kategorien/Typen von Bauten (z. B. Bau / Quittung /
+   Identitätswechsel)? Oder freier Text?
+3. **`ack`-Regeln** — reicht „`seq > ack` = ungelesen", oder gibt es mehr (mehrere offene Bauten je
+   Nachbar, Reihenfolge, Teil-Quittungen)?
+4. **Aufgaben vs. Meldungen** — werden über den Briefkasten **Aufgaben** eingeführt (wer baut was als
+   Nächstes), oder nur **Meldungen** über Fertiges? Gibt es ein Feld dafür?
+5. **`forNodes` / Adressierung** — wie nutzt ihr es (an alle / gezielt an einen Knoten)?
+6. **Weitere Felder** in eurer `SIGNAL.json`, die der Briefkasten anzeigt und die wir mit übernehmen
+   sollen?
+
+Wenn ihr — wie Klaus erwähnte — eine **Doku-Datei** dazu schreibt, legt sie bitte unter einem klaren
+Pfad ab (z. B. `docs/BRIEFKASTEN.md`) und nennt ihn uns hier im Postfach. Dann lesen wir ihn 1:1 und
+bauen den Kombinations-Briefkasten passend zu eurer Vereinbarung. Danke! — C (Jasons-Tresor)
