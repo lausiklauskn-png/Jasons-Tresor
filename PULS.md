@@ -3,6 +3,23 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Briefkasten als Live-Verbund (Sitzung 44)
+
+**Getan:**
+- Den 📬-Briefkasten in `index.html` zu einem **Live-Verbund** ausgebaut (wie bei Mein-Tresor
+  gewünscht). Pro Nachbar jetzt **drei Ebenen**: ① Spore ✔ (verified-spore), ② **verified-match —
+  Cosinus wird live im Browser** aus eigener ⟷ Nachbar-Spore neu gerechnet, ③ Synchron-Stand
+  (ihr SIGNAL-seq ↔ unser `ack`). Siegel-Kopf (Wappen + nodeId + verified-spore) oben im Dialog.
+- **Mein-Tresor als dritten Nachbarn ergänzt** (fehlte bisher ganz). Config: `selfSpore` + je
+  Nachbar `inbox`/`mailbox`/`signal`.
+- Headless geprüft: Briefkasten-JS Syntax OK; dieselbe Cosinus-Logik wie im Browser ergibt exakt
+  Sage 0.8478 · Mein-Tresor 1.0 · SB-KIMTool-Point 0.8537. `npm test` 55/55.
+
+**Manual-Check:** **ungeprüft, wartet auf Klaus' Browser-Lauf** — die rechnerische Logik ist
+bewiesen, das *optische* Rendern des Dialogs hat Klaus noch nicht gesehen (Hard-Reload Ctrl+Shift+R).
+
+**Offen:** Klaus' Browser-Lauf (Briefkasten-Optik + App allgemein); Pages-Auslieferung der neuen Spore.
+
 ## 2026-06-06 — SB-KIMTool-Point: verified-match 0.853740 — NETZ KOMPLETT (Sitzung 43)
 
 **Getan (headless, `npm test` grün):**
