@@ -8,6 +8,8 @@
 -->
 <html lang="de">
 <head>
+<base href="../" />
+<!-- Spiegelung: in jasons-bibliothek/ loesen relative Pfade ueber <base> auf den Repo-Stamm auf. Inhalt sonst byte-genau wie die Wurzel-index.html. -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Jasons-Bibliothek</title>
@@ -434,6 +436,11 @@
   @keyframes panik-blink{0%,100%{opacity:.5} 50%{opacity:1}}
   @keyframes panik-blink-red{0%,49%{opacity:1} 50%,100%{opacity:.25}}
   /* SBKIM-Siegel (Modul 16) — Wappen 1:1 aus Sage-Protokol; Klick öffnet Andock */
+  #hud-mailbox{position:relative; font:inherit; font-size:.8rem; font-weight:600; color:#bfeee6;
+    background:rgba(17,37,42,.82); border:1px solid var(--line); border-radius:10px; padding:6px 12px; cursor:pointer}
+  #hud-mailbox:hover{border-color:var(--accent); box-shadow:0 0 12px rgba(110,231,211,.35)}
+  #hud-mailbox-badge{position:absolute; top:-.5em; right:-.5em; min-width:1.4em; height:1.4em; padding:0 .3em;
+    border-radius:.7em; background:#c0392b; color:#fff; font-size:.72em; line-height:1.45em; text-align:center; font-weight:700}
   #sbkim-siegel-badge{width:38px; height:38px; border-radius:50%; background:transparent; border:none;
     cursor:pointer; display:inline-flex; align-items:center; justify-content:center; overflow:visible; padding:0;
     transition:filter .25s ease-out, transform .25s ease-out}
@@ -445,7 +452,7 @@
     60%{transform:scale(1.12); opacity:1; filter:drop-shadow(0 0 14px rgba(201,169,97,.55))}
     100%{transform:scale(1); opacity:1}}
   #andock{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
-    max-width:470px; width:92%; padding:18px}
+    max-width:540px; width:92%; max-height:88vh; overflow:auto; padding:18px}
   #andock::backdrop{background:rgba(0,0,0,.6)}
   .andock-row{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--line); font-size:.9rem}
   .andock-row span{color:var(--muted)}
@@ -476,21 +483,21 @@
      pulsendem Türkis → warmer Lichtblitz → Bibliothek. Bilder lokal/offline. -->
 <div id="threshold" role="dialog" aria-label="Eingang zum Tresor">
   <div class="th-stage" id="th-stage">
-    <img class="th-door" decoding="async" src="../assets/erlebnis/bilder/tuer-zu.webp"
+    <img class="th-door" decoding="async" src="assets/erlebnis/bilder/tuer-zu.webp"
          alt="Verschlossene Tresortür mit glühendem Schlüsselloch" />
     <!-- Schlüssel-Pulsen, 1:1 aus der Sage-Einladung (.vp-key-pulse) — lebendiger Klick-Hinweis -->
     <div class="th-keyglow" aria-hidden="true"></div>
     <div class="th-lock-seq" id="th-lock-seq" aria-hidden="true">
-      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-1.webp" alt="Das Schloss lädt sich auf" />
-      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-2.webp" alt="" />
-      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-3.webp" alt="" />
-      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-4.webp" alt="" />
-      <img decoding="async" src="../assets/erlebnis/bilder/schloss-frame-5.webp" alt="Das Schloss öffnet sich, Gold flutet aus" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-1.webp" alt="Das Schloss lädt sich auf" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-2.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-3.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-4.webp" alt="" />
+      <img decoding="async" src="assets/erlebnis/bilder/schloss-frame-5.webp" alt="Das Schloss öffnet sich, Gold flutet aus" />
     </div>
     <div class="th-flash" id="th-flash"></div>
     <img class="th-burst" id="th-burst" decoding="async" aria-hidden="true" alt=""
-         src="../assets/erlebnis/bilder/licht-blitz.webp" />
-    <img class="th-open" decoding="async" src="../assets/erlebnis/bilder/tuer-offen.webp"
+         src="assets/erlebnis/bilder/licht-blitz.webp" />
+    <img class="th-open" decoding="async" src="assets/erlebnis/bilder/tuer-offen.webp"
          alt="Die Tür steht offen — Blick in die Bibliothek" />
   </div>
   <button class="th-skip" id="th-skip" type="button">überspringen</button>
@@ -499,7 +506,7 @@
 <!-- ===== Regal-Ansicht (Szene 1): der Tresor als navigierbares Bücherregal-Safe.
      Fackeln links/rechts = Navigation (rechte gespiegelt). Bücher folgen mit den Rücken. -->
 <div id="regal" aria-label="Tresor — Bücherregal">
-  <img id="regal-bg" alt="" decoding="async" src="../assets/erlebnis/bilder/regal-ebene1.webp" />
+  <img id="regal-bg" alt="" decoding="async" src="assets/erlebnis/bilder/regal-ebene1.webp" />
   <!-- Bücher auf den frontalen Ebenen (Reihen per JS gefüllt; sichtbar via .has-books) -->
   <div id="regal-books" aria-label="Bücher im Regal"></div>
   <button id="regal-prev" class="regal-torch left" type="button" aria-label="eine Ansicht nach links"></button>
@@ -528,7 +535,7 @@
 
 <header>
   <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
-          title="Briefkasten der Nachbar-Knoten (Sage + SB-KIMTool-Point) jetzt prüfen"
+          title="Briefkasten: Verbindung + Synchron-Stand zu Sage, Mein-Tresor & SB-KIMTool-Point live prüfen"
           style="position:relative;float:right;font:inherit;padding:.4em .8em;border-radius:.5em;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">
     📬 Briefkasten
     <span id="sbkim-mailbox-badge" hidden
@@ -630,10 +637,10 @@
   <div class="bd-backdrop" id="bd-backdrop"></div>
   <div class="bd-stage" role="dialog" aria-label="Muster-Buch" aria-modal="true">
     <div class="bd-book" id="bd-book" role="button" tabindex="0" aria-label="Buch öffnen oder schließen">
-      <img class="bd-zu" decoding="async" src="../assets/erlebnis/bilder/buch-zu.webp" alt="Verschlossenes Buch mit Schlüsselloch" />
-      <img class="bd-auf" decoding="async" src="../assets/erlebnis/bilder/buch-auf.webp" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
-      <img class="bd-energy" decoding="async" aria-hidden="true" alt="" src="../assets/erlebnis/bilder/buch-energie.webp" />
-      <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="../assets/erlebnis/bilder/buch-schluessel.webp" />
+      <img class="bd-zu" decoding="async" src="assets/erlebnis/bilder/buch-zu.webp" alt="Verschlossenes Buch mit Schlüsselloch" />
+      <img class="bd-auf" decoding="async" src="assets/erlebnis/bilder/buch-auf.webp" alt="Geöffnetes Buch, Goldlicht flutet heraus" />
+      <img class="bd-energy" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-energie.webp" />
+      <img class="bd-key" decoding="async" aria-hidden="true" alt="" src="assets/erlebnis/bilder/buch-schluessel.webp" />
       <span class="bd-title" id="bd-title">Mein erstes Jason</span>
       <span class="bd-hint" id="bd-hint">mit dem Schlüssel öffnen</span>
     </div>
@@ -735,28 +742,76 @@
      freigestellten Schlüssel; tauschbar gegen ein transparentes PNG. -->
 <button id="btn-replay-intro" class="key-fab" type="button"
         title="Intro & Tür nochmal ansehen" aria-label="Intro und Tür nochmal ansehen">
-  <img decoding="async" src="../assets/erlebnis/bilder/schluessel.webp" alt="Schlüssel — Intro nochmal ansehen" />
+  <img decoding="async" src="assets/erlebnis/bilder/schluessel.webp" alt="Schlüssel — Intro nochmal ansehen" />
 </button>
 
 <!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
 <div id="hud">
   <span class="hud-lamp" title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter ruhig"></span>
   <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
-    <img src="../assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
+    <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
   </button>
+  <button id="hud-mailbox" type="button" onclick="sbkimMailboxCheck(false)"
+          title="📬 SBKIM-Briefkasten — Verbindung &amp; Synchron-Stand zu den Nachbarn"
+          aria-label="SBKIM-Briefkasten öffnen">📬 Briefkasten<span id="hud-mailbox-badge" hidden></span></button>
   <button id="hud-panik" class="hud-panik" type="button" title="Notfall — schnell verriegeln">🛑 Notfall</button>
 </div>
 
 <!-- SBKIM · Andock — Verbindung zum Werkzeug (wie im Sage-Protokoll) -->
 <dialog id="andock">
-  <h3 style="margin:0 0 6px">SBKIM · Andock</h3>
-  <p style="color:var(--muted); margin:.2em 0 1em; font-size:.9rem">Dieser Tresor ist ein bezeugter SBKIM-Endknoten am Sage-Protokoll.</p>
-  <div class="andock-row"><span>Endknoten</span><code>Jasons-Tresor</code></div>
-  <div class="andock-row"><span>Endpunkt</span><a href="https://lausiklauskn-png.github.io/Jasons-Tresor/" target="_blank" rel="noopener">…github.io/Jasons-Tresor/ ↗</a></div>
-  <div class="andock-row"><span>nodeId</span><code>E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM</code></div>
-  <div class="andock-row"><span>Spore</span><a href="sbkim/spore.json" target="_blank" rel="noopener">sbkim/spore.json ↗</a></div>
-  <p style="margin:1.1em 0 0"><a class="andock-tool" href="../werkzeuge/andock.html" target="_blank" rel="noopener">🔑 Eigenes SBKIM-Werkzeug öffnen ↗</a></p>
-  <p style="color:var(--muted); font-size:.78rem; margin:.9em 0 0">Siegel-Wappen + Andock-Verbindung sind 1:1 aus dem Sage-Protokoll. Die vollständige Bezeugungs-Prüfung (Modul-Chain) folgt in einer eigenen Sitzung.</p>
+  <div style="text-align:center;margin:.1em 0 .7em">
+    <img src="assets/sbkim-siegel-wappen.svg" alt="SBKIM-Siegel — Jasons-Tresor" decoding="async" style="width:84px;height:84px;display:block;margin:0 auto .3em"/>
+    <h3 style="margin:0">SBKIM-Siegel — was bedeutet das?</h3>
+  </div>
+
+  <p style="font-size:.9rem;line-height:1.55;margin:.2em 0 .8em">
+    Dieses Siegel bezeugt: <b>Jasons-Tresor ist ein echter SBKIM-Endknoten</b> am Sage-Protokoll.
+    Es ist keine Zierde, sondern steht für eine <b>kryptografisch geprüfte Identität</b> (Ed25519)
+    und eine <b>echt signierte Spore</b> — die fälschungssichere Visitenkarte dieses Knotens.
+  </p>
+  <p style="font-size:.9rem;line-height:1.55;margin:0 0 .9em">
+    <b>Warum wichtig?</b> Ohne Siegel könnte jeder behaupten, dieser Tresor zu sein. Mit ihm können
+    andere Knoten (Sage-Protokol, SB-KIMTool-Point, Schwester Mein-Tresor) die Echtheit
+    <b>selbst nachprüfen</b> und sich verbinden — die Identität ist reziprok bestätigt.
+  </p>
+
+  <a class="andock-tool" href="werkzeuge/andock.html" target="_blank" rel="noopener"
+     style="display:block;text-align:center;margin:0 0 .9em">🔑 Eigene Identität &amp; Spore erzeugen / verwalten →</a>
+
+  <!-- Andock-Block: Verbindung zum Werkzeug -->
+  <div style="border:1px solid var(--line);border-radius:.6em;padding:.6em .75em;margin:.2em 0 1em">
+    <div style="font-weight:600;font-size:.85rem;margin-bottom:.4em">🔗 Andock — Verbindung zum Werkzeug</div>
+    <div class="andock-row"><span>Endknoten</span><code>Jasons-Tresor</code></div>
+    <div class="andock-row"><span>Endpunkt</span><a href="https://lausiklauskn-png.github.io/Jasons-Tresor/" target="_blank" rel="noopener">…github.io/Jasons-Tresor/ ↗</a></div>
+    <div class="andock-row"><span>nodeId</span><code style="word-break:break-all">E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM</code></div>
+    <div class="andock-row"><span>Spore</span><a href="sbkim/spore.json" target="_blank" rel="noopener">sbkim/spore.json ↗ (✔ VALID)</a></div>
+  </div>
+
+  <div style="font-weight:600;font-size:.8rem;letter-spacing:.04em;margin:0 0 .35em">PFLICHT-MODULE</div>
+  <div style="font-size:.84rem;line-height:1.95;margin:0 0 1em">
+    <div><span style="color:#3bbf7a">●</span> 01 · Storage <span style="color:var(--muted)">· Tresor/Bibliothek (AES-256-GCM) · bereit</span></div>
+    <div><span style="color:#3bbf7a">●</span> 02 · Spore <span style="color:var(--muted)">· Ed25519-Identität, ✔ VALID · bereit</span></div>
+    <div><span style="color:#3bbf7a">●</span> 03 · Embedding <span style="color:var(--muted)">· domainVector 384-dim (e5-small) · bereit</span></div>
+    <div><span style="color:#3bbf7a">●</span> 04 · Match <span style="color:var(--muted)">· Cosinus live im Browser · 3/3 verbunden</span></div>
+    <div><span style="color:#3bbf7a">●</span> 05 · Anastomose <span style="color:var(--muted)">· Netz-Andock, 3 Nachbarn ✔ VALID · bereit</span></div>
+    <div><span style="color:#3bbf7a">●</span> 07 · Apoptose <span style="color:var(--muted)">· Notfall (Verriegeln/Retten&amp;Löschen) · bereit</span></div>
+    <div><span style="color:#3bbf7a">●</span> 15 · Membran <span style="color:var(--muted)">· Wächter, warnt nur · bereit</span></div>
+  </div>
+
+  <div style="font-weight:600;font-size:.8rem;letter-spacing:.04em;margin:0 0 .35em">ASPEKTE (LEBENDES DOKUMENT)</div>
+  <div style="font-size:.82rem;line-height:1.5">
+    <p style="margin:.45em 0"><span style="color:var(--muted)">2026-06-06 · 02 ·</span> <b>Dauerhafte Identität live.</b>
+      Im Browser (WebCrypto) erzeugt: nodeId <code style="font-size:.72rem">E13GDzI…dNM</code>, Spore echt Ed25519-signiert und ✔ VALID. Privater Schlüssel blieb im Browser; verschlüsselte Sicherung liegt lokal bei Klaus.</p>
+    <p style="margin:.45em 0"><span style="color:var(--muted)">2026-06-06 · 03 ·</span> <b>Echter domainVector eingebettet.</b>
+      384-dim Embedding (Xenova/multilingual-e5-small, L2-Norm 1.000000) im Browser erzeugt, in die Spore eingebettet und signiert. Kein <code>_demo</code> mehr.</p>
+    <p style="margin:.45em 0"><span style="color:var(--muted)">2026-06-06 · 05 ·</span> <b>Verbund 3/3.</b>
+      Live nachgerechnet: Sage cos 0.8478, Mein-Tresor 1.0000, SB-KIMTool-Point 0.8537 → 3/3 verbunden; reziprok als verified-spore/-match bei allen drei Postfach-Knoten geführt.</p>
+  </div>
+
+  <p style="font-size:.74rem;color:var(--muted);line-height:1.45;margin:.6em 0 0">
+    Ehrlich: headless durch <code>npm test</code> bewiesen (55/55). Browser-Pfade
+    (Klaus' eigener Browser-Lauf) bleiben <b>ungeprüft</b>, bis Klaus sie gesehen hat.
+  </p>
   <div class="row-end" style="margin-top:12px"><button id="andock-close" class="btn-ghost" type="button">Schließen</button></div>
 </dialog>
 
@@ -1472,9 +1527,11 @@
 </script>
 
 <!-- ============================================================
-     📬 SBKIM-Briefkasten (INTERFACES §11.6) — liest die SIGNAL.json der
-     Nachbarn (Sage + SB-KIMTool-Point) und zeigt ungelesene Bauten.
-     Zero-dependency. Vorlage: Sage .github/SBKIM-WATCH-FUER-FORKER.md.
+     📬 SBKIM-Briefkasten (INTERFACES §11.6) — Live-Verbund: pro Nachbar
+     (Sage, Mein-Tresor, SB-KIMTool-Point) drei Ebenen — ① Spore ✔,
+     ② verified-match (Cosinus live im Browser nachgerechnet),
+     ③ Synchron-Stand (ihr SIGNAL-seq ↔ unser ack). Zero-dependency.
+     Vorlage: Sage .github/SBKIM-WATCH-FUER-FORKER.md.
      ============================================================ -->
 <dialog id="sbkim-mailbox-dialog" style="max-width:32em;border:none;border-radius:.8em;padding:1.2em">
   <h3 style="margin:.2em 0 .6em">📬 SBKIM-Briefkasten</h3>
@@ -1489,9 +1546,11 @@
   window.SBKIM_MAILBOX = {
     self: "Jasons-Tresor",                   // unser Knoten-Name
     selfSignal: "sbkim/SIGNAL.json",          // relativ zu dieser Seite
+    selfSpore:  "sbkim/spore.json",           // eigener domainVector fuer den Live-Match
     peers: [
-      { name: "Sage-Protokol",    signal: "https://raw.githubusercontent.com/lausiklauskn-png/Sage-Protokol/main/sbkim/SIGNAL.json" },
-      { name: "SB-KIMTool-Point", signal: "https://raw.githubusercontent.com/lausiklauskn-png/SB-KIMTool-Point/main/sbkim/SIGNAL.json" }
+      { name: "Sage-Protokol",    label: "Sage-Protokol",           inbox: "sbkim/sage_inbox.json",       mailbox: "sbkim/AUSTAUSCH.md",            signal: "https://raw.githubusercontent.com/lausiklauskn-png/Sage-Protokol/main/sbkim/SIGNAL.json" },
+      { name: "Mein-Tresor",      label: "Mein-Tresor (Schwester)", inbox: "sbkim/meintresor_inbox.json", mailbox: "sbkim/AUSTAUSCH-MeinTresor.md", signal: "https://raw.githubusercontent.com/lausiklauskn-png/Mein-Tresor/main/sbkim/SIGNAL.json" },
+      { name: "SB-KIMTool-Point", label: "SB-KIMTool-Point",        inbox: "sbkim/point_inbox.json",      mailbox: "sbkim/AUSTAUSCH-SBKIMTool.md", signal: "https://raw.githubusercontent.com/lausiklauskn-png/SB-KIMTool-Point/main/sbkim/SIGNAL.json" }
     ]
   };
 
@@ -1501,34 +1560,90 @@
     catch (e) { return { error: String(e && e.message || e) }; }
   }
   // silent=true: nur Badge setzen (beim Laden), KEIN Dialog (Vorlage-Intention "still pruefen").
+  // L2-Cosinus zweier domainVector (sind normalisiert; sicherheitshalber voll gerechnet).
+  function sbkimCosine(a, b) {
+    if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return null;
+    let dot = 0, na = 0, nb = 0;
+    for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
+    if (!na || !nb) return null;
+    return dot / (Math.sqrt(na) * Math.sqrt(nb));
+  }
+
+  // silent=true: nur Badge (beim Laden). Voller Modus: drei Ebenen je Nachbar —
+  // Spore ✔, Match (Cosinus LIVE im Browser nachgerechnet) und Synchron-Stand (seq ↔ ack).
   async function sbkimMailboxCheck(silent) {
     const cfg = window.SBKIM_MAILBOX || {};
     const dlg = document.getElementById("sbkim-mailbox-dialog");
     const body = document.getElementById("sbkim-mailbox-body");
-    if (!silent) { body.innerHTML = "Lese Nachbarn …"; if (dlg.showModal) dlg.showModal(); }
-    let selfAck = {};
+    if (!silent) { body.innerHTML = "Lese Nachbarn & rechne Verbindung nach …"; if (dlg.showModal) dlg.showModal(); }
+
+    // Eigener Stand: ack (wen wir quittiert haben) + eigener domainVector + nodeId.
+    let selfAck = {}, selfVec = null, selfId = "";
     try { const s = await sbkimMailboxFetch(cfg.selfSignal); if (s && s.ack) selfAck = s.ack; } catch {}
-    const lines = [];
-    let unread = 0;
+    if (!silent) {
+      const sp = await sbkimMailboxFetch(cfg.selfSpore);
+      if (sp && !sp.error) { if (Array.isArray(sp.domainVector)) selfVec = sp.domainVector; selfId = sp.id || ""; }
+    }
+
+    const cards = [];
+    let unread = 0, connected = 0;
     for (const peer of (cfg.peers || [])) {
       const sig = await sbkimMailboxFetch(peer.signal);
-      if (sig.error) { lines.push(`<li><b>${peer.name}</b>: SIGNAL nicht lesbar (${sig.error})</li>`); continue; }
-      const seq = Number(sig.seq) || 0;
+      const seq = sig && !sig.error ? (Number(sig.seq) || 0) : null;
       const seen = Number(selfAck[peer.name]) || 0;
-      if (seq > seen) {
-        unread++;
-        lines.push(`<li><b>${peer.name}</b>: NEUER Bau (seq ${seq}) — ${sig.headline || ""}</li>`);
-      } else {
-        lines.push(`<li><b>${peer.name}</b>: nichts Neues (seq ${seq})</li>`);
+
+      // Ebene ③ — Synchron-Stand (ihr seq ↔ unser ack).
+      let sync;
+      if (seq === null) sync = `SIGNAL nicht lesbar`;
+      else if (seq > seen) { unread++; sync = `<b style="color:#e0a52b">⏳ ${seq - seen} ungelesen</b> (ihr seq ${seq})`; }
+      else sync = `<span style="color:#3bbf7a">✔ synchron</span> (seq ${seq}, quittiert ${seen})`;
+      // Ebene ④ — Brief: das Postfach (MD-Datei) ist IMMER anklickbar (offener Brief).
+      const brief = `<a href="${peer.mailbox}" target="_blank" rel="noopener">📄 Brief öffnen ↗</a>`;
+
+      // Ebene ① Spore + ② Match (nur voller Modus; Cosinus live nachgerechnet).
+      let spore = "—", match = "—";
+      if (!silent) {
+        const inbox = await sbkimMailboxFetch(peer.inbox);
+        if (inbox && !inbox.error) {
+          spore = `<span style="color:#3bbf7a">✔ verified-spore</span> · <code style="font-size:.72rem">${(inbox.id || "").slice(0, 16)}…</code>`;
+          const c = selfVec && Array.isArray(inbox.domainVector) ? sbkimCosine(selfVec, inbox.domainVector) : null;
+          if (c === null) match = `wartet auf Vektor`;
+          else if (c >= 0.8) { connected++; match = `<span style="color:#3bbf7a">✔ verified-match</span> · cos <b>${c.toFixed(4)}</b>`; }
+          else match = `cos ${c.toFixed(4)} — unter 0.80`;
+        } else spore = `Spore nicht lesbar`;
       }
+
+      cards.push(
+        `<div style="border:1px solid var(--line,#2a2a2a);border-radius:.6em;padding:.55em .7em;margin:.5em 0">
+           <div style="font-weight:600;margin-bottom:.25em">${peer.label || peer.name}</div>
+           <div style="font-size:.82rem;line-height:1.8">
+             <div>①&nbsp;Spore&nbsp;&nbsp;${spore}</div>
+             <div>②&nbsp;Match&nbsp;&nbsp;${match}</div>
+             <div>③&nbsp;Sync&nbsp;&nbsp;&nbsp;${sync}</div>
+             <div>④&nbsp;Brief&nbsp;&nbsp;${brief}</div>
+           </div>
+         </div>`);
     }
+
     if (!silent) {
-      body.innerHTML = `<ul style="margin:.2em 0 .2em 1.1em;padding:0">${lines.join("")}</ul>` +
-        (unread ? `<p style="margin:.6em 0 0"><b>${unread}</b> ungelesene(r) Bau(ten). Lies das jeweilige Postfach und quittiere via <code>ack</code> in deiner SIGNAL.json.</p>`
-                : `<p style="margin:.6em 0 0">Alles gelesen. 📭</p>`);
+      const total = (cfg.peers || []).length;
+      const head =
+        `<div style="text-align:center;margin:0 0 .6em">
+           <img src="assets/sbkim-siegel-wappen.svg" alt="SBKIM-Siegel" decoding="async" style="width:92px;height:92px;display:block;margin:0 auto .25em"/>
+           <div style="font-weight:600">Jasons-Tresor — SBKIM-Endknoten</div>
+           <div style="font-size:.72rem;color:var(--muted,#9aa);word-break:break-all">${selfId ? "nodeId " + selfId.slice(0, 20) + "… · verified-spore ✔" : "Identität: sbkim/spore.json"}</div>
+         </div>`;
+      const foot =
+        `<p style="margin:.6em 0 0;text-align:center"><b style="color:#3bbf7a">${connected}/${total} verbunden</b> · ${unread ? `<b style="color:#e0a52b">${unread} ungelesen</b>` : "📭 alles synchron"}</p>
+         <p style="margin:.3em 0 0;font-size:.7rem;color:var(--muted,#9aa);text-align:center">Match jetzt <b>live in deinem Browser</b> nachgerechnet (Cosinus eigener ⟷ Nachbar-Spore). Quittieren via <code>ack</code> in sbkim/SIGNAL.json.</p>`;
+      body.innerHTML = head + cards.join("") + foot;
     }
-    const badge = document.getElementById("sbkim-mailbox-badge");
-    if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
+
+    for (const id of ["sbkim-mailbox-badge", "hud-mailbox-badge"]) {
+      const badge = document.getElementById(id);
+      if (!badge) continue;
+      if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
+    }
   }
   // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
   window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
@@ -2331,7 +2446,7 @@
   // Einmalige Umstellung auf die automatische Boden-Verteilung: alte Editier-/Nudge-Layouts leeren
   // (nur Anzeige-Layout im Browser, KEINE Tresor-/Jason-Daten).
   try{ if(localStorage.getItem('jt-shelf-v') !== '2'){ localStorage.removeItem('jt-shelfrows'); localStorage.removeItem('jt-booklayout'); localStorage.setItem('jt-shelf-v','2'); } }catch(e){}
-  var P = '../assets/erlebnis/bilder/';
+  var P = 'assets/erlebnis/bilder/';
   // VIEWS = Hintergrundbild + Beschriftung je Ansicht. Die Regalböden (Position/Perspektive)
   // stehen in SHELVES; daraus werden die Buchrücken automatisch je Boden mittig verteilt.
   var VIEWS = [
