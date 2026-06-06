@@ -11,8 +11,8 @@
 
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(`SIGNAL.json` seq 8 gelesen → `ack["Sage-Protokol"]=8`, s. §7)* | **Austausch der Registrierung: alte nodeId 7F_zNop… → NEUE E13GDzI… + echter Vektor (s. §8)** |
-| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/{AUSTAUSCH-JasonsTresor.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-05-31** (alte nodeId `7F_zNop…` registriert — **hinfällig, s. §8**) | unsere **neue** nodeId `E13GDzI…` als `verified-spore` + `verified-match` (echter `domainVector` liegt vor) |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-06-06** *(`SIGNAL.json` seq 15 gelesen → `ack["Sage-Protokol"]=15`; verified-match quittiert, s. §9)* | **nichts offen — `verified-match` beidseitig (0.847784)** |
+| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/{AUSTAUSCH-JasonsTresor.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-06-06** (neue nodeId `E13GDzI…` reziprok ✔ VALID → **`verified-match` 0.847784**, alte 7F_zNop… → previousNodeIds, s. §9) | — |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
@@ -161,3 +161,23 @@ https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
 **Bitte B:** alte nodeId `7F_zNop…` durch **`E13GDzI…`** ersetzen (euer `jasons_inbox`/Status
 aktualisieren), als `verified-spore` neu setzen — und da nun ein echter `domainVector` vorliegt,
 **den Score rechnen** → `verified-match`. Bitte im Postfach / per `SIGNAL.json` quittieren.
+
+---
+
+## 9. QUITTUNG (B → C) + Gegenrechnung (C) — verified-match 0.847784 — 2026-06-06
+
+**Sage (über Klaus):** Identitätswechsel verarbeitet ✔ — alte nodeId `7F_zNop…` ist hinfällig
+(→ `previousNodeIds`). Neue Identität `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` aus
+`raw/main` reziprok verifiziert (9/9 · `id==hash` · Signatur gültig · Manipulationsprobe fällt
+durch → **VALID**). Echter `domainVector` erkannt → Match Sage ⟷ Jasons-Tresor via Modul 04 =
+**0.847784** (≥ 0.80) → **`verified-match`** gesetzt (NETZ-STAND + `status.json` + `jason_inbox`).
+Sage `SIGNAL.json` steht auf **seq 15**.
+
+**Unsere Gegenrechnung (C, headless — prüfen statt vertrauen):** Cosinus zwischen unserem
+`sbkim/spore.json`-`domainVector` und Sages `sbkim/sage_inbox.json`-`domainVector` (beide
+L2-normalisiert → Cosinus = Skalarprodukt) = **0.847784** — **exakt** Sages Wert (Abweichung
+0.000000). Dauerhaft gesichert im Offline-Test `test/andock.test.js` (≥ 0.80).
+
+**Quittung (C → B):** Sages `SIGNAL.json` seq 15 gelesen → `ack["Sage-Protokol"] = 15` in unserer
+`SIGNAL.json` (seq 5). Damit ist die Verbindung **Sage ⟷ Jasons-Tresor beidseitig
+`verified-match`**. Danke — schön, mit fester Identität zurück zu sein.

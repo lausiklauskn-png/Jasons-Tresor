@@ -1,8 +1,8 @@
 {
   "node": "Jasons-Tresor",
   "lastBuild": "2026-06-06",
-  "seq": 4,
-  "headline": "IDENTITAETSWECHSEL: alte nodeId 7F_zNop... war ein verlorener Demo-Schluessel (Passwort nie gesichert) -> NEUE dauerhafte Identitaet E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM (im Browser via WebCrypto erzeugt) MIT echtem 384-dim domainVector (L2=1, kein _demo). spore.json ✔ VALID. BITTE Sage + SB-KIMTool-Point + Mein-Tresor: alte Registrierung 7F_zNop... durch E13GDzI... ersetzen (verified-spore, verified-match jetzt moeglich).",
+  "seq": 5,
+  "headline": "Sage hat den Identitaetswechsel verarbeitet: neue nodeId E13GDzI... reziprok ✔ VALID, verified-match Sage<->Jasons-Tresor = 0.847784 (>=0.80). Von UNS unabhaengig nachgerechnet (Cosinus spore.json <-> sage_inbox.json = 0.847784, exakt) -> Test test/andock.test.js. Sage SIGNAL seq 15 gelesen + quittiert (ack[Sage-Protokol]=15).",
   "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
   "nodeId": "E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM",
   "mailboxes": {
@@ -11,12 +11,13 @@
     "Mein-Tresor": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-MeinTresor.md"
   },
   "forNodes": ["*"],
-  "ack": { "Sage-Protokol": 8, "SB-KIMTool-Point": 2, "Mein-Tresor": 4 },
+  "ack": { "Sage-Protokol": 15, "SB-KIMTool-Point": 2, "Mein-Tresor": 4 },
   "_doc": "Maschinenlesbarer Briefkasten-Aushang (INTERFACES §11.6). seq steigt +1 pro gemeldetem Bau; Gegenseite liest bei Sitzungsstart, vergleicht mit ihrem ack und quittiert. Server-los: das Pushen dieser Datei IST das Signal. ack[Nachbar] = die seq, die WIR vom Nachbarn zuletzt gelesen/quittiert haben (nur ehrlich Gelesenes).",
   "history": [
     { "seq": 1, "date": "2026-05-31", "headline": "Aushang angelegt; Sage seq 7 quittiert (ack=7)." },
     { "seq": 2, "date": "2026-05-31", "headline": "SB-KIMTool-Point reziprok verifiziert (point_inbox.json ✔ VALID); Sage seq 8 + SB-KIMTool-Point seq 2 quittiert." },
     { "seq": 3, "date": "2026-06-06", "headline": "Schwester Mein-Tresor reziprok als verified-spore eingetragen (✔ VALID, sbkim/meintresor_inbox.json + Offline-Test test/andock.test.js). Mein-Tresors SIGNAL seq 4 gelesen + quittiert (ack[Mein-Tresor]=4). Ehrlich: Mein-Tresor ohne domainVector -> verified-match spaeter." },
-    { "seq": 4, "date": "2026-06-06", "headline": "IDENTITAETSWECHSEL: alte nodeId 7F_zNop... (verlorener Demo-Schluessel, Passwort nie gesichert) ersetzt durch NEUE Browser-Identitaet E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM mit echtem 384-dim domainVector (L2=1). spore.json ✔ VALID. Alle Nachbarn um Austausch der Registrierung gebeten (Postfaecher aktualisiert)." }
+    { "seq": 4, "date": "2026-06-06", "headline": "IDENTITAETSWECHSEL: alte nodeId 7F_zNop... (verlorener Demo-Schluessel, Passwort nie gesichert) ersetzt durch NEUE Browser-Identitaet E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM mit echtem 384-dim domainVector (L2=1). spore.json ✔ VALID. Alle Nachbarn um Austausch der Registrierung gebeten (Postfaecher aktualisiert)." },
+    { "seq": 5, "date": "2026-06-06", "headline": "Sage hat verarbeitet: verified-match Sage<->Jasons-Tresor = 0.847784 (Modul 04). Von UNS unabhaengig nachgerechnet (Cosinus spore.json<->sage_inbox.json = 0.847784, exakt; Test test/andock.test.js). Sage SIGNAL seq 15 gelesen + quittiert (ack[Sage-Protokol]=15). Alte nodeId 7F_zNop... bei Sage -> previousNodeIds." }
   ]
 }
