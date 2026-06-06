@@ -3,6 +3,27 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Andock-Werkzeug für echten domainVector vorbereitet (Sitzung 39)
+
+**Getan (headless, `npm test` 53/53 grün):**
+- **AUFGABE 1 re-verifiziert:** Mein-Tresors Spore ist **unverändert** (gleiche nodeId, weiter
+  ohne `domainVector`); `sbkim/meintresor_inbox.json` → **✔ VALID** erneut bestätigt. Bereits auf
+  `main` registriert (SIGNAL seq 3, `mailboxes["Mein-Tresor"]` + `ack["Mein-Tresor"]: 4`) — **kein
+  Leer-Bau**, nur Bestätigung.
+- **AUFGABE 2 vorbereitet (Werkzeug, kein Neu-Signieren durch Claude):** `werkzeuge/andock.html`
+  + `web/tools/sbkim-embedding.js` **1:1 aus Mein-Tresor** kopiert; nur unsere Werte gesetzt
+  (CONFIG `nodeName/domain/endpoint`, Titel, erwartete nodeId `7F_zNop…` in Hinweis + Match-Prüfung).
+  Krypto-Kern unverändert. Kurz-Anleitung `werkzeuge/LIESMICH.md`.
+- **Ehrliche Grenze dokumentiert:** Das Neu-Signieren (Teil B ①②③) ist **Klaus' Browser-Schritt** —
+  es braucht den Browser **und** das Passwort zu `node_key.enc.json`. Claude kann/soll das **nicht**
+  (headless, kein Passwort, nichts fälschen). nodeId bleibt erhalten (Teil B = gleicher Schlüssel).
+
+**Offen (wartet auf Klaus' Browser-Lauf):**
+- `werkzeuge/andock.html` öffnen → Teil B ①②③ → neue `sbkim/spore.json` (echter 384-Vektor, kein
+  `_demo`). Danach Finalisierung: `npm test` · `verify_foreign_spore.mjs` ✔ VALID · `SIGNAL` seq +1.
+
+**Manual-Check:** Werkzeug **browser-ungeprüft** — wartet auf Klaus' Browser-Lauf. Headless grün.
+
 ## 2026-06-06 — Schwester Mein-Tresor reziprok als verified-spore (Sitzung 38)
 
 **Getan (headless bewiesen, Andock-Tests grün, in `main`-Stand integriert):**
