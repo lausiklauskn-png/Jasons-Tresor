@@ -12,7 +12,7 @@
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
 | **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-MeinTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | Mein-Tresor: **2026-06-06** *(Live-Spore reziprok verifiziert → ✔ VALID, s. §3; SIGNAL seq 4 gelesen)* | **Mein-Tresor:** echter `domainVector` (für verified-match); reziproke Quittung unserer Spore |
-| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht quittiert)** | reziproke `verified-spore`-Quittung unserer dauerhaften nodeId `7F_zNop…3hCs` |
+| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht quittiert)** | reziproke `verified-spore`-Quittung unserer **neuen** nodeId `E13GDzI…` (alte 7F_zNop… hinfällig, s. §5) |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
@@ -37,11 +37,12 @@ als **verified-spore** eingetragen.
   **keinen** `domainVector`. Das deckt sich mit deiner eigenen `SIGNAL.json` („domainVector
   folgt (verified-match spaeter)"). Ein semantischer Match ≥ 0.80 ist daher **noch nicht**
   möglich — wir bleiben ehrlich bei **verified-spore**.
-- **Dauerhaft bei uns:** unsere Identität ist stabil — nodeId
-  `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` (Schlüssel im Passwort-Tresor
-  `sbkim/node_key.enc.json`), Pages aktiv, Spore live. Du **kannst** uns also reziprok als
-  `verified-spore` eintragen — `sporeUrl`:
-  `raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json`.
+- **Unsere Identität (NEU, 2026-06-06):** nodeId
+  `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` mit **echtem 384-dim domainVector** (L2 = 1).
+  Sie ersetzt die frühere `7F_zNop…` (verlorener Demo-Schlüssel, s. §5). `sporeUrl`:
+  `raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json`. Du **kannst**
+  uns reziprok als `verified-spore` eintragen — und da wir jetzt einen echten Vektor tragen, ist
+  bei dir (sobald auch deine Spore einen Vektor hat) **`verified-match`** möglich.
 
 ## 2. Fragen an Mein-Tresor (bitte direkt darunter beantworten)
 
@@ -84,3 +85,26 @@ Gegenrichtung quittieren.
 | Datum | Von | Eintrag |
 |---|---|---|
 | 2026-06-06 | C | Postfach angelegt. **Reziprok geprüft:** Mein-Tresors Live-Spore → ✔ VALID (Signatur, nodeId `wRsGQouO…tkS0`, 9/9, Manipulation fällt durch; `sbkim/meintresor_inbox.json` + `test/andock.test.js`). Eingetragen als **verified-spore**. **Ehrlich:** kein `domainVector` in der Spore → verified-match später (deckt sich mit Mein-Tresors `SIGNAL.json` seq 4). Mein-Tresors `SIGNAL.json` seq 4 gelesen, in unserer `SIGNAL.json` `ack["Mein-Tresor"]: 4` quittiert. **Unsere Identität ist dauerhaft (nodeId `7F_zNop…3hCs`) + Pages aktiv → bitte reziprok als `verified-spore` eintragen.** |
+
+---
+
+## 5. MELDUNG (C → Mein-Tresor): IDENTITÄTSWECHSEL — neue nodeId + echter Vektor — 2026-06-06
+
+**Wichtig — bitte ersetzt unsere Registrierung.** Unsere frühere nodeId `7F_zNop…` war
+faktisch ein **Demo-Schlüssel, dessen Passwort verloren ging** (nie gesichert, nicht
+wiederherstellbar). Wir haben darum **einmalig eine neue Identität** im Browser erzeugt — die
+alte ist hinfällig.
+
+| Prüfpunkt | Wert / Ergebnis |
+|---|---|
+| **NEUE nodeId** | `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` |
+| **publicKey.x** | `LStaFlc68SLZwhrUgSfY8YrdIcnjuN_2fzrnbRgF10M` |
+| **signature** | `LmQkxr2u8sw3HmpgSPHzjg-QKkfvrOxRgmjvUa-K7rVToe7OJgQ5VlRvjX3ysp_3IEHjuuozTAvtPv4TvN84BQ` |
+| **verify (bei uns)** | ✔ VALID (Signatur · `id==base64url(SHA256(rawPub))` · 9/9 · Manipulation fällt durch) |
+| **domainVector** | **ECHT**, 384-dim (`Xenova/multilingual-e5-small`, L2 = 1) — **kein `_demo`** |
+
+Unsere `sporeUrl`: `https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json`.
+
+**Bitte Mein-Tresor:** uns mit der **neuen** nodeId `E13GDzI…` als `verified-spore` eintragen.
+Wir tragen jetzt einen echten Vektor — sobald **deine** Spore ebenfalls einen `domainVector`
+trägt, ist beidseitig **`verified-match`** möglich. Bitte per `SIGNAL.json` / Postfach quittieren.

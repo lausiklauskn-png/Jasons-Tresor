@@ -60,7 +60,7 @@
   <div class="card">
     <h2>① Identität aus Sicherung laden</h2>
     <p class="hint">Lade deine <code>node_key.enc.json</code> (die du gespeichert hast) + Passwort.
-    So signieren wir mit <b>demselben</b> Schlüssel weiter → die nodeId <code>7F_zNop…</code> bleibt gleich.</p>
+    So signieren wir mit <b>demselben</b> Schlüssel weiter → die nodeId <code>E13GDzI…</code> bleibt gleich.</p>
     <div class="row">
       <input id="bk-file" type="file" accept="application/json,.json" />
       <input id="ld-pw" type="password" placeholder="Passwort der Sicherung" autocomplete="off" />
@@ -202,7 +202,7 @@
       var info=await pkInfo(priv);
       identity={ privateKey:priv, x:info.x, nodeId:info.nodeId };
       $("load-box").hidden=false; $("load-box").textContent="nodeId: "+info.nodeId;
-      var match = info.nodeId==="7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs";
+      var match = info.nodeId==="E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM";
       setS($("load-status"),(match?"✔ Identität geladen — passt zur registrierten nodeId.":"⚠ Geladen, aber nodeId weicht ab (andere Identität?)."), match?"ok":"warn");
       log("✔ Identität geladen: "+info.nodeId);
     }catch(e){ setS($("load-status"),"Fehler: "+(e&&e.message||e),"bad"); log("✘ "+(e&&e.message||e)); }

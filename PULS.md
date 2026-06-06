@@ -3,6 +3,36 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Identitätswechsel: neue nodeId + echter domainVector (Sitzung 40)
+
+**Anlass (ehrlich):** Die bisherige nodeId `7F_zNop…` war faktisch ein **Demo-Schlüssel,
+dessen Passwort nie gesichert wurde** → nicht wiederherstellbar. Statt langer Suche: bewusst
+**neue Identität** erzeugt. Die alte `node_key.enc.json` (für 7F_zNop…) wurde als tot
+**aus dem Repo entfernt**.
+
+**Getan (headless, `npm test` 53/53 grün; Spore ✔ VALID):**
+- **Neue Identität + echter Vektor** (Klaus im Browser, `werkzeuge/andock.html` Teil A + B):
+  neue nodeId `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM`, Pubkey
+  `LStaFlc68SLZwhrUgSfY8YrdIcnjuN_2fzrnbRgF10M`, **echter 384-dim domainVector** (L2 = 1,
+  **kein `_demo`**). Unabhängig verifiziert: `id==SHA256(pubkey)`, 9/9, Signatur, Manipulation fällt durch.
+- **`sbkim/spore.json` ersetzt**; alte nodeId an allen Live-Stellen → neue
+  (`SIGNAL.json` seq 3→4, `status.json`, `werkzeuge/andock.html` + `LIESMICH.md`,
+  `index.html` + `jasons-bibliothek/index.html` Anzeige, `docs/SCHLUESSEL.md`).
+- **Drei Übergabe-Meldungen** in die Postfächer geschrieben (Sage §8, SB-KIMTool-Point §5,
+  Mein-Tresor §5): „alte Registrierung 7F_zNop… → neue E13GDzI…, jetzt mit echtem Vektor
+  → `verified-match` möglich".
+
+**Nachgereicht (in dieser Sitzung):** Klaus hat die **`node_key.enc.json` der neuen Identität**
+geschickt → liegt jetzt im Repo (Format geprüft, nodeId E13GDzI… stimmt überein, kein
+Klartext-Geheimnis). Das **Passwort** bewahrt Klaus getrennt auf → Backup vollständig.
+
+**Offen / wartet auf Klaus:**
+- **Re-Registrierung durch die drei Nachbarn** (sie tragen die neue nodeId ein) — Klaus trägt
+  die Briefe (Postfächer §8/§5/§5) rüber.
+- Pages-Auslieferung der **neuen** Spore nach Hard-Reload bestätigen.
+
+**Manual-Check:** Krypto headless grün (✔ VALID, 53/53). App/Pages ungeprüft im Browser.
+
 ## 2026-06-06 — Andock-Werkzeug für echten domainVector vorbereitet (Sitzung 39)
 
 **Getan (headless, `npm test` 53/53 grün):**

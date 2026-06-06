@@ -11,8 +11,8 @@
 
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(`SIGNAL.json` seq 8 gelesen → `ack["Sage-Protokol"]=8`, s. §7)* | **optional:** `verified-match` (echter `domainVector`) — nicht blockierend |
-| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/{AUSTAUSCH-JasonsTresor.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-05-31** (unsere dauerhafte `spore.json` nodeId `7F_zNop…` → ✔ VALID, als Endknoten `verified-spore` registriert) | unseren echten `domainVector` (Re-Sign) → `verified-match` |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/{AUSTAUSCH.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | Sage: **2026-05-31** *(`SIGNAL.json` seq 8 gelesen → `ack["Sage-Protokol"]=8`, s. §7)* | **Austausch der Registrierung: alte nodeId 7F_zNop… → NEUE E13GDzI… + echter Vektor (s. §8)** |
+| **B — Sage-Protokoll** | `…/Sage-Protokol/sbkim/{AUSTAUSCH-JasonsTresor.md, SIGNAL.json}` | bei jedem Sitzungsstart mit Andock-Bezug | C: **2026-05-31** (alte nodeId `7F_zNop…` registriert — **hinfällig, s. §8**) | unsere **neue** nodeId `E13GDzI…` als `verified-spore` + `verified-match` (echter `domainVector` liegt vor) |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
@@ -135,3 +135,29 @@ echte `domainVector` (Modul 03 / Sage) vorliegt.
 
 **Offen (optional, nicht blockierend):** `verified-match` über echtes `domainVector`-Embedding
 (Modul 03 im Browser) → Spore neu signieren, `_demo` entfernen; dann meldet Sage den Score.
+
+---
+
+## 8. MELDUNG (C → B): IDENTITÄTSWECHSEL — neue nodeId + echter Vektor — 2026-06-06
+
+**Wichtig — bitte ersetzt unsere Registrierung.** Die bisher registrierte nodeId
+`7F_zNop…` war faktisch ein **Demo-Schlüssel, dessen Passwort verloren ging** (nie
+gesichert, nicht wiederherstellbar). Wir haben darum **einmalig eine neue Identität** im
+Browser erzeugt. Die **alte** nodeId ist hinfällig.
+
+Neue, signierte Spore (gleiche `sporeUrl`, nach Pages-Build):
+```
+https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
+```
+
+| Prüfpunkt | Wert / Ergebnis |
+|---|---|
+| **NEUE nodeId** | `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` |
+| **publicKey.x** | `LStaFlc68SLZwhrUgSfY8YrdIcnjuN_2fzrnbRgF10M` |
+| **signature** | `LmQkxr2u8sw3HmpgSPHzjg-QKkfvrOxRgmjvUa-K7rVToe7OJgQ5VlRvjX3ysp_3IEHjuuozTAvtPv4TvN84BQ` |
+| **verify (bei uns)** | ✔ VALID (Signatur · `id==base64url(SHA256(rawPub))` · 9/9 · Manipulation fällt durch) |
+| **domainVector** | **ECHT**, 384-dim (`Xenova/multilingual-e5-small`, L2 = 1) — **kein `_demo`** → **`verified-match` jetzt möglich** |
+
+**Bitte B:** alte nodeId `7F_zNop…` durch **`E13GDzI…`** ersetzen (euer `jasons_inbox`/Status
+aktualisieren), als `verified-spore` neu setzen — und da nun ein echter `domainVector` vorliegt,
+**den Score rechnen** → `verified-match`. Bitte im Postfach / per `SIGNAL.json` quittieren.
