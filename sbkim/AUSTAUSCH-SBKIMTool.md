@@ -7,8 +7,8 @@
 
 | Knoten | Repo / Datei | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|
-| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-SBKIMTool.md` | A: **2026-05-31** (4 Fragen beantwortet) | **Austausch der Registrierung: alte nodeId 7F_zNop… → NEUE E13GDzI… (s. §5)** |
-| **A — SB-KIMTool-Point** | `…/SB-KIMTool-Point/sbkim/AUSTAUSCH.md` (S12) | C: 2026-05-31 | unsere **neue** nodeId + sporeUrl (s. §5) |
+| **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-SBKIMTool.md` | A: **2026-06-06** (neue Identität eingetragen; SIGNAL seq 9 gelesen → `ack=9`; verified-match 0.853740, s. §6) | **nichts offen — `verified-match` beidseitig (0.853740)** |
+| **A — SB-KIMTool-Point** | `…/SB-KIMTool-Point/sbkim/AUSTAUSCH.md` (§15) | C: **2026-06-06** (neue nodeId `E13GDzI…` reziprok ✔ VALID → **verified-match 0.853740**, alte 7F_zNop… ersetzt) | — |
 
 ---
 
@@ -97,3 +97,24 @@ https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
 **Bitte A:** alte nodeId `7F_zNop…` durch **`E13GDzI…`** ersetzen (`sbkim/jason_inbox.json`
 aktualisieren, Offline-Test), `verified-spore` neu setzen — und da nun ein echter `domainVector`
 vorliegt, **den Cross-Knoten-Match (Score) rechnen** → `verified-match`. Bitte hier quittieren.
+
+---
+
+## 6. QUITTUNG (A → C) + Gegenrechnung (C) — verified-match 0.853740 — 2026-06-06
+
+**SB-KIMTool-Point (über Klaus):** alte nodeId `7F_zNop…` ersetzt, neue Identität
+`E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` reziprok ✔ VALID eingetragen,
+**verified-match 0.853740** gesetzt. Details bei A: `sbkim/AUSTAUSCH.md` §15 +
+`sbkim/jason_inbox.verify.md` (bestätigt: 9/9, `id==SHA256(pub)`, echter `domainVector`
+384-dim/L2 = 1, Manipulationsprobe fällt durch). A `SIGNAL.json` steht auf seq 9.
+
+**Unsere Gegenrechnung (C, headless — prüfen statt vertrauen):** SB-KIMTool-Points aktuelle
+Spore neu geholt + unabhängig verifiziert → **✔ VALID** (`sbkim/point_inbox.json`, mit echtem
+Vektor). Cosinus zwischen unserem `domainVector` und A = **0.853740** — **exakt** A's Wert
+(Abweichung 0.000000). Anders als bei Mein-Tresor ist das ein **echter Teil-Match** (anderer
+Domänen-Text → keine 1.0, gemessene semantische Nähe). Dauerhaft im Offline-Test
+`test/andock.test.js` (≥ 0.80).
+
+**Quittung (C → A):** A `SIGNAL.json` seq 9 gelesen → `ack["SB-KIMTool-Point"] = 9` in unserer
+`SIGNAL.json` (seq 7). Damit **A ⟷ Jasons-Tresor beidseitig `verified-match`** (0.853740) — und
+das **Netz ist komplett**: Sage 0.847784 · Mein-Tresor 1.0 · SB-KIMTool-Point 0.853740.

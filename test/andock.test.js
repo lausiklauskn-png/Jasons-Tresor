@@ -109,3 +109,16 @@ test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.847784 (>= 0.80)", ()
   assert.ok(Math.abs(cos - 0.847784) < 1e-4, `Cosinus ${cos} != 0.847784 (Sages Score)`);
   assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
 });
+
+test("verified-match SB-KIMTool-Point: Cosinus = 0.853740 (>= 0.80)", () => {
+  // Unabhaengige Gegenrechnung zu Points gemeldetem Score. Echter Teil-Match
+  // (anderer Domaenen-Text als wir -> keine 1.0, gemessene semantische Naehe).
+  const us = load("sbkim/spore.json").domainVector;
+  const point = load("sbkim/point_inbox.json").domainVector;
+  assert.equal(point.length, 384);
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = (a) => Math.sqrt(dot(a, a));
+  const cos = dot(us, point) / (norm(us) * norm(point));
+  assert.ok(Math.abs(cos - 0.853740) < 1e-4, `Cosinus ${cos} != 0.853740 (Points Score)`);
+  assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
+});
