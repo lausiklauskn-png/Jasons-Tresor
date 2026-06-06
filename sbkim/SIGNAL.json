@@ -1,0 +1,27 @@
+{
+  "node": "Jasons-Tresor",
+  "lastBuild": "2026-06-06",
+  "seq": 3,
+  "headline": "Mein-Tresor reziprok als verified-spore eingetragen (nodeId wRsGQouOYPVBOLzAB3nBteRvyvJ-AGv461WTJMKtkS0, spore.json ✔ VALID; sbkim/meintresor_inbox.json + Offline-Test). Ehrlich: Mein-Tresor traegt (noch) KEINEN domainVector -> verified-match spaeter. Unsere nodeId bleibt provisorisch (kein SBKIM_NODE_KEY) -> Nachbarn bitte noch nicht gegen-registrieren.",
+  "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
+  "nodeId": "OdDBmsrSWnM-mgFyI61FelAp4X7veXez88GZXZuGQwc",
+  "nodeIdHinweis": "PROVISORISCH (fluechtiger Schluessel, kein SBKIM_NODE_KEY in dieser Umgebung) -> wechselt pro Lauf. Wird dauerhaft, sobald Klaus den Schluessel sichert (docs/SCHLUESSEL.md).",
+  "mailboxes": {
+    "Mein-Tresor": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-MeinTresor.md",
+    "Sage-Protokol": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md"
+  },
+  "forNodes": [
+    "*"
+  ],
+  "ack": {
+    "Mein-Tresor": 4
+  },
+  "_doc": "Maschinenlesbarer Briefkasten-Aushang (analog Mein-Tresor / INTERFACES §11.6). seq steigt +1 pro gemeldetem Bau; die Gegenseite liest bei Sitzungsstart, vergleicht mit ihrem ack und quittiert. Server-los: das Pushen dieser Datei IST das Signal. ack[Nachbar] = die seq, die WIR vom Nachbarn zuletzt gelesen/quittiert haben. Wir quittieren ehrlich nur, was wir wirklich gelesen haben.",
+  "history": [
+    {
+      "seq": 3,
+      "date": "2026-06-06",
+      "headline": "Erstes in diesem Repo committetes SIGNAL; seq an den vom Netz bereits gelesenen Stand (Mein-Tresor ack[Jasons-Tresor]=2) angeschlossen -> 3. Mein-Tresor reziprok als verified-spore eingetragen (✔ VALID, sbkim/meintresor_inbox.json + Offline-Test test/andock.test.js). Mein-Tresors SIGNAL seq 4 gelesen + quittiert (ack[Mein-Tresor]=4). Ehrlich: Mein-Tresor ohne domainVector -> verified-match spaeter."
+    }
+  ]
+}
