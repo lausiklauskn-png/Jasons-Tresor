@@ -3,6 +3,21 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Mein-Tresor: verified-match 1.0 (Sitzung 42)
+
+**Getan (headless, `npm test` grün):**
+- **Mein-Tresor hat unsere neue Identität quittiert** (`E13GDzI…` reziprok ✔ VALID, `jason_inbox`
+  ersetzt) **und** führt jetzt selbst einen echten `domainVector`.
+- **Mein-Tresors aktuelle Spore geholt + unabhängig verifiziert** → ✔ VALID; `meintresor_inbox.json`
+  jetzt **mit** Vektor. **Cosinus selbst nachgerechnet = 1.000000** — Vektoren **byte-identisch**.
+- **Ehrlich zur 1.0:** gewollt/erwartbar (Domänen-Text byte-gleich → identisches Embedding) →
+  Identität der Eingaben, kein „entdeckter" Treffer. Gültig (≥ 0.80), so vermerkt. Offline-Test ergänzt.
+- **Eingetragen:** `SIGNAL.json` seq 6 + `ack["Mein-Tresor"]=6`; Postfach `AUSTAUSCH-MeinTresor.md` §6;
+  `status.json`. Damit Mein-Tresor ⟷ Jasons-Tresor **beidseitig verified-match**.
+
+**Netz-Stand:** Sage ✅ verified-match 0.847784 · Mein-Tresor ✅ verified-match 1.0 ·
+SB-KIMTool-Point ⏳ neue nodeId noch übernehmen (Brief liegt).
+
 ## 2026-06-06 — Sage: verified-match 0.847784 (Sitzung 41)
 
 **Getan (headless, `npm test` 54/54 grün):**
