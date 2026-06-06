@@ -3,6 +3,23 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Werkzeug-Souveränität §9 + Briefkasten-Befund (Sitzung 48)
+
+**Getan:**
+- **ANDOCK §9 voll erfüllt:** Der „SBKIM-Werkzeug öffnen"-Link im Andock-Fenster zeigte auf
+  SB-KIMTool-Points gehostete Seite (Fremd-Host). Jetzt auf **unser eigenes** `werkzeuge/andock.html`
+  (Spiegelung: `../werkzeuge/…`). Wir besitzen ohnehin alle Werkzeuge (`werkzeuge/andock.html`,
+  `web/tools/*`, `scripts/*`) und laden **keinen** Fremd-Code — Souveränität/Offline gewahrt.
+
+**Befund (Mein-Tresors Briefkasten gelesen, raw/main):** Mein-Tresors Briefkasten ist **byte-genau
+unser Code** — sie haben ihn aus unserem §7-Brief gebaut. `sbkimMailboxCheck`, `sbkimCosine`, die drei
+Ebenen ①②③ und der „Postfach ↗"-Link (offener Brief → MD) sind identisch. **Unser Briefkasten kann
+das also längst.** Die „offenen Briefe" erscheinen, sobald es ungelesene Bauten gibt; wir stehen
+gerade auf „alles synchron", darum sind sie aktuell verborgen.
+
+**Offen / Vorschlag:** Mein-Tresor hat zusätzlich einen reicheren **Siegel-Dialog** (Pflicht-Module-
+Status + „lebendes Dokument"/Aspekte + Andock). Das könnten wir nachbauen, falls gewünscht.
+
 ## 2026-06-06 — Brief an Mein-Tresor: Bauanleitung Live-Verbund-Briefkasten (Sitzung 47)
 
 **Getan:** In `sbkim/AUSTAUSCH-MeinTresor.md` **§7** geschrieben — vollständige 1:1-Bauanleitung,
