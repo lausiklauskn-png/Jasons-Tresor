@@ -3,6 +3,21 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Spiegelung vollständig auf Wurzel-Stand (Sitzung 50)
+
+**Getan:** Die Spiegelung `jasons-bibliothek/index.html` war stark veraltet (alter 2-Nachbar-
+Briefkasten; `sbkim/`-Links sogar kaputt, weil `../` fehlte). Jetzt **byte-genau aus der Wurzel-
+`index.html` erzeugt** + ein einziges **`<base href="../">`** im Kopf. Dadurch lösen ALLE relativen
+Pfade (assets, sbkim, werkzeuge — auch JS-erzeugte) sauber auf den Repo-Stamm auf, ohne einzelne
+Pfade umzuschreiben. Vorbedingung war: keine `#`-Anker, keine `<script src>`, keine `/`-Absolutpfade
+in der Wurzel → `<base>` ist gefahrlos.
+
+- Verifiziert: Spiegelung == Wurzel (außer base-Block); keine doppelten `../`; Briefkasten-JS Syntax OK;
+  alle neuen Features in der Spiegelung (HUD-Briefkasten, Mein-Tresor-Nachbar, 3+1-Ebenen, reicher
+  Siegel-Dialog, Siegel-Band JASONS-TRESOR). `npm test` 55/55.
+- **Manual-Check:** optisch ungeprüft, wartet auf Klaus' Browser-Lauf (beide Seiten sollten nun gleich
+  aussehen: `…/Jasons-Tresor/` und `…/Jasons-Tresor/jasons-bibliothek/`).
+
 ## 2026-06-06 — Reicher Siegel-Dialog + Briefe immer sichtbar (Sitzung 49)
 
 **Getan (Klaus wählte beides):**
