@@ -68,3 +68,22 @@ test("reziprok: SB-KIMTool-Points Spore (sbkim/point_inbox.json) verifiziert ✔
   assert.equal(r.valid, true, r.reason);
   assert.equal(spore.nodeName, "SB-KIMTool-Point");
 });
+
+test("reziprok: Mein-Tresors Spore (sbkim/meintresor_inbox.json) verifiziert ✔ VALID", () => {
+  const spore = load("sbkim/meintresor_inbox.json");
+  const r = verifyForeignSpore(spore);
+  assert.equal(r.valid, true, r.reason);
+  assert.equal(r.checks.id, true);
+  assert.equal(r.checks.signature, true);
+  assert.equal(r.checks.tamperRejected, true);
+  assert.equal(spore.nodeName, "Mein-Tresor");
+  // Erwartete, von Klaus genannte stabile nodeId.
+  assert.equal(spore.id, "wRsGQouOYPVBOLzAB3nBteRvyvJ-AGv461WTJMKtkS0");
+});
+
+test("ehrlich: Mein-Tresors Spore traegt (noch) KEINEN domainVector", () => {
+  // Mein-Tresors eigene SIGNAL.json sagt selbst: "domainVector folgt
+  // (verified-match spaeter)". Darum: verified-spore ja, verified-match nein.
+  const spore = load("sbkim/meintresor_inbox.json");
+  assert.equal("domainVector" in spore, false);
+});

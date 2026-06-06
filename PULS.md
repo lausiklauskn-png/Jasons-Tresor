@@ -3,6 +3,33 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Schwester Mein-Tresor reziprok als verified-spore (Sitzung 38)
+
+**Getan (headless bewiesen, Andock-Tests grün, in `main`-Stand integriert):**
+- **Reziproke Verifikation:** Mein-Tresors Live-Spore gezogen und mit **unserer** kanonischen
+  Form (ANDOCK §4) geprüft → **✔ VALID**. nodeId `wRsGQouOYPVBOLzAB3nBteRvyvJ-AGv461WTJMKtkS0`
+  unabhängig nachgerechnet (== base64url(SHA256(roher Pubkey))), 9/9 Pflichtfelder, Signatur
+  gültig, Manipulationsprobe fällt durch. **Vierter Peer** im Netz (neben Sage + SB-KIMTool-Point).
+- **Inbox + Offline-Test:** `sbkim/meintresor_inbox.json` (byte-treue Momentaufnahme) +
+  zwei neue Fälle in `test/andock.test.js` (VALID inkl. erwarteter nodeId + ehrlich: kein domainVector).
+- **Postfach:** `sbkim/AUSTAUSCH-MeinTresor.md` angelegt (Quittung + Fragen + Status-Kopf).
+- **Briefkasten-Aushang:** `sbkim/SIGNAL.json` fortgeschrieben — `mailboxes["Mein-Tresor"]` +
+  `ack["Mein-Tresor"]: 4` (Mein-Tresors SIGNAL seq 4 gelesen) ergänzt, **seq 2 → 3** (Sage=8,
+  SB-KIMTool-Point=2 weiter quittiert).
+- **Merge-Integration:** dieser Branch fußte auf dem alten Gründungsstand; vor dem Merge `origin/main`
+  eingezogen und Konflikte aufgelöst (dauerhafte nodeId `7F_zNop…3hCs`, 3-Knoten-Netz, Pages — alles
+  von `main` behalten, nur Mein-Tresor ergänzt).
+
+**Ehrlich / offen:**
+- **Mein-Tresor trägt (noch) KEINEN `domainVector`** in der Live-Spore — entgegen der
+  ursprünglichen Aufgaben-Erwartung („echt, 384-dim"). Deckt sich mit Mein-Tresors **eigener**
+  `SIGNAL.json` („domainVector folgt (verified-match spaeter)"). Darum: **verified-spore ja,
+  verified-match nein** (kein semantischer Match möglich, bis der echte Vektor da ist).
+- **Gegen-Registrierung:** unsere Identität ist dauerhaft + Pages aktiv → Mein-Tresor kann uns
+  reziprok eintragen (im Postfach erbeten).
+
+**Manual-Check:** Andock-Krypto **headless grün** (`npm test`). App weiter ungeprüft im Browser.
+
 ## 2026-06-05 — Bootstrap-Brief für Schwester-Repo „Mein-Tresor" (Planung) (Sitzung 37)
 
 **Klaus' Vision (eigene Sitzung/Repo):** „Mein-Tresor" = design-vereinfachte Schwester (gleiche
