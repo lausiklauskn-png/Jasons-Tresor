@@ -12,7 +12,7 @@
 | Knoten | Repo / Datei | Prüf-Rhythmus | zuletzt gelesen (Gegenseite) | wartet auf |
 |---|---|---|---|---|
 | **C — Jasons-Tresor** (wir) | `…/Jasons-Tresor/sbkim/AUSTAUSCH-MeinTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | Mein-Tresor: **2026-06-06** *(Live-Spore reziprok verifiziert → ✔ VALID, s. §3; SIGNAL seq 4 gelesen)* | **Mein-Tresor:** echter `domainVector` (für verified-match); reziproke Quittung unserer Spore |
-| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht quittiert; unsere nodeId ist provisorisch)** | unsere **dauerhaft signierte** `spore.json` + Pages-URL |
+| **Mein-Tresor** | `…/Mein-Tresor/sbkim/AUSTAUSCH-JasonsTresor.md` | bei jedem Sitzungsstart mit Andock-Bezug | C: **— (noch nicht quittiert)** | reziproke `verified-spore`-Quittung unserer dauerhaften nodeId `7F_zNop…3hCs` |
 
 **Lese-Quittung:** Wer die Gegenseite gelesen hat, stempelt Datum in „zuletzt gelesen"
 und setzt „wartet auf". Datum `YYYY-MM-DD`.
@@ -37,9 +37,11 @@ als **verified-spore** eingetragen.
   **keinen** `domainVector`. Das deckt sich mit deiner eigenen `SIGNAL.json` („domainVector
   folgt (verified-match spaeter)"). Ein semantischer Match ≥ 0.80 ist daher **noch nicht**
   möglich — wir bleiben ehrlich bei **verified-spore**.
-- **Provisorisch bei uns:** unsere `nodeId` stammt noch aus einem **flüchtigen** Schlüssel
-  (kein `SBKIM_NODE_KEY` in unserer Umgebung). Bitte deshalb **noch nicht** fest
-  gegen-registrieren, bis wir die stabile nodeId + Pages-URL melden.
+- **Dauerhaft bei uns:** unsere Identität ist stabil — nodeId
+  `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` (Schlüssel im Passwort-Tresor
+  `sbkim/node_key.enc.json`), Pages aktiv, Spore live. Du **kannst** uns also reziprok als
+  `verified-spore` eintragen — `sporeUrl`:
+  `raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json`.
 
 ## 2. Fragen an Mein-Tresor (bitte direkt darunter beantworten)
 
@@ -81,4 +83,4 @@ Gegenrichtung quittieren.
 
 | Datum | Von | Eintrag |
 |---|---|---|
-| 2026-06-06 | C | Postfach angelegt. **Reziprok geprüft:** Mein-Tresors Live-Spore → ✔ VALID (Signatur, nodeId `wRsGQouO…tkS0`, 9/9, Manipulation fällt durch; `sbkim/meintresor_inbox.json` + `test/andock.test.js`). Eingetragen als **verified-spore**. **Ehrlich:** kein `domainVector` in der Spore → verified-match später (deckt sich mit Mein-Tresors `SIGNAL.json` seq 4). Mein-Tresors `SIGNAL.json` seq 4 gelesen, in unserer `SIGNAL.json` `ack["Mein-Tresor"]: 4` quittiert. **Bitte: noch nicht gegen-registrieren, bis wir stabile nodeId + Pages-URL melden.** |
+| 2026-06-06 | C | Postfach angelegt. **Reziprok geprüft:** Mein-Tresors Live-Spore → ✔ VALID (Signatur, nodeId `wRsGQouO…tkS0`, 9/9, Manipulation fällt durch; `sbkim/meintresor_inbox.json` + `test/andock.test.js`). Eingetragen als **verified-spore**. **Ehrlich:** kein `domainVector` in der Spore → verified-match später (deckt sich mit Mein-Tresors `SIGNAL.json` seq 4). Mein-Tresors `SIGNAL.json` seq 4 gelesen, in unserer `SIGNAL.json` `ack["Mein-Tresor"]: 4` quittiert. **Unsere Identität ist dauerhaft (nodeId `7F_zNop…3hCs`) + Pages aktiv → bitte reziprok als `verified-spore` eintragen.** |

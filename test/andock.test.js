@@ -62,6 +62,13 @@ test("reziprok: Sages Spore (sbkim/sage_inbox.json) verifiziert ✔ VALID", () =
   assert.equal(spore.nodeName, "Sage");
 });
 
+test("reziprok: SB-KIMTool-Points Spore (sbkim/point_inbox.json) verifiziert ✔ VALID", () => {
+  const spore = load("sbkim/point_inbox.json");
+  const r = verifyForeignSpore(spore);
+  assert.equal(r.valid, true, r.reason);
+  assert.equal(spore.nodeName, "SB-KIMTool-Point");
+});
+
 test("reziprok: Mein-Tresors Spore (sbkim/meintresor_inbox.json) verifiziert ✔ VALID", () => {
   const spore = load("sbkim/meintresor_inbox.json");
   const r = verifyForeignSpore(spore);

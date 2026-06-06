@@ -154,7 +154,11 @@ test("Tresor: Manipulation faellt durch (AES-GCM Auth-Tag)", async () => {
   const blob = await L.encryptTresor({ x: 1 }, "passwort123");
   const tampered = JSON.parse(JSON.stringify(blob));
   const ch = tampered.ciphertext;
-  tampered.ciphertext = ch.slice(0, -1) + (ch.slice(-1) === "A" ? "B" : "A");
+  // Abweichung von der 1:1-Kopie (Evolutions-Klausel, an Klaus genannt): das ERSTE
+  // base64-Zeichen kippen statt des letzten. Das letzte Zeichen kann je nach
+  // Laenge/Padding bedeutungslose Bits tragen -> Klartext unveraendert -> Auth-Tag
+  // schlaegt nicht an (flaky). Das erste Zeichen ist immer signifikant -> deterministisch.
+  tampered.ciphertext = (ch[0] === "A" ? "B" : "A") + ch.slice(1);
   await assert.rejects(() => L.decryptTresor(tampered, "passwort123"));
 });
 
@@ -180,4 +184,22 @@ test("isTresor erkennt Modul-02-artige Bloecke strukturell", () => {
   assert.equal(L.isTresor({ kdf: { algorithm: "PBKDF2" }, cipher: { algorithm: "AES-GCM-256" }, ciphertext: "x" }), true);
   assert.equal(L.isTresor({ eintraege: [] }), false);
   assert.equal(L.isTresor(null), false);
+});
+
+// ---- Buch-Tresor (Regal-Buch = eigener Tresor): genau die Aufrufkette der App-Schale ----
+// Verschliessen: buildLibraryExport -> encryptTresor. Oeffnen: decryptTresor -> payloadToEntries.
+// Belegt headless, dass ein Buch seinen Inhalt echt AES-verschluesselt und unveraendert zurueckgibt.
+test("Buch-Tresor: verschliessen -> oeffnen gibt dieselbe Sammlung zurueck", async () => {
+  const eintraege = [
+    L.makeEntry({ name: "Rezept", category: "Kueche", payload: { titel: "Brot", schritte: [1, 2, 3] } }),
+    L.makeEntry({ name: "Notiz", payload: "geheim" })
+  ];
+  const blob = await L.encryptTresor(L.buildLibraryExport(eintraege), "buchpasswort1");
+  assert.equal(L.isTresor(blob), true);                       // zu = jason-tresor v2 (verschluesselt)
+  const plain = await L.decryptTresor(blob, "buchpasswort1"); // auf = nur im Speicher entschluesselt
+  const r = L.payloadToEntries(plain, "Buch");
+  assert.equal(r.kind, "bibliothek");
+  assert.deepEqual(r.entries.map((e) => e.name).sort(), ["Notiz", "Rezept"]);
+  assert.deepEqual(r.entries.find((e) => e.name === "Rezept").payload, { titel: "Brot", schritte: [1, 2, 3] });
+  await assert.rejects(() => L.decryptTresor(blob, "falschespw"));   // falsches Buch-Passwort scheitert
 });
