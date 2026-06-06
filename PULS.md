@@ -3,6 +3,25 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Reicher Siegel-Dialog + Briefe immer sichtbar (Sitzung 49)
+
+**Getan (Klaus wählte beides):**
+- **Reicher Siegel-Dialog** (Klick aufs Siegel, `#andock` ausgebaut, Verdrahtung unverändert) — wie
+  Mein-Tresors: Erklärung „was bedeutet das?", Link zum eigenen Werkzeug, **Andock-Block**
+  (Endknoten/Endpunkt/nodeId/Spore ✔ VALID), **Pflicht-Module-Status** (01 Storage · 02 Spore ·
+  03 Embedding · 04 Match · 05 Anastomose · 07 Apoptose · 15 Membran), **„Lebendes Dokument"/Aspekte**
+  (Identität · Vektor · Verbund 3/3), Ehrlich-Notiz (npm test 55/55, Browser ungeprüft).
+- **Briefe immer sichtbar:** Briefkasten-Karte bekam eine vierte Zeile **„④ Brief öffnen ↗"** — das
+  Postfach (MD) ist jetzt **dauerhaft** anklickbar, nicht nur bei ungelesenen Bauten.
+- Syntax OK, `npm test` 55/55.
+
+**Manual-Check:** **optisch ungeprüft, wartet auf Klaus' Browser-Lauf.**
+
+**OFFEN — ehrlich: Spiegelung `jasons-bibliothek/index.html` ist veraltet.** Sie hat noch den ALTEN
+2-Nachbar-Briefkasten (ohne Mein-Tresor, ohne 3-Ebenen/Live-Match, ohne HUD-Knopf, ohne reichen
+Siegel-Dialog). Nur Einzelfixe (#regal-edit, §9-Link) wurden mitgezogen. **Vorschlag:** Spiegelung in
+einem eigenen Schritt vollständig auf den Stand der Wurzel-`index.html` bringen (Pfade `../` beachten).
+
 ## 2026-06-06 — Werkzeug-Souveränität §9 + Briefkasten-Befund (Sitzung 48)
 
 **Getan:**
