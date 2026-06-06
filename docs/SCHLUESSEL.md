@@ -12,15 +12,23 @@ Unser Knoten unterschreibt seine Spore mit einem **privaten Ed25519-Schlüssel**
 `base64url(SHA256(roher Pubkey))` ab. Solange wir denselben Schlüssel behalten, bleibt die
 nodeId gleich — Sage muss uns nicht neu registrieren.
 
-## ✓ Aktueller Stand: nodeId ist DAUERHAFT
+## ✓ Aktueller Stand: NEUE Identität (2026-06-06), Sicherung bei Klaus
 
-Der Schlüssel ist gesichert: `sbkim/node_key.enc.json` (Passwort-Tresor, AES-256-GCM /
-PBKDF2-SHA256 600k) wurde mit Klaus' Passwort angelegt. Die **dauerhafte nodeId** ist
-`7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` — über zwei Läufe **stabil**, Spore
-`sbkim/spore.json` echt signiert und ✔ VALID. Das **Passwort und der private Schlüssel
-sind nicht im Repo** (nur der verschlüsselte Tresor — ohne Passwort wertlos).
+**Identitätswechsel:** Die frühere nodeId `7F_zNop…` war faktisch ein **verlorener
+Demo-Schlüssel** — das Passwort wurde nie gesichert, der Tresor ließ sich nicht öffnen, die
+alte `node_key.enc.json` wurde aus dem Repo **entfernt**. Im Browser (`werkzeuge/andock.html`,
+Teil A) wurde eine **neue** Identität erzeugt:
 
-Damit darf Sage / SB-KIMTool-Point die nodeId jetzt **fest registrieren**. Re-Sign (z. B. wenn
+- **dauerhafte nodeId:** `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM`
+- Spore `sbkim/spore.json` echt signiert + ✔ VALID, **mit echtem 384-dim domainVector** (L2 ≈ 1).
+
+**Wichtig / offen:** Die verschlüsselte Sicherung `node_key.enc.json` der neuen Identität liegt
+**noch nicht im Repo** — Klaus hält sie **und das Passwort**. Empfehlung: die `node_key.enc.json`
+(ohne Passwort, wertlos ohne dieses) ins Repo legen, **damit künftiges Neu-Signieren möglich
+bleibt** — und das **Passwort diesmal dauerhaft sichern** (sonst erneut Identitätsverlust).
+
+Sage / SB-KIMTool-Point / Mein-Tresor müssen die **neue** nodeId übernehmen (die alte ist
+hinfällig). Re-Sign (z. B. wenn
 der echte `domainVector` dazukommt) hält die nodeId gleich, solange derselbe Schlüssel benutzt
 wird (Rezept unten). **Passwort gut aufbewahren** — Verlust = neue Identität nötig.
 
