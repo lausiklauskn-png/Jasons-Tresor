@@ -3,6 +3,19 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Siegel trägt den Tresor-Namen + „Regale einrichten" ausgeblendet (Sitzung 46)
+
+**Getan (Klaus' Wünsche):**
+- **Siegel-Band** (unten im Wappen) von „SELF-INSCRIBING" auf **„JASONS-TRESOR"** geändert —
+  genau wie Mein-Tresor sein Band auf „MEIN-TRESOR" gesetzt hat. Damit gehört das Siegel sichtbar
+  diesem Tresor. SBKIM/SIEGEL/„OFFIZIELLE BESTÄTIGUNG" bleiben (wie bei Mein-Tresor).
+- **„📐 Regale einrichten"** ausgeblendet (`#regal-edit{display:none}`) — in `index.html` **und** der
+  Spiegelung `jasons-bibliothek/index.html`. Das Siegel-SVG ist geteilt (`../assets`), gilt also für beide.
+- SVG wohlgeformt, `npm test` 55/55.
+
+**Manual-Check:** **optisch ungeprüft, wartet auf Klaus' Browser-Lauf** (Hard-Reload; Siegel oben
+links + im Briefkasten-Kopf zeigt nun „JASONS-TRESOR", „Regale einrichten" ist weg).
+
 ## 2026-06-06 — Briefkasten-Knopf in der Szene sichtbar (Sitzung 45)
 
 **Problem (Klaus' Browser-Lauf, Screenshots):** Der 📬-Briefkasten war in der App nicht

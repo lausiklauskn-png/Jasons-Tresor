@@ -222,7 +222,7 @@
     </g>
   </g>
 
-  <!-- Bottom ribbon SELF-INSCRIBING -->
+  <!-- Bottom ribbon — Tresor-Name (das Siegel gehoert diesem Tresor) -->
   <g>
     <path d="M 28 880 L 200 850 L 200 925 L 28 945 Z" fill="url(#goldRibbonGrad)" stroke="#3D2914" stroke-width="2"/>
     <path d="M 28 880 L 70 905 L 28 945 Z" fill="#7A5800"/>
@@ -233,7 +233,7 @@
     <path d="M 200 920 Q 512 995, 824 920" fill="none" stroke="#3D2914" stroke-width="1" opacity="0.5"/>
     <path id="ribbonText" d="M 222 902 Q 512 980, 802 902" fill="none"/>
     <text font-family="Georgia, 'Times New Roman', serif" font-size="48" font-weight="bold" fill="#3D2914" letter-spacing="3">
-      <textPath href="#ribbonText" startOffset="50%" text-anchor="middle">SELF-INSCRIBING</textPath>
+      <textPath href="#ribbonText" startOffset="50%" text-anchor="middle">JASONS-TRESOR</textPath>
     </text>
   </g>
 </svg>
