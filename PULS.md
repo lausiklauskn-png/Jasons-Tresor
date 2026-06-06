@@ -3,6 +3,19 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-06 — Briefkasten-Knopf in der Szene sichtbar (Sitzung 45)
+
+**Problem (Klaus' Browser-Lauf, Screenshots):** Der 📬-Briefkasten war in der App nicht
+auffindbar — der Knopf saß nur im `<header>` der **Listen**-Ansicht (Bibliothek), nicht in der
+immersiven **Regal-Szene**, wo Klaus sich aufhält. Mein-Tresor hat den Knopf in seiner Raumleiste.
+
+**Getan:** 📬-Briefkasten-Knopf in die **fixe HUD-Leiste** (`#hud`, oben links, immer sichtbar —
+Lampe · Siegel · 📬 · Notfall) gesetzt → in jeder Szene erreichbar. Eigenes Badge `hud-mailbox-badge`;
+Zähler bedient jetzt beide Badges (HUD + Listenkopf). Syntax OK, `npm test` 55/55.
+
+**Manual-Check:** Logik bewiesen; **optische Sichtbarkeit wartet auf Klaus' nächsten Browser-Lauf**
+(Hard-Reload → 📬 oben links neben dem Siegel).
+
 ## 2026-06-06 — Briefkasten als Live-Verbund (Sitzung 44)
 
 **Getan:**

@@ -434,6 +434,11 @@
   @keyframes panik-blink{0%,100%{opacity:.5} 50%{opacity:1}}
   @keyframes panik-blink-red{0%,49%{opacity:1} 50%,100%{opacity:.25}}
   /* SBKIM-Siegel (Modul 16) — Wappen 1:1 aus Sage-Protokol; Klick öffnet Andock */
+  #hud-mailbox{position:relative; font:inherit; font-size:.8rem; font-weight:600; color:#bfeee6;
+    background:rgba(17,37,42,.82); border:1px solid var(--line); border-radius:10px; padding:6px 12px; cursor:pointer}
+  #hud-mailbox:hover{border-color:var(--accent); box-shadow:0 0 12px rgba(110,231,211,.35)}
+  #hud-mailbox-badge{position:absolute; top:-.5em; right:-.5em; min-width:1.4em; height:1.4em; padding:0 .3em;
+    border-radius:.7em; background:#c0392b; color:#fff; font-size:.72em; line-height:1.45em; text-align:center; font-weight:700}
   #sbkim-siegel-badge{width:38px; height:38px; border-radius:50%; background:transparent; border:none;
     cursor:pointer; display:inline-flex; align-items:center; justify-content:center; overflow:visible; padding:0;
     transition:filter .25s ease-out, transform .25s ease-out}
@@ -744,6 +749,9 @@
   <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
     <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
   </button>
+  <button id="hud-mailbox" type="button" onclick="sbkimMailboxCheck(false)"
+          title="📬 SBKIM-Briefkasten — Verbindung &amp; Synchron-Stand zu den Nachbarn"
+          aria-label="SBKIM-Briefkasten öffnen">📬 Briefkasten<span id="hud-mailbox-badge" hidden></span></button>
   <button id="hud-panik" class="hud-panik" type="button" title="Notfall — schnell verriegeln">🛑 Notfall</button>
 </div>
 
@@ -1581,8 +1589,11 @@
       body.innerHTML = head + cards.join("") + foot;
     }
 
-    const badge = document.getElementById("sbkim-mailbox-badge");
-    if (badge) { if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; } }
+    for (const id of ["sbkim-mailbox-badge", "hud-mailbox-badge"]) {
+      const badge = document.getElementById(id);
+      if (!badge) continue;
+      if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
+    }
   }
   // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
   window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
