@@ -122,3 +122,51 @@ test("verified-match SB-KIMTool-Point: Cosinus = 0.853740 (>= 0.80)", () => {
   assert.ok(Math.abs(cos - 0.853740) < 1e-4, `Cosinus ${cos} != 0.853740 (Points Score)`);
   assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
 });
+
+// --- Vollvernetzung (Bauplan §7): zwei weitere Knoten als verified-spore aufgenommen ---
+
+test("reziprok: Mein-Rezeptbuchs Spore (sbkim/rezeptbuch_inbox.json) verifiziert ✔ VALID", () => {
+  const spore = load("sbkim/rezeptbuch_inbox.json");
+  const r = verifyForeignSpore(spore);
+  assert.equal(r.valid, true, r.reason);
+  assert.equal(r.checks.id, true);
+  assert.equal(r.checks.signature, true);
+  assert.equal(r.checks.tamperRejected, true);
+  // Unabhaengig nachgerechnete, stabile nodeId.
+  assert.equal(spore.id, "uOpUBezUVbOMsVd2C9BkHW80agnLx5tCx_nIRy2KkXg");
+});
+
+test("reziprok: Mein-Mixariums Spore (sbkim/mixarium_inbox.json) verifiziert ✔ VALID", () => {
+  const spore = load("sbkim/mixarium_inbox.json");
+  const r = verifyForeignSpore(spore);
+  assert.equal(r.valid, true, r.reason);
+  assert.equal(r.checks.id, true);
+  assert.equal(r.checks.signature, true);
+  assert.equal(r.checks.tamperRejected, true);
+  assert.equal(spore.id, "B7Fke9CYTR1BrC3xOXzEY5q9RuRH8xxHPUuqRHV3utA");
+});
+
+test("verified-match Mein-Rezeptbuch: Cosinus = 0.813698 (>= 0.80)", () => {
+  // Unabhaengige Gegenrechnung (deckt sich exakt mit Mein-Tresors gemeldetem 0.8137).
+  const us = load("sbkim/spore.json").domainVector;
+  const rez = load("sbkim/rezeptbuch_inbox.json").domainVector;
+  assert.equal(rez.length, 384);
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = (a) => Math.sqrt(dot(a, a));
+  const cos = dot(us, rez) / (norm(us) * norm(rez));
+  assert.ok(Math.abs(cos - 0.813698) < 1e-4, `Cosinus ${cos} != 0.813698`);
+  assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
+});
+
+test("ehrlich: Mein-Mixarium Cosinus = 0.788402 -> UNTER 0.80 (verified-spore, KEIN verified-match)", () => {
+  // Ehrlichkeit (Leitplanke): knapp unter der Schwelle -> bleibt verified-spore, kein Match.
+  // Deckt sich exakt mit Mein-Tresors gemeldetem 0.7884 (kein Schoenrechnen).
+  const us = load("sbkim/spore.json").domainVector;
+  const mix = load("sbkim/mixarium_inbox.json").domainVector;
+  assert.equal(mix.length, 384);
+  const dot = (a, b) => a.reduce((s, x, i) => s + x * b[i], 0);
+  const norm = (a) => Math.sqrt(dot(a, a));
+  const cos = dot(us, mix) / (norm(us) * norm(mix));
+  assert.ok(Math.abs(cos - 0.788402) < 1e-4, `Cosinus ${cos} != 0.788402`);
+  assert.ok(cos < 0.8, "Mixarium darf nicht als verified-match gelten (< 0.80)");
+});
