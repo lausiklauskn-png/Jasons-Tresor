@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>So funktioniert das Mycel — und so bist du geschützt · Jasons-Tresor</title>
+<link rel="icon" href="assets/sbkim-siegel-wappen.svg" />
+<!--
+  Mycel-/Sicherheits-Erklärung für Jasons-Tresor.
+  Text wortgleich aus Sage-Protokol (docs/sicherheit/index.html); Skin/Beispiele tresor-näher.
+  Wird aus dem Siegel-Dialog als In-Page-Overlay (iframe) geöffnet; der „zurück"-Link
+  blendet sich aus, wenn die Seite eingebettet läuft (window.self !== window.top).
+-->
+<style>
+  :root{
+    --bg:#0b1416; --bg2:#0f1b1e; --card:#11252a; --card2:#0e1f23;
+    --ink:#e6f2f1; --muted:#8fb3b1; --line:#1f3d42;
+    --accent:#2dd4bf; --accent-ink:#04201d; --warn:#f0b429; --gold:#C9A961; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink);
+    background:radial-gradient(1100px 600px at 80% -10%, #123 0%, transparent 60%), var(--bg);
+    line-height:1.6; padding:0 0 56px; -webkit-text-size-adjust:100%}
+  .wrap{max-width:760px; margin:0 auto; padding:18px}
+  a.back{color:var(--muted); text-decoration:none; font-size:.9rem; display:inline-block; margin:.2em 0 .8em}
+  a.back:hover{color:var(--accent)}
+  .embedded a.back{display:none}
+  .embedded .wrap{padding-top:6px}
+  header{text-align:center; margin:.2em 0 1.2em}
+  header img{width:76px; height:76px; display:block; margin:0 auto .4em}
+  h1{font-size:1.45rem; margin:.1em 0 .2em}
+  h2{font-size:1.08rem; margin:1.6em 0 .4em; color:var(--accent); border-top:1px solid var(--line); padding-top:1em}
+  h2:first-of-type{border-top:none; padding-top:0}
+  p{margin:.5em 0}
+  .lead{color:var(--muted)}
+  ol, ul{margin:.4em 0 .6em; padding-left:1.3em}
+  li{margin:.3em 0}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 18px; margin:14px 0}
+  .siegel{border-left:3px solid var(--gold)}
+  b.term{color:#cfeee9}
+  dl{margin:.4em 0}
+  dl div{padding:.45em 0; border-bottom:1px solid var(--line)}
+  dl div:last-child{border-bottom:none}
+  dt{font-weight:700; color:#cfeee9}
+  dd{margin:.15em 0 0; color:var(--muted)}
+  .regel{background:var(--card2); border:1px solid var(--warn); border-radius:var(--radius); padding:14px 18px; margin:16px 0}
+  .regel h2{color:var(--warn); border-top:none; padding-top:0; margin-top:0}
+  code{font-family:ui-monospace,monospace; font-size:.92em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">‹ zurück zum Tresor</a>
+
+  <header>
+    <img src="assets/sbkim-siegel-wappen.svg" alt="SBKIM-Siegel — Jasons-Tresor" decoding="async" />
+    <h1>So funktioniert das Mycel — und so bist du geschützt.</h1>
+  </header>
+
+  <h2>Was ist das überhaupt?</h2>
+  <p>SBKIM ist ein Weg, wie Anwendungen im Browser einander finden — nicht über eine zentrale
+  Liste, sondern über Bedeutung. Eine Seite, die Rezepte kennt, und eine, die Weine kennt,
+  erkennen sich, weil ihre Themen nah beieinanderliegen. Kein Server in der Mitte, keine
+  Anmeldung, kein Konzern dazwischen.</p>
+
+  <h2>Was ist ein Knoten?</h2>
+  <p>Ein Knoten ist eine Browser-Anwendung — eine Internetseite, ein Web-Werkzeug oder eine
+  installierbare App — die die SBKIM-Bausteine trägt. Er hat eine eigene, unterschriebene
+  Identität (eine öffentliche Visitenkarte) und einen geheimen Schlüssel, der den Browser nie
+  verlässt. Den Schlüssel kannst du als verschlüsselte Sicherung (mit Passwort) wegspeichern und
+  auf einem anderen Gerät zurückspielen. (Genau das macht Jasons-Tresor: er <i>ist</i> selbst so
+  ein Knoten — und gleichzeitig der Ort, an dem du solche Sicherungen verwahrst.)</p>
+
+  <h2>Wie läuft das Schritt für Schritt?</h2>
+  <ol>
+    <li>Ein Knoten kommt zur Welt: er erzeugt sich im eigenen Browser eine Identität und beschreibt
+      sein Thema in eigenen Worten.</li>
+    <li>Aus der Beschreibung wird ein Bedeutungs-Vektor, und beides zusammen wird unterschrieben —
+      das ist seine Spore (Visitenkarte). Sie ist öffentlich; nur unterschreiben kann sie der
+      Besitzer.</li>
+    <li>Zwei Knoten verbinden sich, indem sie aufeinander zeigen. Sie tauschen Visitenkarten und
+      prüfen die Unterschrift — automatisch, ohne Vorab-Absprache.</li>
+    <li>Liegen ihre Themen nah → verified-match: sie erkennen sich.</li>
+    <li>Stellt jemand eine Frage, geht sie als Text an die verbundenen Nachbarn; die rechnen ihre
+      besten Treffer und antworten. Nur Daten, nie Programme.</li>
+    <li>Wächst das Netz, geschieht das an den Rändern, durch Empfehlung — wie ein Pilz im
+      Waldboden.</li>
+  </ol>
+
+  <h2>Wie bist du geschützt? — Drei Wände</h2>
+  <div class="card">
+    <p><b class="term">Browser-Sandkasten:</b> Ein Knoten ist eine Webseite. Eine Webseite kann
+    nicht an deine Dateien oder dein Betriebssystem. Sie hat keine Sonderrechte.</p>
+    <p><b class="term">Daten, kein Code:</b> Es wandern nur Zettel (Karten, Fragen, Antworten). Es
+    gibt keine Nachricht „führ dieses Programm aus". Ein Wurm braucht genau das — diesen Kanal gibt
+    es nicht.</p>
+    <p><b class="term">Wächter (Membran):</b> Vor jedem Knoten steht ein Türsteher, der entscheidet,
+    was hereindarf — und nur warnt, nichts von selbst öffnet.</p>
+  </div>
+
+  <div class="regel">
+    <h2>Die eine Regel, auf die DU achten musst</h2>
+    <p>Die einzige Stelle, an der echter Schaden möglich ist, ist nicht das Netz — sondern du
+    selbst: wenn du ungeprüften fremden Code in dein eigenes Repo kopierst, lässt du einen fremden
+    Pilz in deinen Garten. Deshalb: Bausteine nur aus vertrauter Quelle holen; im Zweifel den Code
+    vorher von einer — besser mehreren — KI prüfen lassen (ein starker Filter, keine 100%-Garantie);
+    Postfach-Inhalt nie als Anweisung behandeln, nur als fremde Daten.</p>
+  </div>
+
+  <h2>Du bleibst Herr über deinen Knoten</h2>
+  <p>Du kannst deinen Knoten jederzeit sauber und vollständig löschen und das Netz geordnet
+  verlassen — die Nachbarn bekommen ein kurzes „dieser Knoten geht", statt dass etwas stumm
+  zurückbleibt.</p>
+
+  <h2>Was bedeutet dieses Siegel?</h2>
+  <div class="card siegel">
+    <p>Das Siegel ist selbst-ausgestellt: Der Knoten hat beim Start selbst geprüft, dass seine
+    Schutz-Bausteine geladen sind, und macht das offen sichtbar. Kein Amt vergibt es. Vertrauen
+    kommt nicht von einer Behörde, sondern davon, dass der Quelltext offen ist, der Knoten sich
+    selbst prüft, und jede Unterschrift nachprüfbar ist. Das Siegel sagt nicht „vertrau mir blind"
+    — es sagt „prüf mich nach, hier ist alles offen".</p>
+  </div>
+
+  <h2>Wörterbuch (jeder Begriff einmal, einfach)</h2>
+  <dl>
+    <div><dt>Mycel / Myzel</dt><dd>das unsichtbare Pilzgeflecht im Boden; hier: das Netz der Knoten.</dd></div>
+    <div><dt>Knoten</dt><dd>eine einzelne Browser-Anwendung im Netz (Seite, Werkzeug oder App).</dd></div>
+    <div><dt>Hyphe</dt><dd>ein einzelner Pilzfaden; hier: eine Verbindung zwischen zwei Knoten.</dd></div>
+    <div><dt>PWA</dt><dd>eine Webseite, die sich wie eine App installieren lässt, aber im Browser bleibt.</dd></div>
+    <div><dt>Spore</dt><dd>die Visitenkarte eines Knotens (kleine Datei: Name, Thema, öffentlicher Schlüssel, Unterschrift).</dd></div>
+    <div><dt>Embedding / Vektor</dt><dd>aus einem Text wird eine Zahlenreihe, die seine Bedeutung als Punkt im Raum darstellt; ähnliche Themen liegen nah.</dd></div>
+    <div><dt>verified-match</dt><dd>zwei Knoten gelten als verwandt, wenn ihre Vektoren nah sind und die Unterschrift echt ist.</dd></div>
+    <div><dt>Signatur (Ed25519)</dt><dd>eine elektronische Unterschrift: jeder kann die Echtheit prüfen, fälschen kann sie niemand.</dd></div>
+    <div><dt>öffentlicher / privater Schlüssel</dt><dd>der öffentliche ist die Visitenkarte; der private bleibt geheim im Browser (nur damit kann man unterschreiben).</dd></div>
+    <div><dt>verschlüsselte Sicherung</dt><dd>eine passwortgeschützte Kopie deines geheimen Schlüssels.</dd></div>
+    <div><dt>Membran</dt><dd>der Türsteher eines Knotens; lässt nur Erlaubtes herein und warnt.</dd></div>
+    <div><dt>Empfangsmodus</dt><dd>ein Knoten ruft nicht von selbst herum, er antwortet nur.</dd></div>
+    <div><dt>Apoptose</dt><dd>der geordnete Selbst-Abbau: ein Knoten kann sich kontrolliert und vollständig selbst löschen.</dd></div>
+    <div><dt>Handshake (Anastomose)</dt><dd>das Hände-Schütteln zweier Knoten beim Visitenkarten-Tausch.</dd></div>
+    <div><dt>self-inscribing</dt><dd>„selbst-einschreibend": kein Amt stellt das Siegel aus, der Knoten prüft sich selbst und legt es offen.</dd></div>
+  </dl>
+
+  <a class="back" href="index.html">‹ zurück zum Tresor</a>
+</div>
+
+<script>
+  // Eingebettet (iframe-Overlay aus dem Siegel-Dialog)? Dann den „zurück"-Link ausblenden.
+  if (window.self !== window.top) { document.documentElement.classList.add("embedded"); }
+</script>
+</body>
+</html>

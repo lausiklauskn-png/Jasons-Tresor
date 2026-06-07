@@ -34,6 +34,8 @@
     border:1px solid var(--line); border-radius:8px; padding:8px 10px; color:var(--accent)}
   textarea{width:100%; min-height:200px; font-family:ui-monospace,monospace; font-size:.78rem; color:var(--ink);
     background:#06100f; border:1px solid var(--line); border-radius:8px; padding:10px; resize:vertical}
+  textarea#domain-desc{min-height:96px; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    font-size:.95rem; line-height:1.5; overflow:hidden; resize:none}
   .row{display:flex; flex-wrap:wrap; align-items:center; gap:6px}
   .ok{color:var(--accent)} .bad{color:#ff8a8a} .warn{color:var(--warn)}
   .hint{color:var(--muted); font-size:.86rem; margin:.4em 0}
@@ -68,6 +70,17 @@
     </div>
     <div id="load-status" class="status"></div>
     <div id="load-box" class="nodeid" hidden></div>
+  </div>
+
+  <div class="card">
+    <h2>Beschreibung (Semantik) — je konkreter, desto besser findet dich das Mycel</h2>
+    <p class="hint">Zwischenschritt zwischen ① und ②: Diese Beschreibung wird der Embedding-Eingang für
+    ② und die <code>domainDescription</code> der in ③ neu signierten Spore.</p>
+    <textarea id="domain-desc" placeholder="Beschreibe deine App neu oder kopiere die Beschreibung / README hier hinein."></textarea>
+    <p class="hint">Je konkreter, desto besser findet dich das Mycel. Beschreibe in eigenen Worten: was die
+    App/Seite ist, wofür man sie nutzt, welche Themen/Stichworte sie abdeckt, für wen sie gedacht ist.
+    Ein gut gefüllter Absatz (ca. 3–8 Sätze) ist ideal — gern auch die README hineinkopieren. Vermeide
+    reine Schlagwort-Listen ohne Kontext.</p>
   </div>
 
   <div class="card">
@@ -117,7 +130,7 @@
   "use strict";
   var CONFIG = {
     nodeName:"Jasons-Tresor", nodeType:"hybrid", domain:"Jasons-Tresor-Bibliothek",
-    domainDescription:"Verwahrt und verschlüsselt JSON-Dateien und SBKIM-Schlüssel offline; Bibliothek/Tresor.",
+    domainDescription:"Jasons-Tresor ist Jasons eigener Endknoten im SBKIM-Mycel zum sicheren Verwahren: er verschlüsselt und speichert JSON-Dateien und SBKIM-Schlüssel offline im Browser (AES-256-GCM), Tresor und Bibliothek zugleich. Backups lassen sich passwortgeschützt exportieren und auf einem anderen Gerät zurückspielen; der private Schlüssel verlässt den Browser nie. Schwester-Knoten von Mein-Tresor, angedockt ans Netz aus Sage, SB-KIMTool-Point, Rezeptbuch und Mixarium.",
     domainKeywords:["Tresor","Bibliothek","JSON","SBKIM-Schlüssel","Verschlüsselung","Endknoten"],
     stammCategories:["JSON-Tresor","Jasons-Bibliothek","Schlüssel-Backup","AES-256-GCM-Verschlüsselung"],
     guestCategories:["Jason-Verwahrung","Schlüssel-Andock","Spore-Verifikation"],
@@ -134,6 +147,9 @@
 
   function log(m){ var d=$("diag"); d.textContent += "\n"+m; d.scrollTop=d.scrollHeight; }
   function setS(el,m,c){ el.textContent=m; el.className="status"+(c?" "+c:""); }
+  // Semantik-Textfeld: getrimmter Inhalt; leer -> Aufrufer fällt auf CONFIG-Default zurück.
+  function descText(){ var el=$("domain-desc"); return el ? (el.value||"").trim() : ""; }
+  function autoGrow(el){ if(!el) return; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
   window.addEventListener("error", function(e){ log("✘ "+(e&&e.message||e)); });
   window.addEventListener("unhandledrejection", function(e){ log("✘ "+(e&&e.reason&&e.reason.message||e.reason)); });
 
@@ -159,7 +175,7 @@
   async function buildSpore(withVector){
     if(!identity) throw new Error("Erst eine Identität laden (Teil B ①) oder anlegen (Teil A).");
     var publicKeyJwk={alg:"Ed25519",crv:"Ed25519",ext:true,key_ops:["verify"],kty:"OKP",x:identity.x};
-    var u={ createdAt:new Date().toISOString(), domain:CONFIG.domain, domainDescription:CONFIG.domainDescription,
+    var u={ createdAt:new Date().toISOString(), domain:CONFIG.domain, domainDescription:(descText()||CONFIG.domainDescription),
       domainKeywords:CONFIG.domainKeywords, embeddingModel:CONFIG.embeddingModel, endpoint:CONFIG.endpoint,
       guestCategories:CONFIG.guestCategories, stammCategories:CONFIG.stammCategories, id:identity.nodeId,
       nodeName:CONFIG.nodeName, nodeType:CONFIG.nodeType, protocolVersion:CONFIG.protocolVersion, publicKey:publicKeyJwk };
@@ -218,8 +234,9 @@
     setS($("vec-status"),"Starte Modell (erster Lauf lädt ~30 MB) …");
     try{
       if(!window.SbkimEmbedding) throw new Error("Embedding-Modul nicht geladen (web/tools/sbkim-embedding.js).");
-      log("Domänen-Text: "+DOMAIN_TEXT);
-      var vec=await window.SbkimEmbedding.embedPassage(DOMAIN_TEXT);   // Float32Array(384)
+      var domainText = descText() || DOMAIN_TEXT;   // Textfeld-Inhalt; leer -> heutiges DOMAIN_TEXT
+      log("Domänen-Text: "+domainText);
+      var vec=await window.SbkimEmbedding.embedPassage(domainText);   // Float32Array(384)
       var arr=Array.prototype.slice.call(vec);
       var l2=Math.sqrt(arr.reduce(function(a,x){return a+x*x;},0));
       if(arr.length!==384) throw new Error("Erwartet 384 Floats, bekommen "+arr.length);
@@ -293,6 +310,10 @@
   // ---- Selbstprüfung beim Laden ----
   (function init(){
     $("diag").textContent="Andock-Werkzeug geladen.";
+    // Semantik-Textfeld vorbefüllen (CONFIG-Default) + auto-wachsen lassen.
+    var desc=$("domain-desc");
+    if(desc){ desc.value=CONFIG.domainDescription; autoGrow(desc);
+      desc.addEventListener("input", function(){ autoGrow(desc); }); }
     log(window.isSecureContext?"✔ Sicherer Kontext (https).":"⚠ KEIN sicherer Kontext — Pages-https nutzen.");
     log(subtle?"✔ crypto.subtle vorhanden.":"✘ crypto.subtle FEHLT.");
     log(window.SbkimEmbedding?"✔ Embedding-Modul (Modul 03) geladen.":"⚠ Embedding-Modul fehlt.");

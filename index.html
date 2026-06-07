@@ -462,6 +462,18 @@
   .andock-tool{display:inline-block; background:var(--accent); color:var(--accent-ink); border:1px solid var(--accent);
     border-radius:10px; padding:9px 14px; font-weight:600; text-decoration:none}
   .andock-tool:hover{filter:brightness(1.06)}
+  .mycel-link{color:var(--accent); text-decoration:none; font-size:.9rem; border:1px solid var(--line);
+    border-radius:10px; padding:9px 12px}
+  .mycel-link:hover{border-color:var(--accent)}
+  #mycel-info{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
+    width:min(880px,94vw); max-width:94vw; height:min(86vh,900px); padding:0; overflow:hidden}
+  #mycel-info::backdrop{background:rgba(0,0,0,.6)}
+  #mycel-info .mycel-head{display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:8px 12px; border-bottom:1px solid var(--line); font-size:.9rem; color:var(--muted)}
+  #mycel-info iframe{display:block; width:100%; height:calc(100% - 41px); border:0; background:var(--bg)}
+  #mycel-close{font:inherit; cursor:pointer; color:var(--ink); background:var(--card); border:1px solid var(--line);
+    border-radius:8px; padding:6px 12px}
+  #mycel-close:hover{border-color:var(--accent)}
   #panik{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
     max-width:430px; width:92%; padding:18px}
   #panik::backdrop{background:rgba(0,0,0,.6)}
@@ -810,7 +822,10 @@
   </p>
 
   <a class="andock-tool" href="werkzeuge/andock.html" target="_blank" rel="noopener"
-     style="display:block;text-align:center;margin:0 0 .9em">🔑 Eigene Identität &amp; Spore erzeugen / verwalten →</a>
+     style="display:block;text-align:center;margin:0 0 .6em">🔑 Eigene Identität &amp; Spore erzeugen / verwalten →</a>
+
+  <a id="mycel-link" class="mycel-link" href="sicherheit.html"
+     style="display:block;text-align:center;margin:0 0 .9em">🛡 So funktioniert das Mycel &amp; wie du geschützt bist →</a>
 
   <!-- Andock-Block: Verbindung zum Werkzeug -->
   <div style="border:1px solid var(--line);border-radius:.6em;padding:.6em .75em;margin:.2em 0 1em">
@@ -847,6 +862,15 @@
     (Klaus' eigener Browser-Lauf) bleiben <b>ungeprüft</b>, bis Klaus sie gesehen hat.
   </p>
   <div class="row-end" style="margin-top:12px"><button id="andock-close" class="btn-ghost" type="button">Schließen</button></div>
+</dialog>
+
+<!-- Mycel-/Sicherheits-Erklärung: In-Page-Overlay (iframe auf sicherheit.html), ✕/Esc schließt. -->
+<dialog id="mycel-info" aria-label="So funktioniert das Mycel und wie du geschützt bist">
+  <div class="mycel-head">
+    <span>🛡 Mycel &amp; Sicherheit</span>
+    <button id="mycel-close" type="button" aria-label="Schließen">✕ Schließen</button>
+  </div>
+  <iframe id="mycel-frame" title="Mycel- und Sicherheits-Erklärung" loading="lazy" src="about:blank"></iframe>
 </dialog>
 
 <dialog id="panik">
@@ -2960,6 +2984,21 @@
     siegel.classList.add('first-boot'); setTimeout(function(){ siegel.classList.remove('first-boot'); }, 700);
   }
   if(andockClose && andock){ andockClose.addEventListener('click', function(){ if(andock.close) andock.close(); }); }
+
+  // Mycel-/Sicherheits-Erklärung als In-Page-Overlay (iframe). Fällt ohne <dialog> auf einen
+  // neuen Tab zurück. Der „zurück"-Link in sicherheit.html versteckt sich im iframe von selbst.
+  var mycelLink = document.getElementById('mycel-link');
+  var mycelInfo = document.getElementById('mycel-info');
+  var mycelClose = document.getElementById('mycel-close');
+  var mycelFrame = document.getElementById('mycel-frame');
+  if(mycelLink && mycelInfo && mycelFrame && mycelInfo.showModal){
+    mycelLink.addEventListener('click', function(e){
+      e.preventDefault();
+      if(mycelFrame.src === 'about:blank' || !mycelFrame.src){ mycelFrame.src = mycelLink.getAttribute('href'); }
+      mycelInfo.showModal();
+    });
+    if(mycelClose){ mycelClose.addEventListener('click', function(){ mycelInfo.close(); }); }
+  }
 })();
 </script>
 </body>
