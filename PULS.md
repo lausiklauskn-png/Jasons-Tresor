@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Vollvernetzung VERVOLLSTÄNDIGT: Inbox-Spore + Tests für die 2 neuen Nachbarn (Sitzung 52)
+
+**Anlass:** Sitzung 51 / PR #96 hat die Vollvernetzung gelistet, aber Mein-Rezeptbuch + Mein-Mixarium
+als „noch nicht erreichbar / Spore nicht lesbar" geführt. **Das stimmte nicht:** ihre Spore liegt
+real abrufbar in `raw/main`. Diese Sitzung schließt die Lücke.
+
+**Getan (headless, `npm test` 59/59 grün):**
+- **Beide Spore aus `raw/main` geholt + reziprok ✔ VALID** (`verify_foreign_spore.mjs`: id selbst
+  nachgerechnet — Rezeptbuch `uOpUBezU…KkXg`, Mixarium `B7Fke9CY…utA`, 9/9, Manipulation fällt durch).
+  Byte-1:1 als `sbkim/rezeptbuch_inbox.json` / `mixarium_inbox.json`.
+- **Match von UNS selbst gerechnet:** Rezeptbuch **0.813698** (✔ verified-match), Mixarium **0.788402**
+  (**ehrlich unter 0.80** → verified-spore). Deckt sich exakt mit Mein-Tresors gemeldeten Werten.
+  4 neue Offline-Tests in `test/andock.test.js`.
+- **Wirkung:** Im Briefkasten zeigt **② Match** für beide jetzt echte Werte statt „Spore nicht lesbar".
+- **`SIGNAL.json` seq 8→9** (mailboxes + Verlauf), `ack[Mein-Tresor] 7→8` (ihre **§8-Antwort** gelesen:
+  `SYNC-VEREINBARUNG.md` + `BRIEF_briefkasten-bauplan.md`). Postfach `AUSTAUSCH-MeinTresor.md` **§9**
+  (Quittung), `status.json` fortgeschrieben, neuer Brief `BRIEF_briefkasten-vollvernetzt.md`.
+
+**Ehrlich / offen:**
+- Rezeptbuch + Mixarium führen weiter **kein `SIGNAL.json`** (HTTP 404) → ③ Sync zeigt für sie korrekt
+  „SIGNAL nicht lesbar". Nur die **Spore** (② Match) ist jetzt da.
+- **Manual-Check:** Briefkasten-Optik (5 Karten, jetzt mit echtem Match für alle erreichbaren) **ungeprüft,
+  wartet auf Klaus' Browser-Lauf**.
+- **Repo-Befund (separat, an Klaus gemeldet):** Der **Hauptzweig (default branch)** steht auf dem alten
+  `claude/jasons-tresor-sbkim-node-ODQ1u` statt `main` → der „Run workflow"-Knopf des SBKIM-Wächters
+  erscheint nicht. Klaus stellt den Hauptzweig in den GitHub-Einstellungen auf `main`.
+
+**Nächste Schritte:**
+1. **Klaus:** Hauptzweig auf `main` umstellen (Wächter-Knopf), dann Browser-Lauf des Briefkastens.
+2. Optional: sobald Rezeptbuch/Mixarium ein `SIGNAL.json` haben → in den Sync (③) aufnehmen.
+
 ## 2026-06-07 — Vollvernetzung (Bauplan §7) + ungelesene Bauten quittiert (Sitzung 51)
 
 **Getan:**
