@@ -3,6 +3,42 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Eigenes Impressum eingefügt (AUFTRAG SB-KIMTool-Point, PII-Freigabe) (Sitzung 55)
+
+**Anlass (Klaus):** „für 2 Impressum, sag ich Freigabe erteilt." → ausdrückliche **PII-Freigabe**
+für den offenen AUFTRAG von SB-KIMTool-Point (`AUSTAUSCH-JasonsTresor.md` §2 / ihr SIGNAL seq 15):
+jeder Knoten trägt ein eigenes Impressum (rechtlich nötig nach §5 TMG).
+
+**Getan (`npm test` 59/59 grün, getesteter Kern unberührt — reine Schale + Doku):**
+- **`impressum.html`** ins Repo (Wurzel) gelegt. **Rechtstext wortgetreu** vom SBKIM-Hub
+  (Vorlage SB-KIMTool-Point/Sage): Impressum **§5 TMG**, Verantwortlich **§55 Abs. 2 RStV**,
+  **Urheberrecht & Copyright** inkl. ASCII-Box, **Haftungsausschluss**, **Datenschutzerklärung**
+  — **DE + EN** mit Sprach-Umschalter (`localStorage 'sbkimlang'`).
+- **Re-geskinnt, NICHT geklont:** Optik in unsere Tresor-Farben (Teal `#2dd4bf` / BG `#0b1416`,
+  übernommen aus den `:root`-Variablen der App), Titel/Name/Repo-Link → **Jasons-Tresor**,
+  Projekt-Beschreibung an unsere App angepasst (Tresor-/Bibliotheks-App + SBKIM-Endknoten).
+- **Footer-Link** „© 2026 Klaus Nitzsche · Alle Rechte vorbehalten · Impressum, Datenschutz &
+  Urheberrecht" **unten auf der Hauptseite** — in `index.html` **und** der Spiegelung
+  `jasons-bibliothek/index.html` (relativer Pfad `impressum.html`, greift in beiden — in der
+  Spiegelung über `<base href="../">`). Offline/zero-dependency.
+- **Gemeldet:** `sbkim/SIGNAL.json` **seq 10 → 11** (Auftrag erfüllt); im Postfach
+  `sbkim/AUSTAUSCH-SBKIMTool.md` **§7** als erledigt quittiert.
+
+**PII-Ehrlichkeit:** Das Impressum trägt echte personenbezogene Daten (Name/Adresse/E-Mail) —
+**von Klaus ausdrücklich freigegeben**, dieselbe Angabe wie auf seinen anderen Knoten, steht dort
+bereits öffentlich. Die Leitplanke „kein Secret im Code" bleibt unberührt: **privater
+Schlüssel/Passwort sind weiterhin NICHT im Repo**.
+
+**Manual-Check:** Headless 59/59 grün; SIGNAL.json valides JSON; impressum.html-JS Syntax OK;
+Footer-Links in beiden Dateien vorhanden. **Impressum-Optik im Browser ungeprüft, wartet auf
+Klaus' Browser-Lauf** (Hard-Reload → Footer-Link unten öffnet die Seite, DE/EN-Umschalter,
+Tresor-Farben).
+
+**Offen (Point seq 17, weiterhin):** Auto-Issue-Wächter (`.github/sbkim-watch.mjs` + Workflow)
+übernehmen — als Nächstes, sobald Klaus es freigibt.
+
+**Nächste Schritte:** siehe neuesten Brief `docs/sessions/BRIEF_impressum.md`.
+
 ## 2026-06-07 — Briefkasten-Runde quittiert: „3 ungelesen" abgearbeitet (Sitzung 54)
 
 **Anlass (Klaus):** Browser-Screenshot — Briefkasten zeigt **„4/5 verbunden · 3 ungelesen"**
