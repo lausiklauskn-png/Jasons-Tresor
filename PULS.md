@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Briefkasten-Runde quittiert: „3 ungelesen" abgearbeitet (Sitzung 54)
+
+**Anlass (Klaus):** Browser-Screenshot — Briefkasten zeigt **„4/5 verbunden · 3 ungelesen"**
+(Wächter-Lampe gelb, Sitzung 53). Fußzeile: „Quittieren via `ack` in `sbkim/SIGNAL.json`".
+
+**Wichtiger Befund (ehrlich):** Mein zugewiesener Arbeitszweig stand zu Beginn auf einem
+**alten, fast leeren Stand** (nur die „Gründung", provisorische nodeId, Demo-Vektor) — eine
+andere Linie als `main`. Ein erster Demo-Nachbau wäre ein **Rückschritt** gewesen → **verworfen**.
+Stattdessen den Zweig auf den echten `main`-Stand gesetzt und nur den ehrlichen Zuwachs ergänzt.
+
+**Getan (`npm test` 59/59 grün, nichts an Logik/UI geändert — reine Quittung):**
+- **3 ungelesene Nachbar-Bauten gelesen** und die Sporen **reziprok neu gegengeprüft**
+  (frisch aus `raw/main`, **byte-identisch** zu unseren Inbox-Dateien, **✔ VALID**, Matches
+  unverändert von uns nachgerechnet: Sage **0.847784** · SB-KIMTool-Point **0.853740** ·
+  Mein-Tresor **1.000000**).
+- **`sbkim/SIGNAL.json` quittiert** (seq 9→10): `ack` Sage 15→**18**, SB-KIMTool-Point 13→**20**,
+  Mein-Tresor 8→**11** (nur ehrlich Gelesenes, monoton). → im Browser: 0 ungelesen, Lampe türkis.
+- Mein-Rezeptbuch + Mein-Mixarium führen weiter **kein `SIGNAL.json`** (HTTP 404) → nichts zu
+  quittieren; ihre Spore bleibt verified-spore/-match unverändert.
+
+**Offen für Klaus (AUFTRÄGE von SB-KIMTool-Point seq 15/17 — bewusst NICHT autonom gebaut):**
+- **Eigenes Impressum** nachziehen (Rechtstext 1:1 vom Hub, an unsere Identität re-geskinnt) —
+  braucht Klaus' **PII-Freigabe**.
+- **Auto-Issue-Wächter** (`.github/sbkim-watch.mjs` + Workflow) übernehmen (zeitgesteuert,
+  meldet Neues auch ohne offene Seite).
+
+**Manual-Check:** Headless 59/59 grün. Briefkasten-Optik (jetzt 0 ungelesen / Lampe türkis)
+**ungeprüft, wartet auf Klaus' Browser-Lauf** (Hard-Reload Ctrl+Shift+R).
+
+**Nächste Schritte:** siehe neuesten Brief `docs/sessions/BRIEF_briefkasten-quittieren.md`.
+
 ## 2026-06-07 — Wächter-Lampe wird lebendig (gelb = Neues im Netz, rot = Fremdzugriff) (Sitzung 53)
 
 **Anlass (Klaus):** Wunsch nach einem „gelben Knopf, der bei Angriff/Wächter-Auslösung rot wird" — wie

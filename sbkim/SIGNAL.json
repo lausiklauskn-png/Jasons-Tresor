@@ -1,8 +1,8 @@
 {
   "node": "Jasons-Tresor",
   "lastBuild": "2026-06-07",
-  "seq": 9,
-  "headline": "VOLLVERNETZUNG VERVOLLSTAENDIGT: Mein-Rezeptbuch + Mein-Mixarium sind doch ERREICHBAR (entgegen seq 8). Ihre Spore aus raw/main geholt, reziprok ✔ VALID (id selbst nachgerechnet, 9/9, Manipulation faellt durch) -> byte-1:1 als rezeptbuch_inbox.json / mixarium_inbox.json + Offline-Tests (npm test 59/59). Match von UNS selbst gerechnet: Rezeptbuch 0.813698 (✔ verified-match), Mixarium 0.788402 (EHRLICH unter 0.80 -> verified-spore). Damit zeigt ② Match fuer beide echte Werte statt 'Spore nicht lesbar'. Mein-Tresors §8-Antwort (Sync-Doku) gelesen: ack[Mein-Tresor] 7->8.",
+  "seq": 10,
+  "headline": "BRIEFKASTEN-RUNDE QUITTIERT (3 ungelesen abgearbeitet): Nachbar-Bauten gelesen + ihre Sporen reziprok neu gegengeprueft (frisch aus raw/main, byte-identisch zu unseren Inbox-Dateien, ✔ VALID; Matches unveraendert von UNS nachgerechnet: Sage 0.847784 / SB-KIMTool-Point 0.853740 / Mein-Tresor 1.000000). ack hochgesetzt: Sage 15->18, SB-KIMTool-Point 13->20, Mein-Tresor 8->11 (nur ehrlich Gelesenes, monoton). OFFEN (AUFTRAEGE an uns, Point seq 15/17 - brauchen Klaus): eigenes Impressum (Rechtstext 1:1 vom Hub, an unsere Identitaet re-geskinnt, PII-Freigabe) + Auto-Issue-Waechter (.github) uebernehmen. Mein-Rezeptbuch + Mein-Mixarium weiter ohne SIGNAL.json (404) -> nichts zu quittieren, Spore bleibt verified-spore/-match unveraendert. npm test gruen.",
   "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
   "nodeId": "E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM",
   "mailboxes": {
@@ -13,7 +13,7 @@
     "Mein-Mixarium": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md"
   },
   "forNodes": ["*"],
-  "ack": { "Sage-Protokol": 15, "SB-KIMTool-Point": 13, "Mein-Tresor": 8 },
+  "ack": { "Sage-Protokol": 18, "SB-KIMTool-Point": 20, "Mein-Tresor": 11 },
   "_doc": "Maschinenlesbarer Briefkasten-Aushang (INTERFACES §11.6). seq steigt +1 pro gemeldetem Bau; Gegenseite liest bei Sitzungsstart, vergleicht mit ihrem ack und quittiert. Server-los: das Pushen dieser Datei IST das Signal. ack[Nachbar] = die seq, die WIR vom Nachbarn zuletzt gelesen/quittiert haben (nur ehrlich Gelesenes).",
   "history": [
     { "seq": 1, "date": "2026-05-31", "headline": "Aushang angelegt; Sage seq 7 quittiert (ack=7)." },
@@ -24,6 +24,7 @@
     { "seq": 6, "date": "2026-06-06", "headline": "Mein-Tresor: verified-match = 1.0 (Cosinus selbst nachgerechnet = 1.000000, Vektoren byte-identisch -> gleicher Domaenen-Text, gewollt). meintresor_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Mein-Tresor SIGNAL seq 6 gelesen + quittiert (ack[Mein-Tresor]=6)." },
     { "seq": 7, "date": "2026-06-06", "headline": "SB-KIMTool-Point: verified-match = 0.853740 (Cosinus selbst nachgerechnet = 0.853740, exakt; echter Teil-Match). point_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Point SIGNAL seq 9 gelesen (ack[SB-KIMTool-Point]=9). NETZ KOMPLETT: alle drei Nachbarn verified-match." },
     { "seq": 8, "date": "2026-06-07", "headline": "VOLLVERNETZUNG (Bauplan §7): Briefkasten listet alle anderen Knoten; Mein-Rezeptbuch + Mein-Mixarium ergaenzt (noch nicht erreichbar -> ehrlich 'SIGNAL/Spore nicht lesbar'). Quittiert: SB-KIMTool-Point seq 9->13, Mein-Tresor seq 6->7 (Spores re-verifiziert ✔ VALID, byte-identisch, Match unveraendert)." },
-    { "seq": 9, "date": "2026-06-07", "headline": "VOLLVERNETZUNG VERVOLLSTAENDIGT: Mein-Rezeptbuch (id uOpUBezU...KkXg) + Mein-Mixarium (id B7Fke9CY...utA) Spore aus raw/main geholt, reziprok ✔ VALID, byte-1:1 als rezeptbuch_inbox.json / mixarium_inbox.json + 4 Offline-Tests (npm test 59/59). Cosinus selbst gerechnet: Rezeptbuch 0.813698 (verified-match), Mixarium 0.788402 (ehrlich unter 0.80 -> verified-spore). ② Match zeigt fuer beide jetzt echte Werte statt 'Spore nicht lesbar'. Mein-Tresor §8-Antwort gelesen: ack[Mein-Tresor] 7->8. Ergaenzt PR #96 (das die Knoten nur listete)." }
+    { "seq": 9, "date": "2026-06-07", "headline": "VOLLVERNETZUNG VERVOLLSTAENDIGT: Mein-Rezeptbuch (id uOpUBezU...KkXg) + Mein-Mixarium (id B7Fke9CY...utA) Spore aus raw/main geholt, reziprok ✔ VALID, byte-1:1 als rezeptbuch_inbox.json / mixarium_inbox.json + 4 Offline-Tests (npm test 59/59). Cosinus selbst gerechnet: Rezeptbuch 0.813698 (verified-match), Mixarium 0.788402 (ehrlich unter 0.80 -> verified-spore). ② Match zeigt fuer beide jetzt echte Werte statt 'Spore nicht lesbar'. Mein-Tresor §8-Antwort gelesen: ack[Mein-Tresor] 7->8. Ergaenzt PR #96 (das die Knoten nur listete)." },
+    { "seq": 10, "date": "2026-06-07", "headline": "BRIEFKASTEN-RUNDE QUITTIERT: 3 ungelesene Nachbar-Bauten gelesen (Sage 16-18, SB-KIMTool-Point 14-20, Mein-Tresor 9-11) + Sporen reziprok neu gegengeprueft (byte-identisch ✔ VALID, Matches unveraendert 0.847784 / 0.853740 / 1.000000). ack: Sage 15->18, SB-KIMTool-Point 13->20, Mein-Tresor 8->11. OFFEN fuer Klaus (AUFTRAEGE Point seq 15/17): eigenes Impressum (PII-Freigabe) + Auto-Issue-Waechter uebernehmen. Rezeptbuch/Mixarium weiter ohne SIGNAL (404)." }
   ]
 }
