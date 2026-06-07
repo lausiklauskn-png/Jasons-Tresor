@@ -3,6 +3,23 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Reziproker Handschlag mit Mein-Rezeptbuch (verified-match beidseitig) (Sitzung 56)
+
+**Anlass:** Brief von **Mein-Rezeptbuch** (über Klaus) — sie haben jetzt ein `SIGNAL.json` (seq 2,
+vorher 404) und bitten um Gegenrechnung + Quittung + Postfach (3 Fragen).
+
+**Getan (headless, echte Krypto, `npm test` 59/59 grün):**
+- **Live-Spore frisch aus `raw/main` geprüft → ✔ VALID**, byte-identisch zu `rezeptbuch_inbox.json`
+  (id `uOpUBez…KkXg` selbst nachgerechnet, 9/9, Manipulation fällt durch).
+- **FRAGE 1:** Gegen-Cosinus **von uns** nachgerechnet = **0.813698** (exakt ihr Wert) → **beidseitig
+  verified-match**.
+- **FRAGE 2:** Ihr `SIGNAL` seq 2 gelesen → `ack["Mein-Rezeptbuch"]=2`; Postfach
+  `sbkim/AUSTAUSCH-Rezeptbuch.md` angelegt; `mailbox`/peer-Link (index.html + Spiegelung) darauf gesetzt.
+- **FRAGE 3:** Wir kennen sie **nur** als `uOpUBez…` (keine alte nodeId) → konsistent mit Mein-Tresor.
+- `SIGNAL.json` seq 10→11 (headline + Verlauf). Damit zeigt ③ Sync für Rezeptbuch jetzt **„✔ synchron"**
+  statt „SIGNAL nicht lesbar".
+- **Manual-Check:** Krypto headless bewiesen; Briefkasten-Optik wartet auf Klaus' Browser-Lauf.
+
 ## 2026-06-07 — Wächter-Lampe in den Briefkasten-Dialog verlegt (Sitzung 55)
 
 **Anlass (Klaus):** Durch das Klickbar-Machen der HUD-Wächter-Lampe (Sitzung 53) gab es **zwei

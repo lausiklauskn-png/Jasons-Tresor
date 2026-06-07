@@ -1,19 +1,19 @@
 {
   "node": "Jasons-Tresor",
   "lastBuild": "2026-06-07",
-  "seq": 10,
-  "headline": "BRIEFKASTEN-RUNDE QUITTIERT (3 ungelesen abgearbeitet): Nachbar-Bauten gelesen + ihre Sporen reziprok neu gegengeprueft (frisch aus raw/main, byte-identisch zu unseren Inbox-Dateien, ✔ VALID; Matches unveraendert von UNS nachgerechnet: Sage 0.847784 / SB-KIMTool-Point 0.853740 / Mein-Tresor 1.000000). ack hochgesetzt: Sage 15->18, SB-KIMTool-Point 13->20, Mein-Tresor 8->11 (nur ehrlich Gelesenes, monoton). OFFEN (AUFTRAEGE an uns, Point seq 15/17 - brauchen Klaus): eigenes Impressum (Rechtstext 1:1 vom Hub, an unsere Identitaet re-geskinnt, PII-Freigabe) + Auto-Issue-Waechter (.github) uebernehmen. Mein-Rezeptbuch + Mein-Mixarium weiter ohne SIGNAL.json (404) -> nichts zu quittieren, Spore bleibt verified-spore/-match unveraendert. npm test gruen.",
+  "seq": 11,
+  "headline": "MEIN-REZEPTBUCH JETZT MIT SIGNAL (vorher 404) -> reziproker Handschlag vollzogen: ihre Live-Spore frisch aus raw/main geholt, ✔ VALID (id uOpUBez...KkXg == SHA256(pub), 9/9, byte-identisch zu unserer rezeptbuch_inbox.json), ihr SIGNAL seq 2 gelesen -> ack[Mein-Rezeptbuch]=2. Gegen-Cosinus von UNS nachgerechnet = 0.813698 (exakt ihr Wert) -> beidseitig verified-match. Postfach AUSTAUSCH-Rezeptbuch.md angelegt + mailbox/peer-Link darauf gesetzt. Wir kennen sie NUR unter uOpUBez... (keine alte nodeId), deckt sich mit Mein-Tresor.",
   "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
   "nodeId": "E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM",
   "mailboxes": {
     "Sage-Protokol": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md",
     "SB-KIMTool-Point": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-SBKIMTool.md",
     "Mein-Tresor": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-MeinTresor.md",
-    "Mein-Rezeptbuch": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md",
+    "Mein-Rezeptbuch": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-Rezeptbuch.md",
     "Mein-Mixarium": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH.md"
   },
   "forNodes": ["*"],
-  "ack": { "Sage-Protokol": 18, "SB-KIMTool-Point": 20, "Mein-Tresor": 11 },
+  "ack": { "Sage-Protokol": 18, "SB-KIMTool-Point": 20, "Mein-Tresor": 11, "Mein-Rezeptbuch": 2 },
   "_doc": "Maschinenlesbarer Briefkasten-Aushang (INTERFACES §11.6). seq steigt +1 pro gemeldetem Bau; Gegenseite liest bei Sitzungsstart, vergleicht mit ihrem ack und quittiert. Server-los: das Pushen dieser Datei IST das Signal. ack[Nachbar] = die seq, die WIR vom Nachbarn zuletzt gelesen/quittiert haben (nur ehrlich Gelesenes).",
   "history": [
     { "seq": 1, "date": "2026-05-31", "headline": "Aushang angelegt; Sage seq 7 quittiert (ack=7)." },
@@ -25,6 +25,7 @@
     { "seq": 7, "date": "2026-06-06", "headline": "SB-KIMTool-Point: verified-match = 0.853740 (Cosinus selbst nachgerechnet = 0.853740, exakt; echter Teil-Match). point_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Point SIGNAL seq 9 gelesen (ack[SB-KIMTool-Point]=9). NETZ KOMPLETT: alle drei Nachbarn verified-match." },
     { "seq": 8, "date": "2026-06-07", "headline": "VOLLVERNETZUNG (Bauplan §7): Briefkasten listet alle anderen Knoten; Mein-Rezeptbuch + Mein-Mixarium ergaenzt (noch nicht erreichbar -> ehrlich 'SIGNAL/Spore nicht lesbar'). Quittiert: SB-KIMTool-Point seq 9->13, Mein-Tresor seq 6->7 (Spores re-verifiziert ✔ VALID, byte-identisch, Match unveraendert)." },
     { "seq": 9, "date": "2026-06-07", "headline": "VOLLVERNETZUNG VERVOLLSTAENDIGT: Mein-Rezeptbuch (id uOpUBezU...KkXg) + Mein-Mixarium (id B7Fke9CY...utA) Spore aus raw/main geholt, reziprok ✔ VALID, byte-1:1 als rezeptbuch_inbox.json / mixarium_inbox.json + 4 Offline-Tests (npm test 59/59). Cosinus selbst gerechnet: Rezeptbuch 0.813698 (verified-match), Mixarium 0.788402 (ehrlich unter 0.80 -> verified-spore). ② Match zeigt fuer beide jetzt echte Werte statt 'Spore nicht lesbar'. Mein-Tresor §8-Antwort gelesen: ack[Mein-Tresor] 7->8. Ergaenzt PR #96 (das die Knoten nur listete)." },
-    { "seq": 10, "date": "2026-06-07", "headline": "BRIEFKASTEN-RUNDE QUITTIERT: 3 ungelesene Nachbar-Bauten gelesen (Sage 16-18, SB-KIMTool-Point 14-20, Mein-Tresor 9-11) + Sporen reziprok neu gegengeprueft (byte-identisch ✔ VALID, Matches unveraendert 0.847784 / 0.853740 / 1.000000). ack: Sage 15->18, SB-KIMTool-Point 13->20, Mein-Tresor 8->11. OFFEN fuer Klaus (AUFTRAEGE Point seq 15/17): eigenes Impressum (PII-Freigabe) + Auto-Issue-Waechter uebernehmen. Rezeptbuch/Mixarium weiter ohne SIGNAL (404)." }
+    { "seq": 10, "date": "2026-06-07", "headline": "BRIEFKASTEN-RUNDE QUITTIERT: 3 ungelesene Nachbar-Bauten gelesen (Sage 16-18, SB-KIMTool-Point 14-20, Mein-Tresor 9-11) + Sporen reziprok neu gegengeprueft (byte-identisch ✔ VALID, Matches unveraendert 0.847784 / 0.853740 / 1.000000). ack: Sage 15->18, SB-KIMTool-Point 13->20, Mein-Tresor 8->11. OFFEN fuer Klaus (AUFTRAEGE Point seq 15/17): eigenes Impressum (PII-Freigabe) + Auto-Issue-Waechter uebernehmen. Rezeptbuch/Mixarium weiter ohne SIGNAL (404)." },
+    { "seq": 11, "date": "2026-06-07", "headline": "Mein-Rezeptbuch hat jetzt ein SIGNAL.json (seq 2) + Brief geschickt. Reziproker Handschlag: Live-Spore frisch geprueft ✔ VALID (id uOpUBez...KkXg, byte-identisch zu rezeptbuch_inbox.json), Gegen-Cosinus von UNS nachgerechnet = 0.813698 -> beidseitig verified-match. ack[Mein-Rezeptbuch]=2; Postfach AUSTAUSCH-Rezeptbuch.md angelegt (mailbox/peer darauf gezeigt). FRAGE 3 beantwortet: wir kennen sie NUR als uOpUBez... (keine alte nodeId), passt zu Mein-Tresor." }
   ]
 }
