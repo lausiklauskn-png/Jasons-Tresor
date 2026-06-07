@@ -416,9 +416,13 @@
   /* ===== HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht ===== */
   #hud{position:fixed; top:12px; left:14px; z-index:55; display:flex; align-items:center; gap:10px}
   #hud.is-hidden{display:none}
-  .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf;
+  .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf; cursor:pointer;
     box-shadow:0 0 10px rgba(45,212,191,.85); animation:hud-breath 3.2s ease-in-out infinite}
   @keyframes hud-breath{0%,100%{opacity:.65} 50%{opacity:1}}
+  /* Wächter-Lampe reagiert auf echte Ereignisse: gelb = Neues im Netz (Wächter springt an),
+     rot = Fremdzugriff erkannt (falsches Passwort -> Sperre). Türkis = ruhig. */
+  .hud-lamp.is-news{ background:#e0a52b; box-shadow:0 0 11px rgba(224,165,43,.92) }
+  .hud-lamp.is-alarm{ background:#c0392b; box-shadow:0 0 13px rgba(192,57,43,.95); animation-duration:1s }
   .hud-seal{display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%;
     background:radial-gradient(circle at 50% 35%, #d9b25a, #7a5a1e); border:1px solid #caa24e;
     font-size:.85rem; box-shadow:0 0 8px rgba(201,169,97,.5); cursor:help}
@@ -747,7 +751,8 @@
 
 <!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
 <div id="hud">
-  <span class="hud-lamp" title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter ruhig"></span>
+  <span class="hud-lamp" id="hud-lamp" role="button" tabindex="0" onclick="sbkimMailboxCheck(false)"
+        title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter: ruhig — keine Fremdzugriffe erkannt"></span>
   <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
     <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
   </button>
@@ -756,6 +761,42 @@
           aria-label="SBKIM-Briefkasten öffnen">📬 Briefkasten<span id="hud-mailbox-badge" hidden></span></button>
   <button id="hud-panik" class="hud-panik" type="button" title="Notfall — schnell verriegeln">🛑 Notfall</button>
 </div>
+
+<!-- Wächter-Lampe: lebendige Steuerung. Priorität rot (Fremdzugriff) > gelb (Neues im Netz) > türkis (ruhig).
+     Gespeist aus echten Ereignissen: jtWatcherAlarm() bei Passwort-Sperre, jtWatcherNews() aus dem Briefkasten. -->
+<script>
+(function () {
+  var state = { news: false, alarmUntil: 0 }, timer = null;
+  function lamp() { return document.getElementById("hud-lamp"); }
+  function render() {
+    var el = lamp(); if (!el) return;
+    var alarm = Date.now() < state.alarmUntil;
+    el.classList.toggle("is-alarm", alarm);
+    el.classList.toggle("is-news", !alarm && !!state.news);
+    el.title = alarm
+      ? "Wächter: ⚠ Fremdzugriff erkannt — falsches Passwort, Buch gesperrt"
+      : (state.news
+          ? "Wächter: Neues im Netz — ungelesene Nachbar-Bauten (klick: Briefkasten öffnen)"
+          : "Wächter: ruhig — keine Fremdzugriffe erkannt");
+    el.setAttribute("aria-label", el.title);
+    if (alarm) { if (!timer) timer = setInterval(render, 1000); }
+    else if (timer) { clearInterval(timer); timer = null; }
+  }
+  // Gelb: der Briefkasten meldet ungelesene Bauten (true) bzw. alles synchron (false).
+  window.jtWatcherNews = function (hasNews) { state.news = !!hasNews; render(); };
+  // Rot: Fremdzugriff erkannt (Passwort-Sperre). Hält die Sperrzeit über (~62 s), dann zurück.
+  window.jtWatcherAlarm = function (ms) { state.alarmUntil = Date.now() + (ms || 62000); render(); };
+  window.jtRenderWatcherLamp = render;
+  // Tastatur-Bedienung der Lampe (Enter/Space öffnet den Briefkasten).
+  document.addEventListener("DOMContentLoaded", function () {
+    render();
+    var el = lamp();
+    if (el) el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (window.sbkimMailboxCheck) sbkimMailboxCheck(false); }
+    });
+  });
+})();
+</script>
 
 <!-- SBKIM · Andock — Verbindung zum Werkzeug (wie im Sage-Protokoll) -->
 <dialog id="andock">
@@ -1646,6 +1687,8 @@
       if (!badge) continue;
       if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
     }
+    // Wächter-Lampe: gelb, sobald es ungelesene Nachbar-Bauten gibt (sonst zurück auf ruhig).
+    if (window.jtWatcherNews) window.jtWatcherNews(unread > 0);
   }
   // Beim Laden still pruefen und Badge setzen (kein Dialog-Popup).
   window.addEventListener("DOMContentLoaded", () => { try { sbkimMailboxCheck(true); } catch {} });
@@ -1782,7 +1825,8 @@
       if(codeIn) codeIn.disabled = false; if(codeGo) codeGo.disabled = false;
     }
   }
-  function startLock(){ lockedUntil = Date.now() + 60000; updateLockUI(); clearLockTimer(); lockTimer = setInterval(updateLockUI, 500); }
+  function startLock(){ lockedUntil = Date.now() + 60000; updateLockUI(); clearLockTimer(); lockTimer = setInterval(updateLockUI, 500);
+    if (window.jtWatcherAlarm) window.jtWatcherAlarm(62000); }   // Wächter-Lampe rot: Fremdzugriff erkannt
 
   // --- Inhalt des offenen Buchs rendern (Einträge read-only + „Ansehen"/„Herunterladen") ---
   function humanSize(b){ b = Number(b) || 0; if(b < 1024) return b + ' B'; if(b < 1048576) return (b/1024).toFixed(1) + ' KB'; return (b/1048576).toFixed(1) + ' MB'; }

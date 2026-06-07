@@ -3,6 +3,25 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Wächter-Lampe wird lebendig (gelb = Neues im Netz, rot = Fremdzugriff) (Sitzung 53)
+
+**Anlass (Klaus):** Wunsch nach einem „gelben Knopf, der bei Angriff/Wächter-Auslösung rot wird" — wie
+bei den anderen. **Befund (ehrlich, alle 5 Nachbar-Repos geprüft):** diesen reagierenden Knopf hat
+**keiner** wirklich; überall (auch bei uns) nur eine **statische türkise Wächter-Lampe** („ruhig"), die
+echte Reaktion ist überall als „spätere Sicherheits-Sitzung" vermerkt. **Nichts zum Kopieren → bei uns
+als Erstem echt gebaut.** Klaus wählte die volle Variante (gelb + rot).
+
+**Getan (additiv, `npm test` 59/59 grün, getesteter Kern unberührt):**
+- **HUD-Wächter-Lampe reagiert jetzt auf echte Ereignisse** (Priorität rot > gelb > türkis):
+  - **Türkis** = ruhig (Normalzustand).
+  - **Gelb** = der Wächter „springt an": es gibt **ungelesene Nachbar-Bauten** (gespeist aus
+    `sbkimMailboxCheck` → `jtWatcherNews(unread>0)`). Tooltip nennt es; Klick öffnet den Briefkasten.
+  - **Rot** = **Fremdzugriff erkannt**: 2× falsches Passwort → bestehende 1-Minuten-Sperre
+    (`startLock()` → `jtWatcherAlarm(62000)`), hält die Sperrzeit über, dann zurück.
+  - Lampe ist nun **anklickbar** (Maus + Enter/Space) → Briefkasten. Spiegelung byte-identisch.
+- **Manual-Check:** **optisch ungeprüft, wartet auf Klaus' Browser-Lauf** (Hard-Reload). Test: Buch mit
+  falschem Passwort 2× → Lampe rot; ungelesene Bauten → Lampe gelb (im Screenshot wären das die „3").
+
 ## 2026-06-07 — Vollvernetzung VERVOLLSTÄNDIGT: Inbox-Spore + Tests für die 2 neuen Nachbarn (Sitzung 52)
 
 **Anlass:** Sitzung 51 / PR #96 hat die Vollvernetzung gelistet, aber Mein-Rezeptbuch + Mein-Mixarium
