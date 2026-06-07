@@ -3,6 +3,25 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Vollvernetzung (Bauplan §7) + ungelesene Bauten quittiert (Sitzung 51)
+
+**Getan:**
+- **Vollvernetzung** nach Mein-Tresors `BRIEF_briefkasten-bauplan.md` §7 (Klaus' Regel): unser
+  Briefkasten listet jetzt **alle anderen Knoten** — **Mein-Rezeptbuch** + **Mein-Mixarium** ergänzt
+  (5 Nachbarn). Beide zeigen sich **ehrlich** als „SIGNAL/Spore nicht lesbar" (Repos noch nicht live,
+  HTTP 404) — die Logik degradiert sauber, kein Bruch.
+- **Ungelesene Bauten gelesen + quittiert:** SB-KIMTool-Point seq 9→13 („Siegel-Modal aufgeräumt"),
+  Mein-Tresor seq 6→7 („Briefkasten vollvernetzt"). Beide Spores reziprok **re-verifiziert ✔ VALID**,
+  byte-identisch zur Inbox, Match unverändert (Point 0.853740, Mein-Tresor 1.0) → kein Inbox/Test-Update nötig.
+- `SIGNAL.json` seq 7→8 + headline; Spiegelung neu aus Wurzel erzeugt. `npm test` 55/55.
+
+**Bestätigt (Klaus' Browser-Lauf, Screenshots):** Unser Briefkasten läuft live wie gebaut (4 Ebenen
+inkl. ④ Brief, Siegel-Kopf, 3/3 verbunden). Browser-Punkt 1 = **grün**.
+
+**Offen:** Mein-Rezeptbuch/Mein-Mixarium echte Spore holen + reziprok verifizieren, sobald ihre Repos
+live sind → dann `*_inbox.json` anlegen und sie zeigen verified-match. Optional: Bau-Meldung
+(`SIGNAL.headline`) je Karte einblenden.
+
 ## 2026-06-06 — SITZUNGSABSCHLUSS
 
 **Netz:** komplett — alle drei Nachbarn beidseitig `verified-match`, von uns selbst nachgerechnet

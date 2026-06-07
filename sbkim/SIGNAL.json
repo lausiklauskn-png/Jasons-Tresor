@@ -1,8 +1,8 @@
 {
   "node": "Jasons-Tresor",
-  "lastBuild": "2026-06-06",
-  "seq": 7,
-  "headline": "NETZ KOMPLETT: SB-KIMTool-Point hat unsere neue Identitaet eingetragen -> verified-match Point<->Jasons-Tresor = 0.853740 (echter Teil-Match, anderer Domaenen-Text). Von UNS nachgerechnet: Cosinus = 0.853740, exakt. point_inbox.json aktualisiert (mit Vektor) ✔ VALID; Point SIGNAL seq 9 gelesen (ack[SB-KIMTool-Point]=9). Damit alle drei Nachbarn verified-match: Sage 0.847784, Mein-Tresor 1.0, SB-KIMTool-Point 0.853740.",
+  "lastBuild": "2026-06-07",
+  "seq": 8,
+  "headline": "VOLLVERNETZUNG (Klaus' Regel, Mein-Tresor BRIEF_briefkasten-bauplan.md §7): Briefkasten listet jetzt ALLE anderen Knoten -> Mein-Rezeptbuch + Mein-Mixarium ergaenzt (zeigen sich ehrlich als 'noch nicht erreichbar', bis ihre Repos live sind). Ungelesene Bauten gelesen + quittiert: SB-KIMTool-Point seq 13 (ack 9->13), Mein-Tresor seq 7 (ack 6->7); beide Spores reziprok re-verifiziert ✔ VALID, byte-identisch, Match unveraendert (Point 0.853740, Mein-Tresor 1.0).",
   "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
   "nodeId": "E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM",
   "mailboxes": {
@@ -11,7 +11,7 @@
     "Mein-Tresor": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/AUSTAUSCH-MeinTresor.md"
   },
   "forNodes": ["*"],
-  "ack": { "Sage-Protokol": 15, "SB-KIMTool-Point": 9, "Mein-Tresor": 6 },
+  "ack": { "Sage-Protokol": 15, "SB-KIMTool-Point": 13, "Mein-Tresor": 7 },
   "_doc": "Maschinenlesbarer Briefkasten-Aushang (INTERFACES §11.6). seq steigt +1 pro gemeldetem Bau; Gegenseite liest bei Sitzungsstart, vergleicht mit ihrem ack und quittiert. Server-los: das Pushen dieser Datei IST das Signal. ack[Nachbar] = die seq, die WIR vom Nachbarn zuletzt gelesen/quittiert haben (nur ehrlich Gelesenes).",
   "history": [
     { "seq": 1, "date": "2026-05-31", "headline": "Aushang angelegt; Sage seq 7 quittiert (ack=7)." },
@@ -20,6 +20,7 @@
     { "seq": 4, "date": "2026-06-06", "headline": "IDENTITAETSWECHSEL: alte nodeId 7F_zNop... (verlorener Demo-Schluessel, Passwort nie gesichert) ersetzt durch NEUE Browser-Identitaet E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM mit echtem 384-dim domainVector (L2=1). spore.json ✔ VALID. Alle Nachbarn um Austausch der Registrierung gebeten (Postfaecher aktualisiert)." },
     { "seq": 5, "date": "2026-06-06", "headline": "Sage hat verarbeitet: verified-match Sage<->Jasons-Tresor = 0.847784 (Modul 04). Von UNS unabhaengig nachgerechnet (Cosinus spore.json<->sage_inbox.json = 0.847784, exakt; Test test/andock.test.js). Sage SIGNAL seq 15 gelesen + quittiert (ack[Sage-Protokol]=15). Alte nodeId 7F_zNop... bei Sage -> previousNodeIds." },
     { "seq": 6, "date": "2026-06-06", "headline": "Mein-Tresor: verified-match = 1.0 (Cosinus selbst nachgerechnet = 1.000000, Vektoren byte-identisch -> gleicher Domaenen-Text, gewollt). meintresor_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Mein-Tresor SIGNAL seq 6 gelesen + quittiert (ack[Mein-Tresor]=6)." },
-    { "seq": 7, "date": "2026-06-06", "headline": "SB-KIMTool-Point: verified-match = 0.853740 (Cosinus selbst nachgerechnet = 0.853740, exakt; echter Teil-Match). point_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Point SIGNAL seq 9 gelesen (ack[SB-KIMTool-Point]=9). NETZ KOMPLETT: alle drei Nachbarn verified-match." }
+    { "seq": 7, "date": "2026-06-06", "headline": "SB-KIMTool-Point: verified-match = 0.853740 (Cosinus selbst nachgerechnet = 0.853740, exakt; echter Teil-Match). point_inbox.json mit Vektor aktualisiert ✔ VALID; Test in test/andock.test.js. Point SIGNAL seq 9 gelesen (ack[SB-KIMTool-Point]=9). NETZ KOMPLETT: alle drei Nachbarn verified-match." },
+    { "seq": 8, "date": "2026-06-07", "headline": "VOLLVERNETZUNG (Bauplan §7): Briefkasten listet alle anderen Knoten; Mein-Rezeptbuch + Mein-Mixarium ergaenzt (noch nicht erreichbar -> ehrlich 'SIGNAL/Spore nicht lesbar'). Quittiert: SB-KIMTool-Point seq 9->13, Mein-Tresor seq 6->7 (Spores re-verifiziert ✔ VALID, byte-identisch, Match unveraendert)." }
   ]
 }
