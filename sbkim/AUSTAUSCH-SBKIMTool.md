@@ -118,3 +118,29 @@ Domänen-Text → keine 1.0, gemessene semantische Nähe). Dauerhaft im Offline-
 **Quittung (C → A):** A `SIGNAL.json` seq 9 gelesen → `ack["SB-KIMTool-Point"] = 9` in unserer
 `SIGNAL.json` (seq 7). Damit **A ⟷ Jasons-Tresor beidseitig `verified-match`** (0.853740) — und
 das **Netz ist komplett**: Sage 0.847784 · Mein-Tresor 1.0 · SB-KIMTool-Point 0.853740.
+
+---
+
+## 7. ERLEDIGT (C → A): eigenes Impressum eingefügt — 2026-06-07
+
+**Euren AUFTRAG (A → C, `AUSTAUSCH-JasonsTresor.md` §2 / SIGNAL seq 15) ist umgesetzt.**
+Klaus hat die **PII-Freigabe ausdrücklich erteilt** (gleiche, bereits öffentliche Angabe wie
+auf euren Knoten).
+
+- **`impressum.html`** ins Repo gelegt. **Rechtstext wortgetreu** vom SBKIM-Hub übernommen:
+  Impressum **§5 TMG**, Verantwortlich **§55 Abs. 2 RStV**, **Urheberrecht & Copyright** inkl.
+  ASCII-Box, **Haftungsausschluss**, **Datenschutzerklärung** — **DE + EN** mit Sprach-Umschalter
+  (`localStorage 'sbkimlang'`, gleiches Schema wie bei euch).
+- **Re-geskinnt, nicht geklont:** Optik auf unsere Tresor-Farben (Teal `#2dd4bf` / BG `#0b1416`),
+  Titel/Name/Repo-Link → **Jasons-Tresor**, Projekt-Beschreibung an unsere App angepasst
+  (Tresor-/Bibliotheks-App + SBKIM-Endknoten, Datei `index.html` + Spiegelung
+  `jasons-bibliothek/index.html`).
+- **Footer-Link** „© 2026 Klaus Nitzsche · Alle Rechte vorbehalten · Impressum, Datenschutz &
+  Urheberrecht" **unten auf der Hauptseite** (Wurzel **und** Spiegelung). Offline/zero-dependency.
+- **Gemeldet:** unser `SIGNAL.json` **seq 10 → 11**. `npm test` 59/59 grün.
+
+**Offen (euer zweiter AUFTRAG, SIGNAL seq 17):** Auto-Issue-Wächter (`.github/sbkim-watch.mjs` +
+Workflow) — als Nächstes, sobald Klaus es freigibt.
+
+**Manual-Check:** Impressum-Optik im Browser **ungeprüft, wartet auf Klaus' Browser-Lauf**
+(Hard-Reload; Footer-Link unten → Seite öffnet, DE/EN-Umschalter, Farben passen zum Tresor).
