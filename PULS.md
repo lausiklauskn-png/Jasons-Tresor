@@ -3,6 +3,40 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Semantik-Textfeld im Andock + Mycel-Erklärseite (Sitzung 57)
+
+**Anlass (Klaus, Freibrief):** Zwei kleine Ergänzungen aus dem Sage-Bau in Jasons-Tresor
+nachziehen — wie bei Schwester Mein-Tresor. Siegel-Design **unverändert**, keine neue Krypto.
+
+**Schritt 0 (wichtig):** Mein Branch `claude/jasons-tresor-textfeld-mycel-WYeRx` lag **177 Commits
+hinter `main`** (0 eigene) → gegen einen veralteten Stand gearbeitet hätte „Dateien fehlen"
+gemeldet. Branch auf `origin/main` zurückgesetzt → echte Dateien (`werkzeuge/andock.html`,
+`web/tools/sbkim-embedding.js`) sind da. (Genau der Stolperstein aus Mein-Tresors Brief, Punkt 1.)
+
+**Getan (additiv, `npm test` 59/59 grün, getesteter Kern byte-identisch):**
+- **(1) Semantik-Textfeld in `werkzeuge/andock.html`:** auto-wachsendes `<textarea id="domain-desc">`
+  als Zwischenschritt zwischen ① Identität und ② domainVector, vorbefüllt mit dem **reichen
+  Default** (`CONFIG.domainDescription`, jetzt tresor-spezifisch — unterscheidet uns von Mein-Tresor,
+  die bisher cos 1.0000 hatten). Hinweis-Wortlaut wortgleich aus Sage.
+  Verdrahtung über den **bestehenden Pfad, keine neue Krypto**: `#btn-vec` bettet den Textfeld-Inhalt
+  ein (leer → heutiges `DOMAIN_TEXT`); `buildSpore` schreibt `domainDescription` aus dem Textfeld
+  (leer → `CONFIG`-Default); signiert wie gehabt mit dem in ① geladenen Schlüssel → **gleiche nodeId**.
+- **(2) Mycel-/Sicherheits-Erklärung:** neue Seite **`sicherheit.html`** (Repo-Root, Jasons-Tresor-
+  Skin, Text wortgleich aus Sage). EIN minimaler Link im Siegel-Dialog (`#andock`) im Stil der
+  vorhandenen Links: „🛡 So funktioniert das Mycel & wie du geschützt bist →" — öffnet als
+  **In-Page-Overlay** (`<dialog id="mycel-info">` + iframe, ✕/Esc schließt; ohne `<dialog>`-Support
+  Fallback neuer Tab). In `sicherheit.html` blendet sich der „zurück"-Link aus, wenn eingebettet
+  (`window.self !== window.top`). **Siegel-Dialog sonst unverändert.**
+- Spiegelung `jasons-bibliothek/index.html` neu erzeugt (byte-genau + `<base href="../">`).
+
+**Nicht getan (bewusst, Leitplanken):** **`sbkim/spore.json` NICHT neu erzeugt** — die reiche
+Beschreibung wird erst veröffentlicht, wenn **Klaus** mit seinem Schlüssel in Teil B neu signiert
+(stabile nodeId `E13GDzI…`). Bis dahin trägt die Live-Spore die alte Beschreibung. Kein
+`npm run demo`, kein Secret/PII ins Repo. Kein Modul-16/18-Umbau.
+
+**Manual-Check:** Krypto/Logik **headless bewiesen** (59/59). Browser-Optik (Textfeld-Wachsen,
+Overlay öffnet/schließt) **ungeprüft — wartet auf Klaus' Browser-Lauf** (Galaxy Tab S6).
+
 ## 2026-06-07 — Reziproker Handschlag mit Mein-Rezeptbuch (verified-match beidseitig) (Sitzung 56)
 
 **Anlass:** Brief von **Mein-Rezeptbuch** (über Klaus) — sie haben jetzt ein `SIGNAL.json` (seq 2,
