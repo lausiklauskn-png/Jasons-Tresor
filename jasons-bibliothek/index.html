@@ -416,7 +416,7 @@
   /* ===== HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht ===== */
   #hud{position:fixed; top:12px; left:14px; z-index:55; display:flex; align-items:center; gap:10px}
   #hud.is-hidden{display:none}
-  .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf; cursor:pointer;
+  .hud-lamp{width:14px; height:14px; border-radius:50%; background:#2dd4bf; display:inline-block; vertical-align:middle;
     box-shadow:0 0 10px rgba(45,212,191,.85); animation:hud-breath 3.2s ease-in-out infinite}
   @keyframes hud-breath{0%,100%{opacity:.65} 50%{opacity:1}}
   /* Wächter-Lampe reagiert auf echte Ereignisse: gelb = Neues im Netz (Wächter springt an),
@@ -749,10 +749,10 @@
   <img decoding="async" src="assets/erlebnis/bilder/schluessel.webp" alt="Schlüssel — Intro nochmal ansehen" />
 </button>
 
-<!-- HUD: Wächter-Lampe · Siegel · Notfall (Panik) — Erlebnis-Schicht -->
+<!-- HUD: Siegel · Briefkasten · Notfall (Panik) — Erlebnis-Schicht.
+     Die Wächter-Lampe sitzt bewusst IM Briefkasten-Dialog (Siegel-Kopf), nicht hier —
+     sonst gäbe es zwei Briefkasten-Öffner links/rechts vom Siegel. -->
 <div id="hud">
-  <span class="hud-lamp" id="hud-lamp" role="button" tabindex="0" onclick="sbkimMailboxCheck(false)"
-        title="Wächter: ruhig — keine Fremdzugriffe erkannt" aria-label="Wächter: ruhig — keine Fremdzugriffe erkannt"></span>
   <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
     <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
   </button>
@@ -763,23 +763,26 @@
 </div>
 
 <!-- Wächter-Lampe: lebendige Steuerung. Priorität rot (Fremdzugriff) > gelb (Neues im Netz) > türkis (ruhig).
+     Lampe + Text leben IM Briefkasten-Dialog (Siegel-Kopf), den sbkimMailboxCheck baut.
      Gespeist aus echten Ereignissen: jtWatcherAlarm() bei Passwort-Sperre, jtWatcherNews() aus dem Briefkasten. -->
 <script>
 (function () {
   var state = { news: false, alarmUntil: 0 }, timer = null;
-  function lamp() { return document.getElementById("hud-lamp"); }
   function render() {
-    var el = lamp(); if (!el) return;
+    var el = document.getElementById("hud-lamp");        // Lampe im Briefkasten-Kopf (nur wenn Dialog offen)
+    var txt = document.getElementById("watcher-text");
     var alarm = Date.now() < state.alarmUntil;
-    el.classList.toggle("is-alarm", alarm);
-    el.classList.toggle("is-news", !alarm && !!state.news);
-    el.title = alarm
-      ? "Wächter: ⚠ Fremdzugriff erkannt — falsches Passwort, Buch gesperrt"
-      : (state.news
-          ? "Wächter: Neues im Netz — ungelesene Nachbar-Bauten (klick: Briefkasten öffnen)"
-          : "Wächter: ruhig — keine Fremdzugriffe erkannt");
-    el.setAttribute("aria-label", el.title);
-    if (alarm) { if (!timer) timer = setInterval(render, 1000); }
+    var label = alarm
+      ? "⚠ Fremdzugriff erkannt — falsches Passwort, Buch gesperrt"
+      : (state.news ? "Neues im Netz — ungelesene Nachbar-Bauten" : "ruhig — keine Fremdzugriffe erkannt");
+    if (el) {
+      el.classList.toggle("is-alarm", alarm);
+      el.classList.toggle("is-news", !alarm && !!state.news);
+      el.title = "Wächter: " + label; el.setAttribute("aria-label", el.title);
+    }
+    if (txt) { txt.textContent = "Wächter: " + label;
+      txt.style.color = alarm ? "#c0392b" : (state.news ? "#e0a52b" : "#2dd4bf"); }
+    if (alarm) { if (!timer) timer = setInterval(render, 1000); }   // rot bis Sperrzeit vorbei
     else if (timer) { clearInterval(timer); timer = null; }
   }
   // Gelb: der Briefkasten meldet ungelesene Bauten (true) bzw. alles synchron (false).
@@ -787,14 +790,6 @@
   // Rot: Fremdzugriff erkannt (Passwort-Sperre). Hält die Sperrzeit über (~62 s), dann zurück.
   window.jtWatcherAlarm = function (ms) { state.alarmUntil = Date.now() + (ms || 62000); render(); };
   window.jtRenderWatcherLamp = render;
-  // Tastatur-Bedienung der Lampe (Enter/Space öffnet den Briefkasten).
-  document.addEventListener("DOMContentLoaded", function () {
-    render();
-    var el = lamp();
-    if (el) el.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (window.sbkimMailboxCheck) sbkimMailboxCheck(false); }
-    });
-  });
 })();
 </script>
 
@@ -1675,6 +1670,10 @@
            <img src="assets/sbkim-siegel-wappen.svg" alt="SBKIM-Siegel" decoding="async" style="width:92px;height:92px;display:block;margin:0 auto .25em"/>
            <div style="font-weight:600">Jasons-Tresor — SBKIM-Endknoten</div>
            <div style="font-size:.72rem;color:var(--muted,#9aa);word-break:break-all">${selfId ? "nodeId " + selfId.slice(0, 20) + "… · verified-spore ✔" : "Identität: sbkim/spore.json"}</div>
+           <div style="margin-top:.5em;display:flex;align-items:center;justify-content:center;gap:.45em;font-size:.8rem">
+             <span class="hud-lamp" id="hud-lamp"></span>
+             <span id="watcher-text">Wächter: ruhig — keine Fremdzugriffe erkannt</span>
+           </div>
          </div>`;
       const foot =
         `<p style="margin:.6em 0 0;text-align:center"><b style="color:#3bbf7a">${connected}/${total} verbunden</b> · ${unread ? `<b style="color:#e0a52b">${unread} ungelesen</b>` : "📭 alles synchron"}</p>

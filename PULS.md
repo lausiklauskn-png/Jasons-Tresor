@@ -3,6 +3,21 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-07 — Wächter-Lampe in den Briefkasten-Dialog verlegt (Sitzung 55)
+
+**Anlass (Klaus):** Durch das Klickbar-Machen der HUD-Wächter-Lampe (Sitzung 53) gab es **zwei
+Briefkasten-Öffner** links/rechts vom Siegel — unlogisch. Wunsch: Lampe **in den Briefkasten-Container**.
+
+**Getan (additiv, `npm test` 59/59 grün, getesteter Kern unberührt):**
+- **Wächter-Lampe aus der HUD entfernt** und in den **Briefkasten-Dialog** (Siegel-Kopf) verlegt: dort
+  steht jetzt eine **Wächter-Statuszeile** — Lampe + Text „Wächter: ruhig / Neues im Netz / Fremdzugriff
+  erkannt" (türkis / gelb / rot). HUD hat nur noch **einen** Briefkasten-Öffner (📬).
+- Steuerung unverändert lebendig: `jtWatcherNews(unread>0)` (gelb) aus `sbkimMailboxCheck`,
+  `jtWatcherAlarm()` (rot) aus `startLock()` (2× falsches Passwort → Sperre). Render färbt Lampe + Text.
+- Spiegelung `jasons-bibliothek/index.html` byte-identisch.
+- **Manual-Check:** **optisch ungeprüft, wartet auf Klaus' Browser-Lauf** — Briefkasten öffnen → die
+  Wächterzeile sollte oben im Siegel-Kopf stehen (aktuell gelb, da Bauten ungelesen).
+
 ## 2026-06-07 — Briefkasten-Runde quittiert: „3 ungelesen" abgearbeitet (Sitzung 54)
 
 **Anlass (Klaus):** Browser-Screenshot — Briefkasten zeigt **„4/5 verbunden · 3 ungelesen"**
