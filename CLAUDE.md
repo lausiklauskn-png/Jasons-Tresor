@@ -103,12 +103,40 @@ Diese Regeln binden, **bis neue Evidenz** sie widerlegt. Eine Änderung erforder
   die Plan-an-Klaus-Pflicht **im freigegebenen Umfang** — dann ohne Rückfrage umsetzen. Ein
   Freibrief gilt **nur** für die benannte Sitzung. Die Leitplanken bleiben **immer** unberührt.
 
+### Briefkasten-Hygiene — bei jedem Sitzungsstart lesen + schlank halten
+
+Es gibt **zwei Briefkästen** — sie werden **streng getrennt** behandelt:
+
+- **SBKIM-Briefkasten** (`sbkim/`: `SIGNAL.json`, `AUSTAUSCH*.md`, `*_inbox.json`,
+  `spore.json`): **bleibt immer komplett.** Das sind keine Notizen, sondern **lebende
+  Datenverträge** — nur lesen + Quittung (`ack`) setzen. **Niemals ausmisten.**
+- **Brief-Kette** (`docs/sessions/BRIEF_*.md`): hier **sammelt sich an** — und **nur hier**
+  wird ausgemistet, damit man sieht, was neu/aktiv ist.
+
+**In der Brief-Kette bleiben liegen:**
+1. der **Gründungs-Brief** (`BRIEF_jasons-tresor-andock.md`, der Bauplan = „START-HIER"),
+2. der **aktuell aktive Brief** (den `PULS.md` als „neuesten" nennt),
+3. `VORLAGE_BRIEF.md`,
+4. **noch offene Aufträge** (Briefe „VORGEMERKT" / „AUFTRAG", noch nicht gebaut) und
+   **Boot-/Befehls-Briefe für andere Repos** — solange sie nicht erledigt sind.
+
+**Gelöscht werden:** alle **erledigten oder überholten Sitzungs-Protokolle**, deren Inhalt
+bereits in `PULS.md` steht. Im Zweifel (offen oder erledigt?) → **behalten** und Klaus fragen.
+
+**Vorgehen:** alle Briefe lesen → kleine Tabelle (Brief · Art · Status) → **Klaus zeigen** →
+Erledigte per `git rm` raus → **Querverweise nachziehen** → `PULS.md` fortschreiben →
+`npm test` grün → Draft-PR. **Merge entscheidet Klaus.**
+
+**Nichts geht verloren:** Löschen = nur aus dem Arbeitsverzeichnis nehmen; die **Git-Historie
+behält jede Datei**. Das Depot wird nur wieder übersichtlich.
+
 ### Dokumentationspflicht **am** Abschluss — neuen Brief schreiben
 
 1. `PULS.md` fortschreiben (getan / offen / nächste Schritte).
 2. **Neuen Brief** `docs/sessions/BRIEF_<thema>.md` nach `docs/sessions/VORLAGE_BRIEF.md`.
 3. Im Brief **Pflichtlektüre + Abschluss-Befehl wiederholen** (die Kette reißt nie ab).
 4. Den vollständigen Brief **als Codeblock im Chat** ausgeben.
+5. **Briefkasten-Hygiene anwenden** (s. o.): erledigte/überholte Protokolle raus.
 
 ## Kommunikations-Disziplin
 

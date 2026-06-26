@@ -2,7 +2,9 @@
 
 > Vorlage für die Brief-Kette (CLAUDE.md). Jede Sitzung schließt mit einem neuen Brief
 > `docs/sessions/BRIEF_<thema>.md` nach diesem Muster und gibt ihn vollständig als
-> Chat-Codeblock aus. Der **neueste** Brief gilt; alte bleiben als Historie.
+> Chat-Codeblock aus. Der **neueste** Brief gilt. **Briefkasten-Hygiene** (CLAUDE.md): es
+> bleiben Gründungs-Brief + aktiver Brief + offene Aufträge + diese Vorlage — erledigte/
+> überholte Protokolle werden per `git rm` gelöscht (die Git-Historie behält sie).
 
 Stand: <YYYY-MM-DD>
 
