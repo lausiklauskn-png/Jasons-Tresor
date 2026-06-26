@@ -3,6 +3,41 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-26 — Briefkasten-Hygiene eingeführt (Übergabe von Mein-Tresor) (Sitzung 58)
+
+**Anlass:** Übergabe der Schwester **Mein-Tresor** — dieselbe Briefkasten-Hygiene auch hier
+einführen, damit man sieht, welche Briefe neu/aktiv sind. (Reine Doku-/Ordnungs-Arbeit.)
+
+**Schritt 0 (wieder der Stolperstein):** Mein Branch `claude/briefkasten-hygiene-emmgis` lag
+auf einem **uralten Gründungs-Stand** (~170 Commits hinter `main`) → ein Merge hätte echte
+Arbeit zurückgerollt (GitHub verweigerte den Merge zu Recht). Branch auf `origin/main`
+zurückgesetzt, dann die Hygiene gegen den **echten** Stand gemacht.
+
+**Getan (`npm test` blieb 59/59 grün, keine App-/Krypto-Pfade berührt):**
+- **Regel verankert:** Neuer Abschnitt **„Briefkasten-Hygiene"** in `CLAUDE.md` — zwei
+  Briefkästen streng getrennt: SBKIM-Briefkasten (`sbkim/`) bleibt komplett (lebende
+  Datenverträge); Brief-Kette (`docs/sessions/`) wird schlank gehalten. `VORLAGE_BRIEF.md`
+  nachgezogen.
+- **Ausgemistet:** **13 erledigte Sitzungs-Protokolle** per `git rm` entfernt (Inhalt steht
+  hier in PULS; Git-Historie behält jede Datei): `briefkasten-kombination`,
+  `briefkasten-quittieren`, `briefkasten-sync`, `briefkasten-vollvernetzt`, `domainvector-echt`,
+  `drei-knoten-netz`, `identitaet-dauerhaft-und-andock`, `meintresor-reziprok`, `neue-identitaet`,
+  `regal-feinschliff`, `regal-linien-editor`, `tresor-regal-safe`, `werkzeug-tresor-anlegen`.
+- **Bewusst behalten (nicht erledigt):** offene Aufträge (`honigtopf-koeder/-start`,
+  `shamir-honigtopf`, `tresor-aktivierung-B`), Repo-Briefe (`mein-tresor-bootstrap`,
+  `pwa-landingpage`), Erlebnis-Referenzen (`tresor-erlebnis`, `PLAN_tresor-erlebnis` — von
+  `assets/erlebnis/_BITTE-NICHT-LOESCHEN.md` verlinkt), plus vorsichtshalber drei unsichere
+  Briefe (`pwa-und-lazyload`, `tarnfach-test-und-pwa`, `tresor-aktivierung`). Gründung +
+  aktiver Brief (`textfeld-mycel-erklaerung`) + Vorlage bleiben ohnehin.
+
+**Manual-Check:** Reine Doku-/Ordnungs-Änderung, keine App-Pfade berührt. `npm test` 59/59 grün.
+
+**Nächste Schritte:** Produkt-Arbeit unverändert beim aktiven Brief
+`BRIEF_textfeld-mycel-erklaerung.md` (Klaus' Browser-Lauf + Neu-Signieren Teil B). Offene
+Frage: sollen die drei vorsichtshalber behaltenen Briefe auch raus?
+
+---
+
 ## 2026-06-07 — Semantik-Textfeld im Andock + Mycel-Erklärseite (Sitzung 57)
 
 **Anlass (Klaus, Freibrief):** Zwei kleine Ergänzungen aus dem Sage-Bau in Jasons-Tresor
