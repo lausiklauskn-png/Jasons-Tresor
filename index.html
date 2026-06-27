@@ -548,13 +548,8 @@
 </div>
 
 <header>
-  <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
-          title="Briefkasten: Verbindung + Synchron-Stand zu Sage, Mein-Tresor & SB-KIMTool-Point live prüfen"
-          style="position:relative;float:right;font:inherit;padding:.4em .8em;border-radius:.5em;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">
-    📬 Briefkasten
-    <span id="sbkim-mailbox-badge" hidden
-          style="position:absolute;top:-.5em;right:-.5em;min-width:1.4em;height:1.4em;padding:0 .3em;border-radius:.7em;background:#c0392b;color:#fff;font-size:.75em;line-height:1.4em;text-align:center"></span>
-  </button>
+  <!-- Doppelter Briefkasten entfernt (Klaus 2026-06-28): der HUD-Briefkasten auf der
+       ersten Seite (#hud-mailbox) hat dieselbe Funktion. Nur EIN Öffner bleibt. -->
   <h1><span class="glyph">▤</span> Jasons-Bibliothek</h1>
   <p class="sub">Deine Bibliothek fuer Dateien (alle Formate) — laden, benennen, ordnen, exportieren, wieder einlesen.</p>
   <p><span class="chip">offline</span> <span class="chip">Scheibe 2</span>
@@ -1703,7 +1698,7 @@
       body.innerHTML = head + cards.join("") + foot;
     }
 
-    for (const id of ["sbkim-mailbox-badge", "hud-mailbox-badge"]) {
+    for (const id of ["hud-mailbox-badge"]) {
       const badge = document.getElementById(id);
       if (!badge) continue;
       if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
@@ -3012,6 +3007,9 @@
 <script src="sbkim/04_match.js"></script>
 <script src="sbkim/05_anastomose.js"></script>
 <script src="sbkim/07_apoptose.js"></script>
+<!-- Modul 17 Floating-Widget (schlankes Lampen-Design): LEBT/VERKEHR/FREMD.
+     Das volle Siegel bleibt das vorhandene statische #sbkim-siegel-badge. -->
+<script src="sbkim/17_floating_widget.js"></script>
 <script type="module" src="sbkim/05b_nostr_relay.js"></script>
 <script src="sbkim/sbkim-init.js"></script>
 </body>
