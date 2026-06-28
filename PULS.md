@@ -3,6 +3,23 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-06-28 — Modul 23 Rendezvous + öffentlicher „🌐 Mit dem Netz verbinden"-Knopf
+
+Branch `claude/module-23-rendezvous-rollout-zqaa8u` (zuerst frisch auf `origin/main`
+gesetzt — Achtsamkeit). Rollout des gemeinsamen Raums (Modul 23 aus Sage) auf den
+vorhandenen Andock-Stack:
+
+- `sbkim/23_rendezvous.js` + `sbkim/23_rendezvous_ui.js` — **byte-1:1** aus Sage.
+- `index.html` lädt beide vor `sbkim/sbkim-init.js`; `sbkim-init.js` mountet
+  `SbkimRendezvousUI` **unabhängig** (nodeName „Jasons Tresor", `createIdentity`
+  über vorhandenes `SbkimEmbedding`+`SbkimSpore`).
+- **Kein Doppel-Laden**; **JASONLIB-Kern unangetastet**.
+- **Verifikation:** `npm test` **59/59** grün, Headless-Chromium **7/7**.
+  §11.6 SIGNAL seq 13.
+
+**Offen:** Browser-Live-Test (z. B. Jasons-Tresor ↔ Mein-Tresor [Schwester] oder
+↔ Sage → „ETABLIERT"). Verfassungstreu (nutzer-ausgelöst).
+
 ## 2026-06-26 — Briefkasten-Hygiene eingeführt (Übergabe von Mein-Tresor) (Sitzung 58)
 
 **Anlass:** Übergabe der Schwester **Mein-Tresor** — dieselbe Briefkasten-Hygiene auch hier
