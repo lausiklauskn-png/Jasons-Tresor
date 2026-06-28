@@ -1,8 +1,8 @@
 {
   "node": "Jasons-Tresor",
   "lastBuild": "2026-06-28",
-  "seq": 13,
-  "headline": "Modul 23 RENDEZVOUS + oeffentlicher Knopf Mit dem Netz verbinden ausgerollt. sbkim/23_rendezvous(.ui).js byte-1:1 aus Sage; index.html laedt beide vor sbkim-init.js, das SbkimRendezvousUI mountet (nodeName Jasons Tresor, createIdentity ueber vorhandenes Embedding+Spore mit Tresor-Domaenen-Beschreibung). Vorhandener Stack (01-05/05b/07) genutzt - kein Doppel-Laden, JASONLIB-Kern unangetastet. Loest die Adress-Wand per Raum sbkim-rdv. npm test 59/59, Headless 7/7. Verfassungstreu (nutzer-ausgeloest). Branch vorher frisch auf origin/main (Achtsamkeit). Browser-Live-Test wartet auf Klaus.",
+  "seq": 14,
+  "headline": "EIGENES IMPRESSUM eingefuegt (rechtlich noetig, §5 TMG; AUFTRAG SB-KIMTool-Point seq 15, Klaus' PII-Freigabe erteilt). impressum.html in der Wurzel (Rechtstext 1:1 vom SBKIM-Hub - Impressum §5 TMG, Verantwortlich §55 RStV, Urheberrecht inkl. ASCII-Box, Haftungsausschluss, Datenschutz; DE+EN Sprach-Umschalter), re-geskinnt auf Tresor-Identitaet (Teal), NICHT geklont. Footer-Link unten auf der Hauptseite (Wurzel + Spiegelung jasons-bibliothek). Frisch auf aktuellem main aufgesetzt - ersetzt den veralteten PR #100, OHNE die Briefkasten-Historie (Modul 23 seq 13) zurueckzudrehen. JASONLIB-Kern byte-identisch unangetastet, offline/zero-dependency. Browser-Sichttest (Footer-Link -> Impressum, DE/EN, Tresor-Farben) wartet auf Klaus.",
   "sporeUrl": "https://raw.githubusercontent.com/lausiklauskn-png/Jasons-Tresor/main/sbkim/spore.json",
   "nodeId": "E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM",
   "mailboxes": {
@@ -87,6 +87,11 @@
       "seq": 13,
       "date": "2026-06-28",
       "headline": "Modul 23 Rendezvous + oeffentlicher Knopf ausgerollt (byte-1:1 aus Sage; sbkim-init.js mountet UI, nodeName Jasons Tresor). Stack genutzt, Kern unangetastet. npm 59/59, Headless 7/7. Browser-Sichttest wartet auf Klaus."
+    },
+    {
+      "seq": 14,
+      "date": "2026-06-28",
+      "headline": "Eigenes Impressum eingefuegt (rechtlich noetig §5 TMG; Klaus' PII-Freigabe). impressum.html (DE+EN, Rechtstext 1:1 vom SBKIM-Hub, re-geskinnt Teal) + Footer-Link unten auf der Hauptseite (Wurzel + Spiegelung). Frisch auf aktuellem main aufgesetzt - ersetzt veralteten PR #100, OHNE Briefkasten-Historie (Modul 23 seq 13) zurueckzudrehen. JASONLIB-Kern byte-identisch unangetastet. Browser-Sichttest wartet auf Klaus."
     }
   ]
 }
