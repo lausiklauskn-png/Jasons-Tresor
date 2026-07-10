@@ -125,7 +125,12 @@
   function mountRendezvous() {
     if (!window.SbkimRendezvousUI) return;
     try {
-      window.SbkimRendezvousUI.init({ nodeName: RDV_CFG.nodeName, corner: "bl", createIdentity: rdvCreateIdentity });
+      if (window.SbkimRendezvous && typeof window.SbkimRendezvous.init === "function") {
+        try {
+          window.SbkimRendezvous.init({ nodeName: RDV_CFG.nodeName, dbSuffix: "jasonstresor", createIdentity: rdvCreateIdentity, ensureIdentity: true });
+        } catch (e) { console.warn("[JT-SBKIM] Rendezvous (Modus A) übersprungen:", e); }
+      }
+      window.SbkimRendezvousUI.init({ nodeName: RDV_CFG.nodeName, dbSuffix: "jasonstresor", corner: "bl", createIdentity: rdvCreateIdentity });
       console.info("[JT-SBKIM] Rendezvous-UI gemountet (öffentlicher 🌐-Knopf).");
     } catch (e) { console.warn("[JT-SBKIM] Rendezvous-UI übersprungen:", e); }
   }
