@@ -143,6 +143,7 @@
   var $ = function(id){ return document.getElementById(id); };
   var identity = null;     // { privateKey, x, nodeId }
   var realVector = null;   // Array(384)
+  var realSnippets = [];   // A10: [{vec:Array(384), text}] — Satz-Schnipsel (fail-soft)
   var lastSpore = null;
 
   function log(m){ var d=$("diag"); d.textContent += "\n"+m; d.scrollTop=d.scrollHeight; }
@@ -179,7 +180,9 @@
       domainKeywords:CONFIG.domainKeywords, embeddingModel:CONFIG.embeddingModel, endpoint:CONFIG.endpoint,
       guestCategories:CONFIG.guestCategories, stammCategories:CONFIG.stammCategories, id:identity.nodeId,
       nodeName:CONFIG.nodeName, nodeType:CONFIG.nodeType, protocolVersion:CONFIG.protocolVersion, publicKey:publicKeyJwk };
-    if(withVector){ if(!realVector) throw new Error("Erst domainVector erzeugen (②)."); u.domainVector=realVector; }
+    if(withVector){ if(!realVector) throw new Error("Erst domainVector erzeugen (②)."); u.domainVector=realVector;
+      // A10 (Spore v0.2): Schnipsel additiv mitsignieren, wenn vorhanden (leer -> Feld weglassen, 0.1-kompatibel).
+      if(Array.isArray(realSnippets)&&realSnippets.length) u.snippetVectors=realSnippets; }
     var sig=await subtle.sign({name:"Ed25519"}, identity.privateKey, cbytes(u));
     var spore=canonicalize(u); spore.signature=bufToB64url(sig); return spore;
   }
@@ -241,6 +244,9 @@
       var l2=Math.sqrt(arr.reduce(function(a,x){return a+x*x;},0));
       if(arr.length!==384) throw new Error("Erwartet 384 Floats, bekommen "+arr.length);
       realVector=arr;
+      // A10 (Spore v0.2): Satz-Schnipsel additiv + fail-soft — bricht domainVector nie.
+      realSnippets=[];
+      try{ if(window.SbkimEmbedding.embedSnippets){ var snips=await window.SbkimEmbedding.embedSnippets(domainText); realSnippets=(snips||[]).map(function(s){return {vec:Array.prototype.slice.call(s.vec),text:s.text};}); log("✔ "+realSnippets.length+" Satz-Schnipsel berechnet (A10)."); } }catch(e){ realSnippets=[]; log("⚠ Schnipsel übersprungen: "+(e&&e.message||e)); }
       $("vec-bar").style.width="100%";
       setS($("vec-status"),"✔ domainVector erzeugt — 384 Floats, L2="+l2.toFixed(4)+" (≈1).","ok");
       log("✔ domainVector fertig (L2="+l2.toFixed(5)+").");
