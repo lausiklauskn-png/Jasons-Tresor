@@ -45,7 +45,7 @@ test("eigene Spore traegt die 9 Pflichtfelder + Tresor-Identitaet", () => {
     assert.ok(f in spore, `Pflichtfeld fehlt: ${f}`);
   }
   assert.equal(spore.nodeName, "Jasons-Tresor");
-  assert.equal(spore.protocolVersion, "0.1");
+  assert.equal(spore.protocolVersion, "0.2");
   assert.equal(spore.domainVector.length, 384);
 });
 
