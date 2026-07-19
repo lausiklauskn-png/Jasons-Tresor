@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-07-18T23:45:44.621Z",
+  "createdAt": "2026-07-19T14:42:03.286Z",
   "domain": "Jasons-Tresor-Bibliothek",
   "domainDescription": "Jasons-Tresor ist Jasons eigener Endknoten im SBKIM-Mycel zum sicheren Verwahren: er verschlüsselt und speichert JSON-Dateien und SBKIM-Schlüssel offline im Browser (AES-256-GCM), Tresor und Bibliothek zugleich. Backups lassen sich passwortgeschützt exportieren und auf einem anderen Gerät zurückspielen; der private Schlüssel verlässt den Browser nie. Schwester-Knoten von Mein-Tresor, angedockt ans Netz aus Sage, SB-KIMTool-Point, Rezeptbuch und Mixarium.",
   "domainKeywords": [
@@ -403,7 +403,7 @@
     "Schlüssel-Andock",
     "Spore-Verifikation"
   ],
-  "id": "OqT8M2FOuSdzIRjt54okdIIcJgnVqLuOUQW3qO2GxJc",
+  "id": "lbUthjt-outt4ns4NJQI2TaMzubX4BzQJGp_Odx_vek",
   "nodeName": "Jasons-Tresor",
   "nodeType": "hybrid",
   "protocolVersion": "0.2",
@@ -415,8 +415,9 @@
       "verify"
     ],
     "kty": "OKP",
-    "x": "bQiwDhB1yuSqfxU1h0zzzxb9JVk7nebxZvAXf1GlMH4"
+    "x": "ILTl40dcrnvM_UaJw8jcsBCThDtiRKSfuAJi-cjPtvo"
   },
+  "signature": "ZUJ6Q10nFeafxVF96e31e-_akcqJlOT4wyg37GarCwEw6HyNRQnIrXt4BCIXPXmDW8CykpeA6R_GeT3x4HEoAA",
   "snippetVectors": [
     {
       "text": "Jasons-Tresor ist Jasons eigener Endknoten im SBKIM-Mycel zum sicheren Verwahren: er verschlüsselt und speichert JSON-Dateien und SBKIM-Schlüssel offline im Br…",
@@ -1591,6 +1592,5 @@
     "Jasons-Bibliothek",
     "Schlüssel-Backup",
     "AES-256-GCM-Verschlüsselung"
-  ],
-  "signature": "aRIXJvzY4bUxnjUtGnWQUj_01icchQzwpbQJ7uyTBZ5ZdAB9h78b60TdzlvdmDaInIjgACnj9463U8CV2dKeDg"
+  ]
 }
