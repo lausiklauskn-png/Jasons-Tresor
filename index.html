@@ -443,16 +443,8 @@
   #hud-mailbox:hover{border-color:var(--accent); box-shadow:0 0 12px rgba(110,231,211,.35)}
   #hud-mailbox-badge{position:absolute; top:-.5em; right:-.5em; min-width:1.4em; height:1.4em; padding:0 .3em;
     border-radius:.7em; background:#c0392b; color:#fff; font-size:.72em; line-height:1.45em; text-align:center; font-weight:700}
-  #sbkim-siegel-badge{width:38px; height:38px; border-radius:50%; background:transparent; border:none;
-    cursor:pointer; display:inline-flex; align-items:center; justify-content:center; overflow:visible; padding:0;
-    transition:filter .25s ease-out, transform .25s ease-out}
-  #sbkim-siegel-badge img{width:38px; height:38px; display:block; pointer-events:none}
-  #sbkim-siegel-badge:hover{filter:drop-shadow(0 0 8px rgba(201,169,97,.55)); transform:scale(1.06)}
-  #sbkim-siegel-badge:focus-visible{outline:2px solid #C9A961; outline-offset:3px}
-  #sbkim-siegel-badge.first-boot{animation:siegel-first-boot 600ms ease-out}
-  @keyframes siegel-first-boot{0%{transform:scale(.7); opacity:0}
-    60%{transform:scale(1.12); opacity:1; filter:drop-shadow(0 0 14px rgba(201,169,97,.55))}
-    100%{transform:scale(1); opacity:1}}
+  /* Siegel-Badge kommt jetzt aus dem Floating-Widget (Modul 17) + dynamischem Modul 16
+     — kein statischer HUD-Badge mehr (einheitlich mit den anderen Apps). */
   #andock{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
     max-width:540px; width:92%; max-height:88vh; overflow:auto; padding:18px}
   #andock::backdrop{background:rgba(0,0,0,.6)}
@@ -762,9 +754,6 @@
      Die Wächter-Lampe sitzt bewusst IM Briefkasten-Dialog (Siegel-Kopf), nicht hier —
      sonst gäbe es zwei Briefkasten-Öffner links/rechts vom Siegel. -->
 <div id="hud">
-  <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
-    <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
-  </button>
   <button id="hud-mailbox" type="button" onclick="sbkimMailboxCheck(false)"
           title="📬 SBKIM-Briefkasten — Verbindung &amp; Synchron-Stand zu den Nachbarn"
           aria-label="SBKIM-Briefkasten öffnen">📬 Briefkasten<span id="hud-mailbox-badge" hidden></span></button>
@@ -3020,11 +3009,19 @@
 <!-- Modul 17 Floating-Widget (schlankes Lampen-Design): LEBT/VERKEHR/FREMD.
      Das volle Siegel bleibt das vorhandene statische #sbkim-siegel-badge. -->
 <script src="sbkim/17_floating_widget.js"></script>
+<!-- Modul 15 (Membran/Fremd-Wächter) + 16 (Selbst-Siegel) — NACH 17 geladen;
+     schutz-init.js initt in Pflicht-Reihenfolge 17→15→16→07. -->
+<script src="sbkim/15_membran.js"></script>
+<script src="sbkim/16_siegel.js"></script>
 <script type="module" src="sbkim/05b_nostr_relay.js"></script>
 <!-- Modul 23 Rendezvous (gemeinsamer Raum) + öffentlicher 🌐-Knopf. Byte-1:1
      aus Sage src/modules/23_rendezvous(.ui).js. Vor sbkim-init.js (das mountet). -->
 <script src="sbkim/23_rendezvous.js"></script>
 <script src="sbkim/23_rendezvous_ui.js"></script>
 <script src="sbkim/sbkim-init.js"></script>
+<!-- Voller-Knoten-Init (17→15→16→07) + Andock-Werkzeug IM Siegel-Modal (aus Sage,
+     nach Skill »status-leiste-siegel«). Ersetzt den alten statischen Siegel/Andock. -->
+<script src="assets/schutz-init.js"></script>
+<script src="assets/siegel-inhalt.js"></script>
 </body>
 </html>
