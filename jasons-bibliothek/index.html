@@ -572,6 +572,7 @@
     <button id="btn-bookdemo" class="btn-ghost" title="Vorschau: wie ein Jason als Buch aussieht">📚 Muster-Buch</button>
     <button id="btn-bookseq" class="btn-ghost" title="Die Buch-Öffnen-Sequenz automatisch ansehen">▶ Buchsequenz</button>
     <button id="btn-regal" class="btn-ghost" title="Zur Regal-Ansicht (Tresor)">📚 Regal</button>
+    <button id="btn-hardreload" class="btn-ghost" type="button" title="Aktualisieren / Cache leeren &amp; neu laden">↻</button>
     <input id="file-add" type="file" multiple class="hidden" />
     <input id="file-import" type="file" accept=".json,application/json" class="hidden" />
   </div>
@@ -3005,6 +3006,25 @@
     });
     if(mycelClose){ mycelClose.addEventListener('click', function(){ mycelInfo.close(); }); }
   }
+})();
+</script>
+<!-- Dezenter Hard-Reload-Knopf (App-Glue, ausserhalb JASONLIB-CORE): Cache/SW leeren
+     und die Seite frisch laden. Fail-soft, blockiert nie. -->
+<script>
+(function(){
+  function hardReloadApp(){
+    var done=function(){ try{location.reload(true);}catch(_e){try{location.reload();}catch(__e){}} };
+    var fired=false; var go=function(){ if(fired)return; fired=true; done(); };
+    try{
+      var to=setTimeout(go,2500);
+      var tasks=[];
+      if('serviceWorker' in navigator){ tasks.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}).catch(function(){})); }
+      if(window.caches && caches.keys){ tasks.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){})); }
+      Promise.all(tasks).then(function(){ clearTimeout(to); go(); }).catch(function(){ clearTimeout(to); go(); });
+    }catch(_e){ go(); }
+  }
+  var b=document.getElementById('btn-hardreload');
+  if(b){ b.addEventListener('click', hardReloadApp); }
 })();
 </script>
 </body>
