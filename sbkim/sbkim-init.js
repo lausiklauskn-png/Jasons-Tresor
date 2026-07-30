@@ -161,7 +161,7 @@
     try {
       if (window.SbkimRendezvous && typeof window.SbkimRendezvous.init === "function") {
         try {
-          window.SbkimRendezvous.init({ nodeName: displayNodeName(RDV_CFG.nodeName), dbSuffix: "jasonstresor", createIdentity: rdvCreateIdentity, ensureIdentity: true });
+          window.SbkimRendezvous.init({ nodeName: displayNodeName(RDV_CFG.nodeName), dbSuffix: "jasonstresor", createIdentity: rdvCreateIdentity });   // ensureIdentity ABSICHTLICH NICHT (Stufe 0b): keine wortlose Neu-Anlage beim Seiten-Start
         } catch (e) { console.warn("[JT-SBKIM] Rendezvous (Modus A) übersprungen:", e); }
       }
       window.SbkimRendezvousUI.init({ nodeName: displayNodeName(RDV_CFG.nodeName), dbSuffix: "jasonstresor", corner: "bl", createIdentity: rdvCreateIdentity });
