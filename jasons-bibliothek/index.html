@@ -1,4 +1,14 @@
 <!doctype html>
+<!-- FP-COPYRIGHT
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  Jasons-Bibliothek  ©  2026  Klaus Nitzsche                       ║
+  ║  info@family-projekt.de                                           ║
+  ║  Alle Rechte vorbehalten. Unautorisierte Vervielfaeltigung,       ║
+  ║  Verbreitung oder Bearbeitung ist untersagt.                      ║
+  ║  All rights reserved. Unauthorized reproduction prohibited.       ║
+  ║  https://github.com/lausiklauskn-png/Jasons-Tresor                ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
 <!--
   Jasons-Bibliothek — SBKIM Tool-Point
   Version 0.1.0 (Scheibe 1) · 2026 · Quelle: SB-KIMTool-Point
@@ -8,8 +18,7 @@
 -->
 <html lang="de">
 <head>
-<base href="../" />
-<!-- Spiegelung: in jasons-bibliothek/ loesen relative Pfade ueber <base> auf den Repo-Stamm auf. Inhalt sonst byte-genau wie die Wurzel-index.html. -->
+<script>/* FP-COPYRIGHT */window._CR=Object.freeze({c:'\u00a9 2026 Klaus Nitzsche',m:'info@family-projekt.de',r:'All rights reserved',repo:'Jasons-Tresor'});</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Jasons-Bibliothek</title>
@@ -445,16 +454,8 @@
   #hud-mailbox:hover{border-color:var(--accent); box-shadow:0 0 12px rgba(110,231,211,.35)}
   #hud-mailbox-badge{position:absolute; top:-.5em; right:-.5em; min-width:1.4em; height:1.4em; padding:0 .3em;
     border-radius:.7em; background:#c0392b; color:#fff; font-size:.72em; line-height:1.45em; text-align:center; font-weight:700}
-  #sbkim-siegel-badge{width:38px; height:38px; border-radius:50%; background:transparent; border:none;
-    cursor:pointer; display:inline-flex; align-items:center; justify-content:center; overflow:visible; padding:0;
-    transition:filter .25s ease-out, transform .25s ease-out}
-  #sbkim-siegel-badge img{width:38px; height:38px; display:block; pointer-events:none}
-  #sbkim-siegel-badge:hover{filter:drop-shadow(0 0 8px rgba(201,169,97,.55)); transform:scale(1.06)}
-  #sbkim-siegel-badge:focus-visible{outline:2px solid #C9A961; outline-offset:3px}
-  #sbkim-siegel-badge.first-boot{animation:siegel-first-boot 600ms ease-out}
-  @keyframes siegel-first-boot{0%{transform:scale(.7); opacity:0}
-    60%{transform:scale(1.12); opacity:1; filter:drop-shadow(0 0 14px rgba(201,169,97,.55))}
-    100%{transform:scale(1); opacity:1}}
+  /* Siegel-Badge kommt jetzt aus dem Floating-Widget (Modul 17) + dynamischem Modul 16
+     — kein statischer HUD-Badge mehr (einheitlich mit den anderen Apps). */
   #andock{border:1px solid var(--line); border-radius:var(--radius); background:var(--bg2); color:var(--ink);
     max-width:540px; width:92%; max-height:88vh; overflow:auto; padding:18px}
   #andock::backdrop{background:rgba(0,0,0,.6)}
@@ -550,13 +551,8 @@
 </div>
 
 <header>
-  <button id="sbkim-mailbox-btn" type="button" onclick="sbkimMailboxCheck(false)"
-          title="Briefkasten: Verbindung + Synchron-Stand zu Sage, Mein-Tresor & SB-KIMTool-Point live prüfen"
-          style="position:relative;float:right;font:inherit;padding:.4em .8em;border-radius:.5em;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">
-    📬 Briefkasten
-    <span id="sbkim-mailbox-badge" hidden
-          style="position:absolute;top:-.5em;right:-.5em;min-width:1.4em;height:1.4em;padding:0 .3em;border-radius:.7em;background:#c0392b;color:#fff;font-size:.75em;line-height:1.4em;text-align:center"></span>
-  </button>
+  <!-- Doppelter Briefkasten entfernt (Klaus 2026-06-28): der HUD-Briefkasten auf der
+       ersten Seite (#hud-mailbox) hat dieselbe Funktion. Nur EIN Öffner bleibt. -->
   <h1><span class="glyph">▤</span> Jasons-Bibliothek</h1>
   <p class="sub">Deine Bibliothek fuer Dateien (alle Formate) — laden, benennen, ordnen, exportieren, wieder einlesen.</p>
   <p><span class="chip">offline</span> <span class="chip">Scheibe 2</span>
@@ -770,9 +766,6 @@
      Die Wächter-Lampe sitzt bewusst IM Briefkasten-Dialog (Siegel-Kopf), nicht hier —
      sonst gäbe es zwei Briefkasten-Öffner links/rechts vom Siegel. -->
 <div id="hud">
-  <button id="sbkim-siegel-badge" type="button" title="SBKIM-Siegel — Andock zum Werkzeug öffnen" aria-label="SBKIM-Siegel — Andock öffnen">
-    <img src="assets/sbkim-siegel-wappen.svg" alt="" decoding="async" />
-  </button>
   <button id="hud-mailbox" type="button" onclick="sbkimMailboxCheck(false)"
           title="📬 SBKIM-Briefkasten — Verbindung &amp; Synchron-Stand zu den Nachbarn"
           aria-label="SBKIM-Briefkasten öffnen">📬 Briefkasten<span id="hud-mailbox-badge" hidden></span></button>
@@ -1710,7 +1703,7 @@
       body.innerHTML = head + cards.join("") + foot;
     }
 
-    for (const id of ["sbkim-mailbox-badge", "hud-mailbox-badge"]) {
+    for (const id of ["hud-mailbox-badge"]) {
       const badge = document.getElementById(id);
       if (!badge) continue;
       if (unread) { badge.textContent = String(unread); badge.hidden = false; } else { badge.hidden = true; }
@@ -3008,6 +3001,40 @@
   }
 })();
 </script>
+
+<!-- SBKIM Andock-Runtime + Auto-Lauschen (Stufe 2, 2026-06-27) — additiv, außerhalb
+     des JASONLIB-Cores. Acht Module byte-identisch aus Sage src/modules/ kopiert.
+     05b als type=module (importiert noble relativ). sbkim-init.js startet nach
+     Anastomose.init() fail-soft listenNostr() — Empfangsmodus mit Antwortrecht. -->
+<script>window.SBKIM_DB_SUFFIX="jasonstresor";</script>
+<script src="sbkim/01_storage.js"></script>
+<!-- Modul 20 Schlüssel-Safe: verschlüsselte Geheimnis-Ablage (putSecret/getSecret,
+     PBKDF2-600k+AES-GCM-256). Der KI-Richter im 🌐-Raum-Panel (Modul 23 UI) nutzt
+     ihn für „🔒 im Tresor merken / 🔓 entsperren" des BYOK-KI-Schlüssels. Byte-1:1
+     aus Sage src/modules/20_schluessel_safe.js. Ohne Modul 20 fail-soft (Feature aus). -->
+<script src="sbkim/20_schluessel_safe.js"></script>
+<script src="sbkim/02_spore.js"></script>
+<script src="sbkim/03_embedding.js"></script>
+<script src="sbkim/04_match.js"></script>
+<script src="sbkim/05_anastomose.js"></script>
+<script src="sbkim/07_apoptose.js"></script>
+<!-- Modul 17 Floating-Widget (schlankes Lampen-Design): LEBT/VERKEHR/FREMD.
+     Das volle Siegel bleibt das vorhandene statische #sbkim-siegel-badge. -->
+<script src="sbkim/17_floating_widget.js"></script>
+<!-- Modul 15 (Membran/Fremd-Wächter) + 16 (Selbst-Siegel) — NACH 17 geladen;
+     schutz-init.js initt in Pflicht-Reihenfolge 17→15→16→07. -->
+<script src="sbkim/15_membran.js"></script>
+<script src="sbkim/16_siegel.js"></script>
+<script type="module" src="sbkim/05b_nostr_relay.js"></script>
+<!-- Modul 23 Rendezvous (gemeinsamer Raum) + öffentlicher 🌐-Knopf. Byte-1:1
+     aus Sage src/modules/23_rendezvous(.ui).js. Vor sbkim-init.js (das mountet). -->
+<script src="sbkim/23_rendezvous.js"></script>
+<script src="sbkim/23_rendezvous_ui.js"></script>
+<script src="sbkim/sbkim-init.js"></script>
+<!-- Voller-Knoten-Init (17→15→16→07) + Andock-Werkzeug IM Siegel-Modal (aus Sage,
+     nach Skill »status-leiste-siegel«). Ersetzt den alten statischen Siegel/Andock. -->
+<script src="assets/schutz-init.js"></script>
+<script src="assets/siegel-inhalt.js"></script>
 <!-- Dezenter Hard-Reload-Knopf (App-Glue, ausserhalb JASONLIB-CORE): Cache/SW leeren
      und die Seite frisch laden. Fail-soft, blockiert nie. -->
 <script>
@@ -3027,5 +3054,39 @@
   if(b){ b.addEventListener('click', hardReloadApp); }
 })();
 </script>
+
+<!-- ── family-projekt.de · dezenter Fuß-Verweis (netzweit identisch) ──────────
+     Zweck: Wer diese App irgendwo findet (GitHub-Download, Fork, geteilter Link),
+     kommt von hier zurück zum Marktplatz. Bewusst KLEIN und ganz unten — nicht
+     dominant auf der ersten Seite (Klaus 2026-07-28). Farbwelt = family-project
+     (--accent #6ee7d3). Selbst-enthalten, kein CDN, keine Abhängigkeit. -->
+<style>
+  .fp-badge-wrap{max-width:960px;margin:30px auto 18px;padding:0 16px;text-align:center;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  .fp-badge{display:inline-flex;align-items:center;gap:.5em;padding:7px 15px;
+    border-radius:999px;border:1px solid rgba(110,231,211,.38);color:#6ee7d3;
+    background:rgba(110,231,211,.06);font-size:.82rem;text-decoration:none;
+    transition:background .18s ease,border-color .18s ease;}
+  .fp-badge:hover,.fp-badge:focus-visible{background:rgba(110,231,211,.15);
+    border-color:rgba(110,231,211,.72);outline:none;}
+  .fp-badge.fp-strong{background:rgba(110,231,211,.13);
+    border-color:rgba(110,231,211,.55);font-size:.86rem;padding:8px 17px;}
+  .fp-badge .fp-dot{width:7px;height:7px;border-radius:50%;background:#6ee7d3;
+    box-shadow:0 0 7px rgba(110,231,211,.85);flex:none;}
+  .fp-copy{margin-top:9px;font-size:.72rem;line-height:1.5;color:#9aa7b6;opacity:.78;}
+  @media (prefers-color-scheme: light){
+    .fp-badge{color:#0f766e;border-color:rgba(15,118,110,.35);background:rgba(15,118,110,.05);}
+    .fp-badge:hover,.fp-badge:focus-visible{background:rgba(15,118,110,.12);}
+    .fp-badge .fp-dot{background:#0f766e;box-shadow:0 0 7px rgba(15,118,110,.5);}
+    .fp-copy{color:#5b6b7a;}
+  }
+</style>
+<div class="fp-badge-wrap">
+  <a class="fp-badge" href="https://family-projekt.de" target="_blank" rel="noopener"
+     title="Zum Marktplatz family-projekt.de — weitere Werkzeuge und Apps">
+    <span class="fp-dot"></span> Mehr Werkzeuge auf family-projekt.de
+  </a>
+  <div class="fp-copy">&copy; 2026 Klaus Nitzsche &middot; kostenlos, ohne Konto, offline nutzbar</div>
+</div>
 </body>
 </html>
