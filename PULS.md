@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-08-08 — Die drei Auswahlfelder haben einen Namen (Kanon für beide Tresore)
+
+Sitzung lief in **Mein-Tresor** (Brief `BRIEF_kern-mangel-netzweit.md`, Punkt 2), der Fix
+gehört aber hierher: die Schale ist zwischen den Schwester-Tresoren geteilt, also wird sie
+**hier zuerst** geändert und dann byte-gleich hinüberkopiert.
+
+### Getan
+- Je ein `aria-label` an `#f-cat` / `#f-tag` / `#f-sort` in Wurzel **und** Spiegel
+  (`jasons-bibliothek/index.html`) — PR #148. Lighthouse meldete das als `select-name` mit
+  **Gewicht 10**: der größte verbliebene Einzelposten der Barrierefreiheit, in beiden
+  Tresoren gleich. Eine Vorlesehilfe sagte dort „Auswahlfeld" und sonst nichts.
+- **Gemessen statt behauptet** (echter A11y-Baum von Chromium, `Accessibility.getFullAXTree`,
+  Handy-Fenster 412 px): vorher dreimal `combobox "(LEER)"`, nachher „Nach Kategorie filtern"
+  / „Nach Schlagwort filtern" / „Reihenfolge der Liste". Beide Dateien geprüft.
+- `npm test` **59/59** grün, kein 404. Nichts am Aussehen — `aria-label` wird nicht gezeichnet.
+
+### Zwei Korrekturen am Auftrag (ehrlich vermerkt)
+1. **Die Felder stehen NICHT im JasonLib-Kern.** Der Brief hielt das für den Grund, sie in
+   Mein-Tresor nicht anzufassen. Nachgemessen: Kern ab Zeile **901** (JavaScript), Felder bei
+   **607–609** im HTML davor. Prüfsumme `a98a704c…` war nie in Gefahr und ist unverändert.
+   Der Weg über den Kanon war trotzdem richtig — nur die Begründung stimmte nicht.
+2. **Die Widget-Knöpfe (Modul 17) sind längst über der Norm.** Gemessen: Lampen 24 px hoch,
+   Minimieren/Schließen je 24 × 24, Siegel 81,5 × 28 (Norm 24 × 24). Der Sage-Kanon trägt den
+   Fix seit der Lighthouse-Runde 2026-08-03, und `sbkim/17_floating_widget.js` +
+   `23_rendezvous_ui.js` liegen hier byte-1:1 darauf (`cmp` gegen Sage). **Nichts zu tun.**
+
+### Offen
+- **PageSpeed-Beweis** (Erwartung Barrierefreiheit 92 → höher). Lokal ist nur ein Hinweis.
+- Klaus' Sichtprüfung am Tablet — an der Anzeige ändert sich nichts, die Felder heißen nur
+  jetzt etwas, wenn eine Vorlesehilfe sie nennt.
+
 ## 2026-06-28 — Modul 23 Rendezvous + öffentlicher „🌐 Mit dem Netz verbinden"-Knopf
 
 Branch `claude/module-23-rendezvous-rollout-zqaa8u` (zuerst frisch auf `origin/main`
