@@ -3,6 +3,56 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-08-08 (2) — Beim Öffnen spricht die Seite mit niemandem mehr
+
+Übernahme aus der Schwester Mein-Tresor (dort Klaus' Entscheidung nach seinem PageSpeed-Lauf
+am Live-Stand). Klaus hat den Rollout hierher ausdrücklich freigegeben: **Jasons-Tresor
+zuerst**, danach entscheidet er am Ergebnis über die übrigen Knoten.
+
+### Was das Problem war
+Beim **bloßen Öffnen** hat die Seite die Briefkästen der fünf Nachbarn abgefragt — und zwar
+bei `DOMContentLoaded`, also **mitten im Seitenaufbau**, nacheinander (`await` in einer
+Schleife). Bei der Schwester stand genau dieser Blick im PageSpeed-Bericht als **längster Weg
+im kritischen Pfad**, 1,7 bis 4,0 s je Abruf — schlimmer als alle Bilder zusammen.
+
+Der zweite Grund wiegt schwerer als die Sekunden: wer die Seite nur öffnete, meldete damit
+**stillschweigend eine Verbindung an GitHub**. Für fremde Nutzer über den
+family-projekt.de-Marktplatz ist das keine Kleinigkeit.
+
+### Gemessen, nicht behauptet
+Echter Browser (Chromium, Handy-Fenster 412 px), gezählt werden **angefragte Adressen** —
+auch fehlgeschlagene, denn es geht um die Frage „meldet die Seite eine Verbindung an":
+
+```
+beim Öffnen, vorher    5 Fremd-Abrufe   (Sage · Mein-Tresor · Point · Rezeptbuch · Mixarium)
+beim Öffnen, nachher   0 Fremd-Abrufe
+nach Druck auf 📬      5 Fremd-Abrufe   (die fünf Nachbarn, wie gewollt)
+Badge aus Merker       zeigt "3" — bei 0 Fremd-Abrufen
+```
+
+**Falle beim Messen, festgehalten:** ein 6-Sekunden-Fenster zählte nur **einen** Abruf und
+hätte „fast nichts los" gemeldet. Die fünf Abrufe laufen **nacheinander**, und hinter dem
+Proxy dieser Maschine dauert jeder rund zwölf Sekunden. Erst ein 70-Sekunden-Fenster zeigt
+alle fünf. Ein zu kurzes Fenster hätte den Befund kleingerechnet.
+
+### Getan
+- `sbkimBadgeSetzen(unread)` herausgezogen (Badge **und** Wächter-Lampe), damit beides ohne
+  Netz aus einer schon bekannten Zahl gesetzt werden kann.
+- Nach einem echten Blick wird das Ergebnis gemerkt: `localStorage`, Schlüssel
+  `sbkim_briefkasten_stand_jasonstresor` — **app-spezifisch**, weil auf der geteilten
+  github.io-Adresse alle Geschwister-Apps im selben Speicher liegen.
+- Der Auto-Check bei `DOMContentLoaded` ruft jetzt `sbkimBadgeAusMerker()` statt
+  `sbkimMailboxCheck(true)`. **Kein Netz beim Öffnen.**
+- Der Dialog sagt es dazu: „Diesen Stand hat **dieser Klick** geholt."
+- Wurzel und Spiegel wieder byte-identisch (`md5sum` gleich), `npm test` **59/59** grün,
+  keine Konsolen-Fehler, kein 404.
+
+### Offen
+- **Klaus' Browser-Lauf** — die Zahlen oben sind headless. Wie sich das Badge im echten
+  Gebrauch anfühlt (erster Besuch zeigt keins, bis einmal 📬 gedrückt wurde), sieht nur er.
+- Ob die übrigen Knoten mit Postfach (SB-KIMTool-Point, Sage, BookLedgerPro, die zwei
+  Rezept-Apps) nachziehen, entscheidet Klaus nach diesem Ergebnis.
+
 ## 2026-08-08 — Die drei Auswahlfelder haben einen Namen (Kanon für beide Tresore)
 
 Sitzung lief in **Mein-Tresor** (Brief `BRIEF_kern-mangel-netzweit.md`, Punkt 2), der Fix
