@@ -117,8 +117,16 @@ Diese Regeln binden, **bis neue Evidenz** sie widerlegt. Eine Änderung erforder
 Es gibt **zwei Briefkästen** — sie werden **streng getrennt** behandelt:
 
 - **SBKIM-Briefkasten** (`sbkim/`: `SIGNAL.json`, `AUSTAUSCH*.md`, `*_inbox.json`,
-  `spore.json`): **bleibt immer komplett.** Das sind keine Notizen, sondern **lebende
-  Datenverträge** — nur lesen + Quittung (`ack`) setzen. **Niemals ausmisten.**
+  `spore.json`): die **Datenverträge** bleiben immer — `SIGNAL.json`, `spore.json`, jede
+  `*_inbox.json`, der Status-Kopf, **jeder offene Auftrag** und alles, was die Gegenstelle noch
+  nicht quittiert hat. **Aber die Quittungen darin verjähren** (Klaus 2026-08-08, netzweit als
+  `Sage-Protokol/docs/INTERFACES.md` **§11.6.1 „Postfach-Verjährung"**): Verlaufs-Einträge, die
+  reine Bestätigungen abgeschlossener Wege sind („gelesen + quittiert", „✅ bestätigt", eine
+  erfüllte Bitte), werden nach **30 Tagen** zu **einem Ergebnis-Block** zusammengefasst, der den
+  **Endstand** trägt. Bedingungen: Endstand steht danach da · es wird hingeschrieben, dass
+  gekürzt wurde · nichts geht verloren (Git-Historie). **Nie** im Postfach einer Gegenstelle.
+  *(Ersetzt die frühere Fassung „bleibt immer komplett — niemals ausmisten". Die war gegen das
+  falsche Aufräumen richtig, hat aber auch das richtige verhindert.)*
 - **Brief-Kette** (`docs/sessions/BRIEF_*.md`): hier **sammelt sich an** — und **nur hier**
   wird ausgemistet, damit man sieht, was neu/aktiv ist.
 

@@ -3,6 +3,44 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-08-08 (3) — Postfach-Verjährung: 559 → 305 Zeilen
+
+Klaus' Auftrag: die Regel **INTERFACES §11.6.1 „Postfach-Verjährung"** auch hier anwenden.
+Sie ist am 2026-08-08 in Mein-Tresor entstanden; Sage und SB-KIMTool-Point sind schon durch.
+
+| Postfach | vorher | nachher | zusammengefasst |
+|---|---|---|---|
+| `sbkim/AUSTAUSCH-MeinTresor.md` | 362 | **236** | Abschnitte 1–6, 8, 9 |
+| `sbkim/AUSTAUSCH.md` (⇄ Sage) | 197 | **69** | Abschnitte 1–9 |
+
+**Beide Bedingungen nachgesehen, nicht angenommen.** Alle gefalteten Einträge stammen vom
+2026-05-31 bis 2026-06-07 — weit über 30 Tage. Und quittiert: Mein-Tresor führt
+`ack["Jasons-Tresor"] = 10`, Sage führt `ack["Jasons-Tresor"] = 11`; alles Gefaltete lief unter
+einer `seq` darunter.
+
+### Was stehen bleibt — und warum
+
+- **Die Datenverträge** (`SIGNAL.json`, `spore.json`, `*_inbox.json`) — `git diff` darauf ist leer.
+- **Die Status-Köpfe.**
+- **§ 7 in `AUSTAUSCH-MeinTresor.md`, vollständig** — die Bauanleitung „Live-Verbund-Briefkasten"
+  (rund 165 Zeilen, der Löwenanteil der Datei). Sie ist **erfüllt**, Mein-Tresor hat den
+  Briefkasten. Trotzdem bleibt sie: der **Status-Kopf verweist ausdrücklich darauf**
+  („Bauanleitung §7"), und die Regel schützt alles, worauf anderswo verwiesen wird. Deshalb
+  fällt diese Datei auch weniger stark als die anderen — das ist kein Versehen.
+- **Der Bau-Bericht vom 2026-06-27** in `AUSTAUSCH.md` (Stufe 2 Auto-Lauschen am Nostr-Relais).
+  Er lief unter unserem `seq` 12, Sages `ack` steht bei 11 — **unquittiert. Ungelesene Post
+  verjährt nicht.**
+- **Die Abschnitts-Nummern** werden nicht neu vergeben; sonst brechen stille Verweise aus
+  anderen Postfächern.
+
+### Eine Angabe war überholt
+
+§ 9 vermerkte: „Rezeptbuch + Mixarium führen noch kein `SIGNAL.json` (HTTP 404)". Nachgesehen:
+**beide führen inzwischen eins** (Rezeptbuch `seq` 13, Mixarium `seq` 14). Steht jetzt richtig da.
+Beim Verjähren wird eben nicht nur umgeschichtet, sondern nachgeprüft.
+
+`npm test` **59/59** grün. Nichts geht verloren — die Git-Historie trägt jede gestrichene Zeile.
+
 ## 2026-08-08 (2) — Beim Öffnen spricht die Seite mit niemandem mehr
 
 Übernahme aus der Schwester Mein-Tresor (dort Klaus' Entscheidung nach seinem PageSpeed-Lauf

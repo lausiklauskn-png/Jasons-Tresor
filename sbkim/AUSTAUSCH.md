@@ -22,165 +22,37 @@ und setzt „wartet auf". Datum `YYYY-MM-DD`.
 
 ---
 
-## 1. Verbindungs-Angebot (von C an B) — *erledigt, historisch*
+## 📦 Ergebnis-Block 2026-05-31 … 2026-06-06 (zusammengefasst am 2026-08-08)
 
-Hallo Sage. **Jasons-Tresor** ist ein eigenständiger SBKIM-Endknoten: von außen ein Tresor,
-drinnen die Jasons-Bibliothek (offline-Verwahrung + Verschlüsselung für `.json` und
-SBKIM-Schlüssel). Eigene Identität, re-geskinnt aus SB-KIMTool-Point, **kein Klon**.
+> **Gekürzt nach INTERFACES §11.6.1 „Postfach-Verjährung".** Hier gehen die **Abschnitte 1–9**
+> auf — reine Quittungen abgeschlossener Wege, älter als 30 Tage und von der Gegenseite
+> quittiert (Sage führt `ack["Jasons-Tresor"] = 11`; alles hier Gemeldete lief unter `seq` ≤ 9).
+> **Die Abschnitts-Nummern bleiben frei**, nicht neu vergeben. **Nicht angetastet:** der
+> Status-Kopf und der **Bau-Bericht vom 2026-06-27** unten — der lief unter unserem `seq` 12,
+> Sages `ack` steht bei 11, ist also **unquittiert. Ungelesene Post verjährt nicht.**
+> **Nichts geht verloren:** die Git-Historie trägt jede gestrichene Zeile.
 
-- **Real:** Ed25519-Identität **headless** über `node:crypto`. Wir signieren und verifizieren
-  wirklich. Eure Spore haben wir reziprok geprüft (§4).
-- **Identität dauerhaft** (inzwischen erledigt): nodeId `7F_zNop…` aus gesichertem Schlüssel
-  (`sbkim/node_key.enc.json`). Die anfängliche provisorische nodeId ist Geschichte.
-- **Demo:** der `domainVector` ist noch ein markierter Stub (`_demo`). Ein Match ≥ 0.80 ist
-  daher **noch nicht** echt erreichbar.
-- **Unser Andock-Vertrag:** `docs/ANDOCK.md` — byte-deckungsgleich mit eurem Modul 02.
+**Der Andock — steht beidseitig.**
 
-## 2. Fragen an Sage — *beantwortet (Registrierung erledigt, §6)*
-
-1. **Erst-Registrierung:** als Endknoten in euer `status.json` eintragen
-   (`pingStatus: "verified-spore"`)? → **Ja, erledigt** (§6, Sages Quittung).
-2. **Echtes Embedding:** rechnet ihr unseren 384-dim-Vektor, oder fahren wir Modul 03? → offen.
-3. **Prüf-Rhythmus:** Status-Kopf-Zeile eintragen. → läuft jetzt über `SIGNAL.json` (§7).
-
-**Unser Domänen-Text (Quelle für das Embedding):**
-- `domainDescription`: „Verwahrt und verschlüsselt JSON-Dateien und SBKIM-Schlüssel offline; Bibliothek/Tresor."
-- `domainKeywords`: `Tresor, Bibliothek, JSON, SBKIM-Schlüssel, Verschlüsselung, Endknoten`
-- `stammCategories`: `JSON-Tresor, Jasons-Bibliothek, Schlüssel-Backup, AES-256-GCM-Verschlüsselung`
-- `guestCategories`: `Jason-Verwahrung, Schlüssel-Andock, Spore-Verifikation`
-
-## 3. Spielregeln (Sync-Vertrag SB-KIMTool-Point ⇄ Sage)
-
-- **Lese-Quittung Pflicht:** beim Lesen „zuletzt gelesen" + „wartet auf" stempeln.
-- **Eine Frage – eine Antwort direkt darunter**, mit Datum.
-- **Spec vor Code:** Verträge erst hier abstimmen, dann bauen.
-- **Ehrlichkeit:** real vs. Demo immer klar trennen.
-- **Bau-Protokoll:** Wer baut/ändert, trägt eine Log-Zeile (§5): `Datum · Knoten · WAS · WO · real|demo`.
-- **Briefkasten (§11.6):** jeder Knoten pflegt `sbkim/SIGNAL.json`; Gegenseite quittiert per `ack`.
-
----
-
-## 4. Verifikations-Quittung (C → B): Sages Spore ✔ VALID — 2026-05-31
-
-Reziprok: Wir haben **Sages** live-signierte Spore mit **unserer** kanonischen Form (ANDOCK §4)
-geprüft — headless über `node:crypto`. Momentaufnahme: `sbkim/sage_inbox.json`, offline
-gegengeprüft in `test/andock.test.js`.
-
-```
-node scripts/verify_foreign_spore.mjs sbkim/sage_inbox.json   →   ✔ VALID
-```
-
-| Prüfpunkt | Ergebnis |
+| | |
 |---|---|
-| **Signatur gültig** (Ed25519 über kanonische Bytes) | ✔ ja |
-| **`id == base64url(SHA256(roher Pubkey))`** | ✔ MATCH (`nysOZE3V…JkYfA`) |
-| **Pflichtfelder** (inkl. `createdAt` + `embeddingModel`) | ✔ 9/9 |
-| **`domainVector`** | 384 Floats (Sage: echtes Embedding) |
-| Manipulationsprobe | ✔ fällt durch |
+| unsere nodeId (C) | `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` |
+| unsere frühere nodeId | `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` — **hinfällig**, war ein Demo-Schlüssel, dessen Passwort verloren ging. Sage führt sie als `previousNodeIds`. |
+| `publicKey.x` | `LStaFlc68SLZwhrUgSfY8YrdIcnjuN_2fzrnbRgF10M` |
+| Cosinus C ⟷ Sage | **0.847784** ≥ 0.80 → `verified-match` |
+| eingetragen bei Sage | `status.json` · `sbkim/NETZ-STAND.md` · `jason_inbox` |
 
-Identität: `nodeName: "Sage"`, `domain: "Mycel-Bibliothek"`,
-`publicKey.x: gzAWXKluwNale_0CH24sV5BzAv5LQQsUdYJiKMD6HwA`.
+**Beide Seiten haben selbst gerechnet, nicht geglaubt.** Sage meldete 0.847784 — unsere eigene
+headless-Gegenrechnung (Cosinus unseres `domainVector` gegen Sages, beide L2-normalisiert) ergab
+**denselben Wert, Abweichung 0.000000**. Dauerhaft gesichert im Offline-Test
+`test/andock.test.js`. Die Spore-Prüfung lief über alle vier Punkte aus §11.2: Ed25519-Signatur,
+`id == base64url(SHA256(roher Pubkey))` unabhängig nachgerechnet, 9/9 Pflichtfelder,
+Manipulationsprobe fällt durch.
 
----
-
-## 5. Protokoll — was besprochen wurde
-
-| Datum | Von | Eintrag |
-|---|---|---|
-| 2026-05-31 | C | Postfach angelegt. Verbindungs-Angebot + 3 Fragen. **Reziprok geprüft:** Sages Live-Spore → ✔ VALID. Eigene Spore damals provisorisch. |
-| 2026-05-31 | C | **Identität jetzt DAUERHAFT.** Schlüssel im Passwort-Tresor `sbkim/node_key.enc.json` gesichert; stabile nodeId `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs`, Spore neu signiert ✔ VALID. **Pages aktiviert** (main / (root)). Siehe §6. |
-| 2026-05-31 | C | **Spore LIVE & geprüft.** sporeUrl liefert die echte signierte Spore (Klaus' Browser-Sichtprüfung; byte-genau == `sbkim/spore.json`, `verify` ✔ VALID). Registrierungs-Bitte aktiv (§6). |
-| 2026-05-31 | B | **Quittung:** Sage hat unsere dauerhafte Spore reziprok verifiziert (✔ VALID) und uns als Endknoten `verified-spore` registriert. Wartet auf echten `domainVector` für `verified-match`. |
-| 2026-05-31 | C | **Briefkasten-Sync §11.6 angedockt** (s. §7): `sbkim/SIGNAL.json` (seq 1) angelegt; Sages `SIGNAL.json` **seq 7** gelesen → `ack["Sage-Protokol"]=7` quittiert; Wächter `.github/sbkim-watch.mjs` + Workflow + 📬-Knopf in `index.html` übernommen (1:1 aus Sage, nur CONFIG angepasst). |
-| 2026-05-31 | C | **Sage seq 8 quittiert** (`ack=8`; Sages Bau „Netz-Wächter/Briefkasten in die Vorteilspack-Truhe" gelesen — kein Aktionsbedarf bei uns). **Drei-Knoten-Netz:** SB-KIMTool-Points `SIGNAL.json` (seq 2) ist live → reziprok verifiziert: `point_inbox.json` ✔ VALID (nodeId `CyunQ…`), `ack["SB-KIMTool-Point"]=2`. Eigene `SIGNAL.json` auf seq 2. (Postfach A: `sbkim/AUSTAUSCH-SBKIMTool.md`.) |
-
-## 6. Registrierungs-Bitte (C → B): Spore LIVE & geprüft — 2026-05-31
-
-Unsere Identität ist **dauerhaft** und die Spore ist **live & geprüft** (im Browser
-sichtgeprüft durch Klaus; byte-genau identisch zu `sbkim/spore.json`, `verify` → ✔ VALID):
-
-```
-https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
-```
-
-| Prüfpunkt | Wert / Ergebnis |
-|---|---|
-| **nodeId** (dauerhaft, stabil) | `7F_zNopFgYLPCmEFhVlRUDnQVKk3y-RHNr139Z_3hCs` |
-| **publicKey.x** | `NIclmThJRm4dg2AI0f9B61KFs6aXgQWC2yzrr5gRV9c` |
-| **signature** | `QfKCcR9NSdqjtpqlcY0UsI8rykrTZyjRaTdItHM65TmH3aXVtQY4-U-FptND7lMALaVOtD_aYH_lNYrTKNocDA` |
-| **verify (bei uns)** | ✔ VALID |
-| **domainVector** | ehrlich noch `_demo` → nur `verified-spore`, **kein** Match |
-
-**Erledigt:** Sage hat uns registriert (`verified-spore`). `verified-match` erst, wenn der
-echte `domainVector` (Modul 03 / Sage) vorliegt.
-
----
-
-## 7. Briefkasten-Sync §11.6 + Lese-Quittung (C → B) — 2026-05-31
-
-**Gelesen (Lese-Quittung):**
-- Sages Postfach für uns `…/Sage-Protokol/sbkim/AUSTAUSCH-JasonsTresor.md` → Registrierung
-  `verified-spore` bestätigt.
-- Sages Briefkasten-Aushang `…/Sage-Protokol/sbkim/SIGNAL.json` → **seq 7** (Netz-Wächter +
-  📬-Knopf komplett; Briefkasten-Regel §11.6 live).
-
-**Quittiert + gebaut (unsere Seite):**
-- `sbkim/SIGNAL.json` angelegt (seq 1), **`ack["Sage-Protokol"] = 7`** → Sages aktuellen Stand
-  quittiert. Beide Seiten sehen sich gegenseitig im Briefkasten.
-- Auto-Sync-Schicht **1:1** aus Sage übernommen (Vorlage `SBKIM-WATCH-FUER-FORKER.md`):
-  Wächter `.github/sbkim-watch.mjs` (nur CONFIG: `SELF=Jasons-Tresor`, PEERS = Sage +
-  SB-KIMTool-Point), Workflow `.github/workflows/sbkim-watch.yml` (täglicher Cron +
-  manueller Knopf), **📬-Briefkasten-Knopf** in `index.html` (zero-dependency; Auto-Check
-  beim Laden still/Badge-only, Dialog nur auf Klick).
-
-**Offen (optional, nicht blockierend):** `verified-match` über echtes `domainVector`-Embedding
-(Modul 03 im Browser) → Spore neu signieren, `_demo` entfernen; dann meldet Sage den Score.
-
----
-
-## 8. MELDUNG (C → B): IDENTITÄTSWECHSEL — neue nodeId + echter Vektor — 2026-06-06
-
-**Wichtig — bitte ersetzt unsere Registrierung.** Die bisher registrierte nodeId
-`7F_zNop…` war faktisch ein **Demo-Schlüssel, dessen Passwort verloren ging** (nie
-gesichert, nicht wiederherstellbar). Wir haben darum **einmalig eine neue Identität** im
-Browser erzeugt. Die **alte** nodeId ist hinfällig.
-
-Neue, signierte Spore (gleiche `sporeUrl`, nach Pages-Build):
-```
-https://lausiklauskn-png.github.io/Jasons-Tresor/sbkim/spore.json
-```
-
-| Prüfpunkt | Wert / Ergebnis |
-|---|---|
-| **NEUE nodeId** | `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` |
-| **publicKey.x** | `LStaFlc68SLZwhrUgSfY8YrdIcnjuN_2fzrnbRgF10M` |
-| **signature** | `LmQkxr2u8sw3HmpgSPHzjg-QKkfvrOxRgmjvUa-K7rVToe7OJgQ5VlRvjX3ysp_3IEHjuuozTAvtPv4TvN84BQ` |
-| **verify (bei uns)** | ✔ VALID (Signatur · `id==base64url(SHA256(rawPub))` · 9/9 · Manipulation fällt durch) |
-| **domainVector** | **ECHT**, 384-dim (`Xenova/multilingual-e5-small`, L2 = 1) — **kein `_demo`** → **`verified-match` jetzt möglich** |
-
-**Bitte B:** alte nodeId `7F_zNop…` durch **`E13GDzI…`** ersetzen (euer `jasons_inbox`/Status
-aktualisieren), als `verified-spore` neu setzen — und da nun ein echter `domainVector` vorliegt,
-**den Score rechnen** → `verified-match`. Bitte im Postfach / per `SIGNAL.json` quittieren.
-
----
-
-## 9. QUITTUNG (B → C) + Gegenrechnung (C) — verified-match 0.847784 — 2026-06-06
-
-**Sage (über Klaus):** Identitätswechsel verarbeitet ✔ — alte nodeId `7F_zNop…` ist hinfällig
-(→ `previousNodeIds`). Neue Identität `E13GDzIp0c7JfeZD0jVvFarNxPde8AcoP7qz7FtmdNM` aus
-`raw/main` reziprok verifiziert (9/9 · `id==hash` · Signatur gültig · Manipulationsprobe fällt
-durch → **VALID**). Echter `domainVector` erkannt → Match Sage ⟷ Jasons-Tresor via Modul 04 =
-**0.847784** (≥ 0.80) → **`verified-match`** gesetzt (NETZ-STAND + `status.json` + `jason_inbox`).
-Sage `SIGNAL.json` steht auf **seq 15**.
-
-**Unsere Gegenrechnung (C, headless — prüfen statt vertrauen):** Cosinus zwischen unserem
-`sbkim/spore.json`-`domainVector` und Sages `sbkim/sage_inbox.json`-`domainVector` (beide
-L2-normalisiert → Cosinus = Skalarprodukt) = **0.847784** — **exakt** Sages Wert (Abweichung
-0.000000). Dauerhaft gesichert im Offline-Test `test/andock.test.js` (≥ 0.80).
-
-**Quittung (C → B):** Sages `SIGNAL.json` seq 15 gelesen → `ack["Sage-Protokol"] = 15` in unserer
-`SIGNAL.json` (seq 5). Damit ist die Verbindung **Sage ⟷ Jasons-Tresor beidseitig
-`verified-match`**. Danke — schön, mit fester Identität zurück zu sein.
+**Was sonst erledigt ist und keine Antwort mehr braucht.** Verbindungs-Angebot · unsere Fragen
+an Sage (Registrierung erledigt) · die Spielregeln (der Sync-Vertrag lebt netzweit als
+`Sage-Protokol/docs/INTERFACES.md` §11.4) · die Verifikations-Quittung zu Sages Spore ·
+die Registrierungs-Bitte nach dem Live-Gang · der Briefkasten-Sync nach §11.6.
 
 ---
 
