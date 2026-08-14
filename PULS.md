@@ -3,6 +3,37 @@
 > Übergabe-Herzschlag. Jede Sitzung schreibt hier fort: Datum · was getan · was offen ·
 > nächste Schritte. Klaus liest zuerst den Chat, dann diese Datei.
 
+## 2026-08-14 — Service Worker eingebaut: installierbar und offlinefähig
+
+**Auslöser:** im PWA-Toolpoint-Marktplatz trug die Karte dieser App nur
+„kein Zähldienst gefunden". Die zwei anderen Häkchen fehlten — nicht, weil der
+Prüfer sich irrte, sondern weil die App **keinen Service Worker anmeldete**.
+Daran hängt beides: „installierbar" und „offlinefähig".
+
+**Was jetzt da ist:** `sw.js` in der Wurzel, angemeldet aus `index.html`
+(fail-soft, ausserhalb JASONLIB-CORE, in Wurzel **und** Spiegel identisch —
+md5 geprüft).
+
+**Zwei Entscheidungen im Bau, beide mit Grund:**
+
+- **Das Dokument kommt zuerst aus dem Netz**, nicht aus dem Vorrat. Ein Tresor
+  trägt Krypto-Code; läge er cache-first vor, würde eine behobene Schwäche noch
+  tagelang aus dem Vorrat ausgeliefert. Online also immer die neueste Fassung,
+  offline die letzte bekannte.
+- **Die Bilder (rund 10 MB) kommen NICHT in den Vorrat.** Sie würden die
+  Installation blockieren, für etwas, das die meisten nie sehen. Sie landen
+  darin, wenn sie einmal geholt wurden.
+
+Fremde Adressen werden nie gespeichert. Der Hard-Reload-Knopf meldet den
+Service Worker weiterhin ab und leert jeden Vorrat — er ist die Notbremse.
+
+**Beweis (echter Lauf, nicht Papierform):** App geladen, **Netz abgeschaltet**,
+neu geladen — volle Oberfläche, 100 % desselben Inhalts, kein Fehlerbild.
+Gegenprobe gemacht: ohne `sw.js` meldet der Browser „keine Registrierung", und
+das Neuladen stirbt mit `ERR_INTERNET_DISCONNECTED`.
+
+`npm test` grün. **Klaus' Browser-Lauf steht aus** — headless ersetzt ihn nicht.
+
 ## 2026-08-08 (3) — Postfach-Verjährung: 559 → 305 Zeilen
 
 Klaus' Auftrag: die Regel **INTERFACES §11.6.1 „Postfach-Verjährung"** auch hier anwenden.
