@@ -65,3 +65,11 @@ status.json             # ehrlicher Real-Anteil
 - **Merge entscheidet Klaus.**
 
 Details in `docs/`.
+
+---
+
+## Rechte
+
+Rechteinhaber ist Klaus Nitzsche. Welche Lizenz gilt und welche Rolle die
+KI-Werkzeuge hatten, steht in [`RECHTE.md`](RECHTE.md); der Lizenztext in
+[`LICENSE`](LICENSE).
