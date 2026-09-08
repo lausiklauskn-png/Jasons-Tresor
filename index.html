@@ -3089,8 +3089,8 @@ if ('serviceWorker' in navigator) {
     try{
       var to=setTimeout(go,2500);
       var tasks=[];
-      if('serviceWorker' in navigator){ tasks.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}).catch(function(){})); }
-      if(window.caches && caches.keys){ tasks.push(caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));}).catch(function(){})); }
+      if('serviceWorker' in navigator){ tasks.push(navigator.serviceWorker.getRegistration().then(function(r){return r&&r.unregister();}) /* nur der EIGENE Worker — getRegistrations() meldete ALLE Apps des Ursprungs ab */.catch(function(){})); }
+      if(window.caches && caches.keys){ tasks.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.startsWith('jasons-tresor-');}).map(function(k){return caches.delete(k);}));}) /* nur EIGENE Vorraete — caches gehoert dem Ursprung */.catch(function(){})); }
       Promise.all(tasks).then(function(){ clearTimeout(to); go(); }).catch(function(){ clearTimeout(to); go(); });
     }catch(_e){ go(); }
   }
