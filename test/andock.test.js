@@ -95,9 +95,17 @@ test("verified-match Mein-Tresor: Cosinus = 0.983191 (>= 0.80), Schwester-Tresor
   assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
 });
 
-test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.879330 (>= 0.80)", () => {
+test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.872405 (>= 0.80)", () => {
   // Unabhaengige Gegenrechnung zu Sages gemeldetem Modul-04-Score. Beide Vektoren
   // sind L2-normalisiert -> Cosinus == Skalarprodukt.
+  //
+  // ⚠ DIE ZAHL WAR BIS ZUM 2026-09-10 0.879330, und diese Probe hat den Wechsel
+  // zu Recht gemeldet. Sage hat an diesem Tag neu signiert: neue Kennung
+  // (BgjXhSApoOrJ... statt nysOZE3VuKqZ...) und eine neue Bedeutungs-
+  // Beschreibung. Damit aendert sich Sages domainVector und jeder Cosinus
+  // dagegen. Nachgezogen wurde die ADRESSKARTE (sbkim/sage_inbox.json) und
+  // diese Zahl; der Pruef-Vermerk daneben bleibt unangetastet, er belegt, was
+  // am 2026-07-14 galt.
   const us = load("sbkim/spore.json").domainVector;
   const sage = load("sbkim/sage_inbox.json").domainVector;
   assert.equal(us.length, 384);
@@ -106,7 +114,7 @@ test("verified-match Sage: Cosinus(eigene Spore, Sage) = 0.879330 (>= 0.80)", ()
   const norm = (a) => Math.sqrt(dot(a, a));
   assert.ok(Math.abs(norm(us) - 1) < 1e-3, "eigener Vektor nicht L2-normalisiert");
   const cos = dot(us, sage) / (norm(us) * norm(sage));
-  assert.ok(Math.abs(cos - 0.879330) < 1e-4, `Cosinus ${cos} != 0.879330 (Sages Score)`);
+  assert.ok(Math.abs(cos - 0.872405) < 1e-4, `Cosinus ${cos} != 0.872405 (Sages Score)`);
   assert.ok(cos >= 0.8, "kein verified-match (Cosinus < 0.80)");
 });
 
